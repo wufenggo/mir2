@@ -5878,7 +5878,7 @@ namespace Server.MirObjects
             return result;
         }
 
-        public void RangeAttack(MirDirection dir, Point location, uint targetID)
+        public void RangeAttack(MirDirection dir, Point location, uint targetID) //弓手伤害
         {
             LogTime = Envir.Time + Globals.LogDelay;
 
@@ -5925,8 +5925,8 @@ namespace Server.MirObjects
                 }
 
                 int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
-                int damage = GetAttackPower(MinMC, MaxMC);
-                damage = (int)(damage * Math.Max(1, (distance * 0.35)));//range boost
+                int damage = GetAttackPower(MinDC, MaxDC);
+                damage = (int)(damage * Math.Max(1, distance * 0.35));//range boost
                 damage = ApplyArcherState(damage);
                 int chanceToHit = 60 + (Focus ? 30 : 0) - (int)(distance * 1.5);
                 int hitChance = Envir.Random.Next(100); // Randomise a number between minimum chance and 100       
