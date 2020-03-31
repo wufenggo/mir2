@@ -1235,7 +1235,7 @@ namespace Server.MirNetwork
             Player.UserMatch = p.Usermode;
             Player.MinShapes = p.MinShape;
             Player.MaxShapes = p.MaxShape;
-            Player.MarketSearch(p.Match, p.Type, p.Grade);
+            Player.MarketSearch(p.Match, p.Type,p.Grade);//, p.Grade
         }
         private void MarketRefresh()
         {
