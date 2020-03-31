@@ -207,7 +207,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(2, 1),
                 Parent = ShowAllButton,
-                Text = "Show All Items",
+                Text = "显示全部物品",
                 NotControl = true,
             };
             WeaponButton = new MirButton
@@ -227,7 +227,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(2, 1),
                 Parent = WeaponButton,
-                Text = "Weapon Items",
+                Text = "武器",
                 NotControl = true,
             };
             DraperyItemsButton = new MirButton
@@ -270,7 +270,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = ArmoursSubBtn,
-                Text = "Amours",
+                Text = "盔甲",
                 NotControl = true,
             };
             HelmetsSubBtn = new MirButton
@@ -290,7 +290,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = HelmetsSubBtn,
-                Text = "Helmets",
+                Text = "头盔",
                 NotControl = true,
             };
             BeltsSubBtn = new MirButton
@@ -310,7 +310,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(18, 1),
                 Parent = BeltsSubBtn,
-                Text = "Belts",
+                Text = "腰带",
                 NotControl = true,
             };
             BootsSubBtn = new MirButton
@@ -330,7 +330,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = BootsSubBtn,
-                Text = "Boots",
+                Text = "靴子",
                 NotControl = true,
             };
             StonesSubBtn = new MirButton
@@ -350,7 +350,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = StonesSubBtn,
-                Text = "Stones",
+                Text = "守护石",
                 NotControl = true,
             };
             #endregion
@@ -394,7 +394,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = NecklaceSubBtn,
-                Text = "Necklaces",
+                Text = "项链",
                 NotControl = true,
             };
             BraceletsSubBtn = new MirButton
@@ -414,7 +414,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = BraceletsSubBtn,
-                Text = "Bracelets",
+                Text = "手镯",
                 NotControl = true,
             };
             RingsSubBtn = new MirButton
@@ -434,7 +434,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = RingsSubBtn,
-                Text = "Rings",
+                Text = "戒指",
                 NotControl = true,
             };
             #endregion
@@ -456,7 +456,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(2, 1),
                 Parent = ConsumableItemsButton,
-                Text = "Cosumable Items",
+                Text = "消耗物品",
                 NotControl = true,
             };
 
@@ -645,7 +645,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(2, 1),
                 Parent = BooksButton,
-                Text = "Books",
+                Text = "书籍",
                 NotControl = true,
             };
 
@@ -667,7 +667,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = WarriorSubBtn,
-                Text = "Warrior",
+                Text = "战士",
                 NotControl = true,
             };
             WizardSubBtn = new MirButton
@@ -687,7 +687,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = WizardSubBtn,
-                Text = "Wizard",
+                Text = "法师",
                 NotControl = true,
             };
             TaoistSubBtn = new MirButton
@@ -707,7 +707,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = TaoistSubBtn,
-                Text = "Taoist",
+                Text = "道士",
                 NotControl = true,
             };
             AssassinSubBtn = new MirButton
@@ -727,7 +727,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = AssassinSubBtn,
-                Text = "Assassin",
+                Text = "刺客",
                 NotControl = true,
             };
             ArcherSubBtn = new MirButton
@@ -747,7 +747,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = ArcherSubBtn,
-                Text = "Archer",
+                Text = "弓箭手",
                 NotControl = true,
             };
             #endregion
@@ -769,7 +769,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(2, 1),
                 Parent = CraftingSystemButton,
-                Text = "Crafting Items",
+                Text = "制作物品",
                 NotControl = true,
             };
 
@@ -893,7 +893,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(99, 18),
                 Location = new Point(2, 1),
                 Parent = PetsItemButton,
-                Text = "Pet Equipment",
+                Text = "宠物装备",
                 NotControl = true,
             };
 
@@ -1221,7 +1221,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (Selected == null || CMain.Time < MarketTime) return;
 
-                MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.FriendlyName, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
+                MirMessageBox box = new MirMessageBox(string.Format("你确定要为{1}购买{0}吗？", Selected.Listing.Item.FriendlyName, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
                 box.YesButton.Click += (o1, e2) =>
                 {
                     MarketTime = CMain.Time + 3000;
@@ -1243,7 +1243,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (CMain.Time < SearchTime)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat(string.Format("You can search again after {0} seconds.", Math.Ceiling((SearchTime - CMain.Time) / 1000D)), ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(string.Format("{0}秒后可以再次搜索.", Math.Ceiling((SearchTime - CMain.Time) / 1000D)), ChatType.System);
                     return;
                 }
                 SearchTime = CMain.Time + Globals.SearchDelay;
@@ -1268,7 +1268,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (Selected.Listing.Seller == "For Sale")
                     {
-                        MirMessageBox box = new MirMessageBox(string.Format("{0} has not sold, Are you sure you want to get it back?", Selected.Listing.Item.FriendlyName), MirMessageBoxButtons.YesNo);
+                        MirMessageBox box = new MirMessageBox(string.Format("{0}尚未出售，是否确实要收回？", Selected.Listing.Item.FriendlyName), MirMessageBoxButtons.YesNo);
                         box.YesButton.Click += (o1, e2) =>
                         {
                             MarketTime = CMain.Time + 3000;
@@ -1285,7 +1285,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 else
                 {
-                    MirMessageBox box = new MirMessageBox(string.Format("Are you sure you want to buy {0} for {1}?", Selected.Listing.Item.FriendlyName, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
+                    MirMessageBox box = new MirMessageBox(string.Format("你确定要为{1}购买{0}吗？", Selected.Listing.Item.FriendlyName, Selected.Listing.Price), MirMessageBoxButtons.YesNo);
                     box.YesButton.Click += (o1, e2) =>
                     {
                         MarketTime = CMain.Time + 3000;
@@ -1441,7 +1441,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (CMain.Time < SearchTime)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(string.Format("You can search again after {0} seconds.", Math.Ceiling((SearchTime - CMain.Time) / 1000D)), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(string.Format("{0}秒后可以再次搜索.", Math.Ceiling((SearchTime - CMain.Time) / 1000D)), ChatType.System);
                 return;
             }
             switch (e.KeyChar)
