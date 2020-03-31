@@ -8519,6 +8519,28 @@ namespace Client.MirScenes
         public static int ViewRangeY;
 
 
+        private bool _autoPath;
+        public bool AutoPath
+        {
+            get
+            {
+                return _autoPath;
+            }
+            set
+            {
+                if (_autoPath == value) return;
+                _autoPath = value;
+
+                if (!_autoPath)
+                    CurrentPath = null;
+
+                if (GameScene.Scene != null)
+                    GameScene.Scene.ChatDialog.ReceiveChat(value ? "[自动寻路: 开启]" : "[自动寻路: 关闭]", ChatType.Hint);
+            }
+        }
+        public PathFinder PathFinder = null;
+        public List<Node> CurrentPath = null;
+
 
         public static Point MapLocation
         {
@@ -8634,6 +8656,10 @@ namespace Client.MirScenes
 
             SetMusic = Music;
             SoundList.Music = Music;
+            if (PathFinder == null)
+            {
+                PathFinder = new PathFinder(this);
+            }
         }
 
 
@@ -9618,6 +9644,9 @@ namespace Client.MirScenes
                             User.QueuedAction = new QueuedAction { Action = MirAction.Harvest, Direction = direction, Location = User.CurrentLocation };
                             return;
                         }
+
+                        if (AutoPath)
+                            AutoPath = false;
                         if (CMain.Shift)
                         {
                             if (CMain.Time > GameScene.AttackTime && CanRideAttack()) //ArcherTest - shift click
@@ -9763,7 +9792,62 @@ namespace Client.MirScenes
                 }
             }
 
+            
+
+            if (AutoPath)
+            {
+                if (CurrentPath == null || CurrentPath.Count == 0)
+                {
+                    AutoPath = false;
+                    return;
+                }
+
+                Node currentNode = CurrentPath.SingleOrDefault(x => User.CurrentLocation == x.Location);
+                if (currentNode != null)
+                {
+                    while (true)
+                    {
+                        Node first = CurrentPath.First();
+                        CurrentPath.Remove(first);
+
+                        if (first == currentNode)
+                            break;
+                    }
+                }
+
+                if (CurrentPath.Count > 0)
+                {
+                    MirDirection dir = Functions.DirectionFromPoint(User.CurrentLocation, CurrentPath.First().Location);
+                    Node upcomingStep = CurrentPath.SingleOrDefault(x => Functions.PointMove(User.CurrentLocation, dir, 2) == x.Location);
+
+                    if (!CanWalk(dir))
+                    {
+                        CurrentPath = PathFinder.FindPath(MapObject.User.CurrentLocation, CurrentPath.Last().Location);
+                        return;
+                    }
+
+                    if (GameScene.CanRun && CanRun(dir) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && CurrentPath.Count > 1 && upcomingStep != null)
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = dir, Location = Functions.PointMove(User.CurrentLocation, dir, 2) };
+                        return;
+                    }
+                    if (CanWalk(dir))
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = dir, Location = Functions.PointMove(User.CurrentLocation, dir, 1) };
+
+                        return;
+                    }
+                }
+            }
+
+
+
+
+
+
+
             if (MapObject.TargetObject == null || MapObject.TargetObject.Dead) return;
+
             if (((!MapObject.TargetObject.Name.EndsWith(")") && !(MapObject.TargetObject is PlayerObject)) || !CMain.Shift) &&
                 (MapObject.TargetObject.Name.EndsWith(")") || !(MapObject.TargetObject is MonsterObject))) return;
             if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1)) return;
@@ -10040,7 +10124,7 @@ namespace Client.MirScenes
             return Math.Sqrt(x * x + y * y);
         }
 
-        private bool EmptyCell(Point p)
+        public bool EmptyCell(Point p)
         {
             if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0) // + (M2CellInfo[P.X, P.Y].FrontImage & 0x7FFF) != 0)
                 return false;
