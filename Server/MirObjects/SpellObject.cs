@@ -170,6 +170,16 @@ namespace Server.MirObjects
                     break;
                 case Spell.MapLava:
                 case Spell.MapLightning:
+                    {
+                        if (ob is PlayerObject player)
+                        {
+                            if (player.Account.AdminAccount && player.Observer)
+                                return;
+                            player.Struck(Value, DefenceType.MAC);
+                        }
+                        
+                    }
+                    break;
                 case Spell.MapQuake1:
                 case Spell.MapQuake2:
                     if (Value == 0) return;

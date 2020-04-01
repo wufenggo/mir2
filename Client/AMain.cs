@@ -78,7 +78,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show("Could not get Patch Information.");
+                    MessageBox.Show(GameLanguage.PatchErr);
                     Completed = true;
                     return;
                 }
@@ -112,7 +112,7 @@ namespace Launcher
         
 
         private void BeginDownload()
-        {
+        {           
             if (DownloadList == null) return;
 
             if (DownloadList.Count == 0)
@@ -185,7 +185,7 @@ namespace Launcher
                 }
 
                 DownloadList.Enqueue(old);
-                _totalBytes += old.Compressed;
+                _totalBytes += old.Length;
             }
         }
 
@@ -228,7 +228,7 @@ namespace Launcher
                             BeginDownload();
                         };
 
-                    if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.AccountID, Settings.Password);
+                    if (Settings.P_NeedLogin) client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
 
 
                     _stopwatch = Stopwatch.StartNew();
@@ -253,7 +253,7 @@ namespace Launcher
                 using (WebClient client = new WebClient())
                 {
                     if (Settings.P_NeedLogin)
-                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.Password);
+                        client.Credentials = new NetworkCredential(Settings.P_Login, Settings.P_Password);
                     else
                         client.Credentials = new NetworkCredential("", "");
 
