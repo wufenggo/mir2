@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
 
-        public const int Version = 76;
+        public const int Version = 79;
 
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
@@ -162,7 +162,7 @@ namespace Server.MirEnvir
 
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[10];
         public int[] RankBottomLevel = new int[11];
-
+        static HttpServer http;
 
         static Envir()
         {

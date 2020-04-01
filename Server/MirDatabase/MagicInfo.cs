@@ -191,7 +191,7 @@ namespace Server.MirDatabase
                     Range = Info.Range,
 
                     IsHumUpTrain = Info.HumUpTrain,
-                    CastTime = (CastTime != 0) && (SMain.Envir.Time > CastTime)? SMain.Envir.Time - CastTime: 0
+                    CastTime = (CastTime != 0) && (Envir.Time > CastTime)? Envir.Time - CastTime: 0
 
             };
         }

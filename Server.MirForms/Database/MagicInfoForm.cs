@@ -208,7 +208,7 @@ namespace Server
             // 
             this.tabPage1.Controls.Add(this.label24);
             this.tabPage1.Controls.Add(this.label23);
-            this.tabPage1.Controls.Add(this.textBoxName);
+            //this.tabPage1.Controls.Add(this.textBoxName);
             this.tabPage1.Controls.Add(this.lblDamageExample);
             this.tabPage1.Controls.Add(this.lblDamageExplained);
             this.tabPage1.Controls.Add(this.lblSelected);
@@ -832,11 +832,11 @@ namespace Server
             // 
             // textBoxName
             // 
-            this.textBoxName.Location = new System.Drawing.Point(89, 18);
-            this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(112, 21);
-            this.textBoxName.TabIndex = 10;
-            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            //this.textBoxName.Location = new System.Drawing.Point(89, 18);
+            //this.textBoxName.Name = "textBoxName";
+            //this.textBoxName.Size = new System.Drawing.Size(112, 21);
+            //this.textBoxName.TabIndex = 10;
+            //this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // label23
             // 
