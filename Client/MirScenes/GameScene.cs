@@ -727,28 +727,28 @@ namespace Client.MirScenes
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
                     Thrusting = !Thrusting;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(Thrusting ? "U使用 刺杀剑术." : "不使用 刺杀剑术.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = Thrusting });
                     break;
                 case Spell.HalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     HalfMoon = !HalfMoon;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use Half Moon." : "Do not use Half Moon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(HalfMoon ? "使用 半月弯刀." : "不使用 半月弯刀.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = HalfMoon });
                     break;
                 case Spell.CrossHalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     CrossHalfMoon = !CrossHalfMoon;
-                    ChatDialog.ReceiveChat(CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(CrossHalfMoon ? "使用 狂风斩." : "不使用 狂风斩.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = CrossHalfMoon });
                     break;
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
                     DoubleSlash = !DoubleSlash;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "Use Double Slash." : "Do not use Double Slash.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(DoubleSlash ? "使用 Double Slash." : "不使用 Double Slash.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleSlash });
                     break;
@@ -2661,7 +2661,7 @@ namespace Client.MirScenes
             
             if (quest == null) return;
 
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} 想跟你分享一个任务. 接受?", p.SharerName), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NPCIndex = 0, QuestIndex = quest.Index });
 
@@ -4129,16 +4129,16 @@ namespace Client.MirScenes
         private void DeleteGroup()
         {
             GroupDialog.GroupList.Clear();
-            ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
+            ChatDialog.ReceiveChat("已离开队伍.", ChatType.Group);
         }
         private void DeleteMember(S.DeleteMember p)
         {
             GroupDialog.GroupList.Remove(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 已离开队伍.", p.Name), ChatType.Group);
         }
         private void GroupInvite(S.GroupInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("你想跟 {0} 组队吗?", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
@@ -4148,7 +4148,7 @@ namespace Client.MirScenes
         private void AddMember(S.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format("-{0} 已加入队伍.", p.Name), ChatType.Group);
         }
         private void Revived()
         {
@@ -4184,19 +4184,19 @@ namespace Client.MirScenes
                     break;
                 case Spell.Thrusting:
                     Thrusting = p.CanUse;
-                    ChatDialog.ReceiveChat(Thrusting ? "Use Thrusting." : "Do not use Thrusting.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(Thrusting ? "使用 刺杀剑术." : "不使用 刺杀剑术.", ChatType.Hint);
                     break;
                 case Spell.HalfMoon:
                     HalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(HalfMoon ? "使用 半月弯刀." : "不使用 半月弯刀.", ChatType.Hint);
                     break;
                 case Spell.CrossHalfMoon:
                     CrossHalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(CrossHalfMoon ? "使用 狂风斩." : "不使用 狂风斩.", ChatType.Hint);
                     break;
                 case Spell.DoubleSlash:
                     DoubleSlash = p.CanUse;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(DoubleSlash ? "使用 DoubleSlash." : "不使用 DoubleSlash", ChatType.Hint);
                     break;
                 case Spell.FlamingSword:
                     FlamingSword = p.CanUse;
@@ -4862,7 +4862,7 @@ namespace Client.MirScenes
 
         private void GuildInvite(S.GuildInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to join the {0} guild?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("你想加入 {0} 行会么??", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = false });
@@ -4872,7 +4872,7 @@ namespace Client.MirScenes
 
         private void GuildNameRequest(S.GuildNameRequest p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter a guild name, length must be 3~20 characters.");
+            MirInputBox inputBox = new MirInputBox("请输入一个行会名, 3~20 字符.");
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
             {
                 string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -4883,7 +4883,7 @@ namespace Client.MirScenes
             {
                 if (inputBox.InputTextBox.Text.Contains('\\'))
                 {
-                    ChatDialog.ReceiveChat("You cannot use the \\ sign in a guildname!", ChatType.System);
+                    ChatDialog.ReceiveChat("你不能在行会名称中使用!\\", ChatType.System);
                     inputBox.InputTextBox.Text = "";
                 }
                 Network.Enqueue(new C.GuildNameReturn { Name = inputBox.InputTextBox.Text });
@@ -4894,7 +4894,7 @@ namespace Client.MirScenes
 
         private void GuildRequestWar(S.GuildRequestWar p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter the guild you would like to go to war with.");
+            MirInputBox inputBox = new MirInputBox("请输入你要开战的行会名.");
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -4919,20 +4919,20 @@ namespace Client.MirScenes
                     GuildDialog.MemberStatusChange(p.Name, false);
                     break;
                 case 1: // logged on
-                    ChatDialog.ReceiveChat(String.Format("{0} logged on.", p.Name), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format("{0} 已经上线.", p.Name), ChatType.Guild);
                     GuildDialog.MemberStatusChange(p.Name, true);
                     break;
                 case 2://new member
-                    ChatDialog.ReceiveChat(String.Format("{0} joined guild.", p.Name), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format("{0} 加入行会", p.Name), ChatType.Guild);
                     GuildDialog.MemberCount++;
                     GuildDialog.MembersChanged = true;
                     break;
                 case 3://kicked member
-                    ChatDialog.ReceiveChat(String.Format("{0} got removed from the guild.", p.Name), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format("{0} 被踢出行会.", p.Name), ChatType.Guild);
                     GuildDialog.MembersChanged = true;
                     break;
                 case 4://member left
-                    ChatDialog.ReceiveChat(String.Format("{0} left the guild.", p.Name), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format("{0} 退出行会.", p.Name), ChatType.Guild);
                     GuildDialog.MembersChanged = true;
                     break;
                 case 5://rank change (name or different rank)
@@ -5131,7 +5131,7 @@ namespace Client.MirScenes
 
         private void MarriageRequest(S.MarriageRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} 要跟你结婚.", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -5141,7 +5141,7 @@ namespace Client.MirScenes
 
         private void DivorceRequest(S.DivorceRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} 申请离婚", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -5151,7 +5151,7 @@ namespace Client.MirScenes
 
         private void MentorRequest(S.MentorRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (等级 {1}) 请求你教他 {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MentorReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -5231,7 +5231,7 @@ namespace Client.MirScenes
 
         private void TradeRequest(S.TradeRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format("{0}申请跟你交易", p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.TradeReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.TradeReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -5269,7 +5269,7 @@ namespace Client.MirScenes
             {
                 TradeDialog.TradeReset();
 
-                MirMessageBox messageBox = new MirMessageBox("Deal cancelled.\r\nTo deal correctly you must face the other party.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox("交易取消.", MirMessageBoxButtons.OK);
                 messageBox.Show();
             }
         }
@@ -5343,7 +5343,7 @@ namespace Client.MirScenes
             switch (p.result)
             {
                 case -4:
-                    messageBox = new MirMessageBox("You have not supplied enough materials.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox("没有提供足够的材料.", MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -3:
@@ -5351,11 +5351,11 @@ namespace Client.MirScenes
                     MapControl.AwakeningAction = false;
                     break;
                 case -2:
-                    messageBox = new MirMessageBox("Awakening already at maximum level.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox("已达最大觉醒等级.", MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -1:
-                    messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox("不能觉醒此物品.", MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case 0:
@@ -5404,7 +5404,7 @@ namespace Client.MirScenes
 
         private void MailSendRequest(S.MailSendRequest p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to mail.");
+            MirInputBox inputBox = new MirInputBox("请输入收信人名称.");
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
@@ -5444,11 +5444,11 @@ namespace Client.MirScenes
             switch(p.Result)
             {
                 case -1:
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("No parcels to collect."), MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format("没有可以接收的包裹."), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     break;
                 case 0:
-                    messageBox = new MirMessageBox(string.Format("All parcels have been collected."), MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(string.Format("所有包裹已经被接收."), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     break;
                 case 1:
@@ -5521,7 +5521,7 @@ namespace Client.MirScenes
         {
             if (CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
-                MirMessageBox messageBox = new MirMessageBox("Would you like to be revived?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox("你想被复活么?", MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptReincarnation());
 
@@ -5533,7 +5533,7 @@ namespace Client.MirScenes
         {
             User.IntelligentCreatures.Add(p.Creature);
 
-            MirInputBox inputBox = new MirInputBox("Please give your creature a name.");
+            MirInputBox inputBox = new MirInputBox("请取个名字.");
             inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count-1].CustomName;
             inputBox.OKButton.Click += (o1, e1) =>
             {
@@ -5851,22 +5851,22 @@ namespace Client.MirScenes
                 switch (HoverItem.Info.Type)
                 {
                     case ItemType.Amulet:
-                        text += string.Format("\nUsage: {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format("\n耐久: {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Ore:
-                        text += string.Format("\nPurity: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format("\n纯度: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Meat:
-                        text += string.Format("\nQuality: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
+                        text += string.Format("\n质量: {0}", Math.Round(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Mount:
-                        text += string.Format("\nStamina: {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format("\n忠诚: {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Food:
-                        text += string.Format("\nMount Food\nRestores {0} Stamina.", HoverItem.CurrentDura);
+                        text += string.Format("\n营养 {0}.", HoverItem.CurrentDura);
                         break;
                     case ItemType.Fish:
-                        text += string.Format("\n______________________\n\nYour fish weighed in at:\n{0:####lb #oz}\n", HoverItem.CurrentDura);
+                        text += string.Format("\n______________________\n\n捕鱼:\n{0:####lb #oz}\n", HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
                         break;
@@ -6103,7 +6103,7 @@ namespace Client.MirScenes
             if (minValue > 0 &&  realItem.Type == ItemType.Gem)
             {
                 count++;
-                text = string.Format("Adds {0}Durability", minValue / 1000);
+                text = string.Format("增加 {0} 耐久", minValue / 1000);
                 MirLabel DuraLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6131,7 +6131,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.DC : GameLanguage.DC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}DC",minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 攻击", minValue + maxValue + addValue);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6161,7 +6161,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.MC : GameLanguage.MC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}MC", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 魔法", minValue + maxValue + addValue);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6191,7 +6191,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.SC : GameLanguage.SC2, minValue, maxValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}SC", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 道术", minValue + maxValue + addValue);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6221,19 +6221,19 @@ namespace Client.MirScenes
 
                 if(realItem.Type == ItemType.Pets && realItem.Shape == 28)
                 {
-                    text = string.Format("BagWeight + {0}% ", minValue + addValue);
+                    text = string.Format("背包重量 + {0}% ", minValue + addValue);
                 }
                 else if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
                 {
-                    text = string.Format("Exp + {0}% ", minValue + addValue);
+                    text = string.Format("经验 + {0}% ", minValue + addValue);
                 }
                 else if (HoverItem.Info.Type == ItemType.Charm && HoverItem.Info.Shape == 3)
                 {
-                    text = string.Format("Exp Rate + {0}% ", minValue);
+                    text = string.Format("经验率 + {0}% ", minValue);
                 }
                 else
                 {
-                    text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck: "Curse + {0}", Math.Abs(minValue + addValue));
+                    text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck: "诅咒 + {0}", Math.Abs(minValue + addValue));
                 }
 
                 MirLabel LUCKLabel = new MirLabel
@@ -6266,7 +6266,7 @@ namespace Client.MirScenes
                 if (HoverItem.Info.Type != ItemType.Gem)
                     text = string.Format(addValue > 0 ? GameLanguage.Accuracy : GameLanguage.Accuracy2, minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Accuracy", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 准确", minValue + maxValue + addValue);
                 MirLabel ACCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6325,11 +6325,11 @@ namespace Client.MirScenes
                 {
                     string negative = "+";
                     if (addValue < 0) negative = "";
-                    text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
+                    text = string.Format(addValue != 0 ? "攻击速度: " + plus + "{0} ({2}{1})" : "攻击速度: " + plus + "{0}", minValue + addValue, addValue, negative);
                     //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
                 }
                 else
-                    text = string.Format("Adds {0}A.Speed", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 攻击速度", minValue + maxValue + addValue);
                 MirLabel ASPEEDLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6357,9 +6357,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "减速: + {0} (+{1})" : "减速: + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Freezing", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0} 减速", minValue + maxValue + addValue);
                 MirLabel FREEZINGLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6387,9 +6387,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue);
+                    text = string.Format(addValue > 0 ? "中毒: + {0} (+{1})" : "中毒: + {0}", minValue + addValue, addValue);
                 else
-                    text = string.Format("Adds {0}Poison", minValue + maxValue + addValue);
+                    text = string.Format("增加 {0}中毒", minValue + maxValue + addValue);
                 MirLabel POISONLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -6424,12 +6424,12 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Chance + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Chance: + {0} (+{1})" : "Critical Chance: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "暴击几率: + {0} (+{1})" : "暴击几率: + {0}", minValue + addValue, addValue)
                 };
 
                 if(fishingItem)
                 {
-                    CRITICALRATELabel.Text = string.Format(addValue > 0 ? "Flexibility: + {0} (+{1})" : "Flexibility: + {0}", minValue + addValue, addValue);
+                    CRITICALRATELabel.Text = string.Format(addValue > 0 ? "灵活性: + {0} (+{1})" : "灵活性: + {0}", minValue + addValue, addValue);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALRATELabel.DisplayRectangle.Right + 4),
@@ -6455,7 +6455,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Damage + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Damage: + {0} (+{1})" : "Critical Damage: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(addValue > 0 ? "暴击伤害: + {0} (+{1})" : "暴击伤害: + {0}", minValue + addValue, addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALDAMAGELabel.DisplayRectangle.Right + 4),
@@ -8159,14 +8159,14 @@ namespace Client.MirScenes
                 switch (realItem.Shape)
                 {
                     case 1:
-                        text = "Hold CTRL and left click to repair weapons.";
+                        text = "按住ctrl并单击要修理的武器.";
                         break;
                     case 2:
-                        text = "Hold CTRL and left click to repair armour\nand accessory items.";
+                        text = "按住ctrl并单击要修理的衣服或其它饰品.";
                         break;
                     case 3:
                     case 4:
-                        text = "Hold CTRL and left click to combine with an item.";
+                        text = "按住ctrl并单击要合并的物品.";
                         break;
                 }
                 count++;
@@ -8252,32 +8252,32 @@ namespace Client.MirScenes
                 switch ((int)realItem.Effect)
                 {
                     case 0://exp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase experience gained by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加经验值获取 {0}% {1}.", HoverItem.Luck + realItem.Luck, strTime);
                         break;
                     case 1://drop low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase droprate by {0}% for {1}.", HoverItem.Luck + realItem.Luck, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加掉率 {0}% {1}.", HoverItem.Luck + realItem.Luck, strTime);
                         break;
                     case 2://hp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase MaxHP +{0} for {1}.", HoverItem.HP + realItem.HP, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加生命值上限 +{0} {1}.", HoverItem.HP + realItem.HP, strTime);
                         break;
                     case 3://mp low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase MaxMP +{0} for {1}.", HoverItem.MP + realItem.MP, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加魔法值上限 +{0} {1}.", HoverItem.MP + realItem.MP, strTime);
                         break;
                     case 4://ac low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AC {0}-{0} for {1}.", HoverItem.AC + realItem.MaxAC, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加防御 {0}-{0} {1}.", HoverItem.AC + realItem.MaxAC, strTime);
                         break;
                     case 5://amc low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AMC {0}-{0} for {1}.", HoverItem.MAC + realItem.MaxAC, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加魔法防御 {0}-{0} {1}.", HoverItem.MAC + realItem.MaxAC, strTime);
                         break;
                     case 6://speed low/med/high
-                        HoverItem.Info.ToolTip = string.Format("Increase AttackSpeed by {0} for {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
+                        HoverItem.Info.ToolTip = string.Format("增加攻击速度 {0} {1}.", HoverItem.AttackSpeed + realItem.AttackSpeed, strTime);
                         break;
                 }
             }
 
             if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
-                HoverItem.Info.ToolTip = string.Format("Adds {0} Credits to your Account.", HoverItem.Info.Price);
+                HoverItem.Info.ToolTip = string.Format("增加了 {0} 游戏点.", HoverItem.Info.Price);
             }
 
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
@@ -8453,7 +8453,7 @@ namespace Client.MirScenes
                     Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = MailLabel,
-                    Text = "Gold: " + mail.Gold
+                    Text = "金币: " + mail.Gold
                 };
 
                 MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, goldLabel.DisplayRectangle.Right + 4),
@@ -8467,7 +8467,7 @@ namespace Client.MirScenes
                 Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = MailLabel,
-                Text = mail.Opened ? "[Old]" : "[New]"
+                Text = mail.Opened ? "[旧]" : "[新]"
             };
 
             MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, openedLabel.DisplayRectangle.Right + 4),
@@ -8529,7 +8529,7 @@ namespace Client.MirScenes
                     return who.UserName;
             }
             Network.Enqueue(new C.RequestUserName { UserID = id });
-            UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
+            UserIdList.Add(new UserId() { Id = id, UserName = "未知" });
             return "";
         }
 
@@ -8849,7 +8849,7 @@ namespace Client.MirScenes
                 if (_autoRun == value) return;
                 _autoRun = value;
                 if (GameScene.Scene != null)
-                    GameScene.Scene.ChatDialog.ReceiveChat(value ? "[AutoRun: On]" : "[AutoRun: Off]", ChatType.Hint);
+                    GameScene.Scene.ChatDialog.ReceiveChat(value ? "[自动跑: On]" : "[自动跑: Off]", ChatType.Hint);
             }
 
         }
@@ -9719,7 +9719,7 @@ namespace Client.MirScenes
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
                 {
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("You cannot drop {0}", cell.Item.Name), MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format("你不能丢弃 {0}", cell.Item.Name), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     GameScene.SelectedCell = null;
                     return;
@@ -9831,7 +9831,7 @@ namespace Client.MirScenes
                             if (CMain.Time >= OutputDelay)
                             {
                                 OutputDelay = CMain.Time + 1000;
-                                GameScene.Scene.OutputMessage("Target is too far.");
+                                GameScene.Scene.OutputMessage("目标太远.");
                             }
                         }
                         //  return;
@@ -10130,7 +10130,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                    GameScene.Scene.OutputMessage(string.Format("{0} 在 {1} 秒内不能被使用.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                 }
 
                 User.ClearMagic();
@@ -10204,7 +10204,7 @@ namespace Client.MirScenes
                 case Spell.SummonSnakes:
                     if (!User.HasClassWeapon)
                     {
-                        GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
+                        GameScene.Scene.OutputMessage("必需装备弓来释放此技能.");
                         User.ClearMagic();
                         return;
                     }
@@ -10310,7 +10310,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage("Target is too far.");
+                    GameScene.Scene.OutputMessage("目标太远.");
                 }
                 User.ClearMagic();
                 return;
@@ -10656,95 +10656,95 @@ namespace Client.MirScenes
             {
                 //magic
                 case BuffType.TemporalFlux:
-                    text = string.Format("Temporal Flux\nIncreases cost of next Teleport by: {0} MP.\n", (int)(MapObject.User.MaxMP * 0.3F));
+                    text = string.Format("时间通量\n 通过: {0} MP 增加下一个传送的成本", (int)(MapObject.User.MaxMP * 0.3F));
                     break;
                 case BuffType.Hiding:
-                    text = "Hiding\nInvisible to many monsters.\n";
+                    text = "隐身\n对大多数怪物不可见.\n";
                     break;
                 case BuffType.Haste:
-                    text = string.Format("Haste\nIncreases Attack Speed by: {0}.\n", Values[0]);
+                    text = string.Format("急速\n增加攻击速度: {0}.\n", Values[0]);
                     break;
                 case BuffType.SwiftFeet:
-                    text = string.Format("Swift Feet\nIncreases Move Speed by: {0}.\n", Values[0]);
+                    text = string.Format("快速脚\n增加移动速度: {0}.\n", Values[0]);
                     break;
                 case BuffType.Fury:
-                    text = string.Format("Fury\nIncreases Attack Speed by: {0}.\n", Values[0]);
+                    text = string.Format("血龙剑法\n增加攻击速度: {0}.\n", Values[0]);
                     break;
                 case BuffType.LightBody:
-                    text = string.Format("Light Body\nIncreases Agility by: {0}.\n", Values[0]);
+                    text = string.Format("身轻如燕\n增加敏捷: {0}.\n", Values[0]);
                     break;
                 case BuffType.SoulShield:
-                    text = string.Format("Soul Shield\nIncreases MAC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("魔法防御盾\n增加魔法防御: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.BlessedArmour:
-                    text = string.Format("Blessed Armour\nIncreases AC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("神圣战甲术\n增加防御: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.ProtectionField:
-                    text = string.Format("Protection Field\nIncreases AC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("护身气幕\n增加防御: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Rage:
-                    text = string.Format("Rage\nIncreases DC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("狂怒\n增加攻击: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.ImmortalSkin:
-                    text = string.Format("ImmortalSkin\nIncreases AC by: 0-{0}.\nDecreases DC by: 0-{1}.\n", Values[0], Values[1]);
+                    text = string.Format("金刚不坏\n增加防御: 0-{0}.\n减少攻击: 0-{1}.\n", Values[0], Values[1]);
                     break;
                 case BuffType.CounterAttack:
-                    text = string.Format("Counter Attack\nIncreases AC/MAC by: {0}-{1}.\n", Values[0], Values[0]);
+                    text = string.Format("天务\n增加防御和魔法防御: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer || GameScene.User.Class == MirClass.HighWizard || GameScene.User.Class == MirClass.HighArcher)
+                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases MC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("最终强化\n增加魔法: 0-{0}.\n", Values[0]);
                     }
-                    else if (GameScene.User.Class == MirClass.Taoist || GameScene.User.Class == MirClass.HighTaoist)
+                    else if (GameScene.User.Class == MirClass.Taoist)
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases SC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("最终强化\n增加道术: 0-{0}.\n", Values[0]);
                     }
                     else
                     {
-                        text = string.Format("Ultimate Enhancer\nIncreases DC by: 0-{0}.\n", Values[0]);
+                        text = string.Format("最终强化\n增加攻击: 0-{0}.\n", Values[0]);
                     }
                     break;
                 case BuffType.EnergyShield:
-                    text = string.Format("Energy Shield\n{0}% chance to gain {1} HP when attacked\n", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
+                    text = string.Format("能量护盾\n{0}% 几率在受攻击时回复 {1} 生命值\n", Math.Round((1 / (decimal)Values[0]) * 100), Values[1]);
                     break;
                 case BuffType.Curse:
-                    text = string.Format("Cursed\nDecreases DC/MC/SC/ASpeed by: {0}%.\n", Values[0]);
+                    text = string.Format("诅咒\n减少 攻击/魔法/道术/攻击速度: {0}%.\n", Values[0]);
                     break;
                 case BuffType.MoonLight:
-                    text = "Moon Light\nInvisible to players and many\nmonsters when at a distance.\n";
+                    text = "月光\n一定距离时对大多数怪物不可见.\n";
                     break;
                 case BuffType.DarkBody:
-                    text = "Dark Body\nInvisible to many monsters and able to move.\n";
+                    text = "黑暗身体\n对大多数怪物不可见并可以移动.\n";
                     break;
                 case BuffType.VampireShot:
-                    text = string.Format("Vampire Shot\nGives you a vampiric ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("吸血鬼射击\n 给你一个吸血鬼能力\n,可以释放与\n某些技能。", Values[0]);
                     break;
                 case BuffType.PoisonShot:
-                    text = string.Format("Poison Shot\nGives you a poison ability\nthat can be released with\ncertain skills.\n", Values[0]);
+                    text = string.Format("毒药射击\n 给你一个毒药能力\n,可以释放与\n某些技能。", Values[0]);
                     break;
                 case BuffType.Concentration:
-                    text = "Concentrating\nIncreases chance on element extraction.\n";
+                    text = "集中\n 增加元素提取的机会。";
                     break;
                 case BuffType.MentalState:
                     switch (Values[0])
                     {
                         case 0:
-                            text = string.Format("Agressive (Full damage)\nCan't shoot over walls.\n", Values[0]);
+                            text = string.Format("激进 (全部伤害)\n不能穿过障碍.\n", Values[0]);
                             break;
                         case 1:
-                            text = string.Format("Trick shot (Minimal damage)\nCan shoot over walls.\n", Values[0]);
+                            text = string.Format("技巧射击 (轻量伤害)\n可以穿过障碍.\n", Values[0]);
                             break;
                         case 2:
-                            text = string.Format("Group Mode (Medium damage)\nDon't steal agro.\n", Values[0]);
+                            text = string.Format("小组模式 (中等伤害)\n相信你的队友.\n", Values[0]);
                             break;
                     }
                     break;
                 case BuffType.MagicBooster:
-                    text = string.Format("Magic Booster\nIncreases MC by: {0}-{0}.\nIncreases consumption by {1}%.\n", Values[0], Values[1]);
+                    text = string.Format("魔法狂暴 \n增加魔法: {0}-{0}.\n增加魔法消耗 {1}%.\n", Values[0], Values[1]);
                     break;
                 case BuffType.MagicShield:
-                    text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
+                    text = string.Format("魔法盾\n减少伤害 {0}%.\n", (Values[0] + 2) * 10);
                     break;
 
                 //special
@@ -10752,110 +10752,110 @@ namespace Client.MirScenes
                     GMOptions options = (GMOptions)Values[0];
                     text = string.Format(GameLanguage.GameMaster + "\n");
 
-                    if (options.HasFlag(GMOptions.GameMaster)) text += "-Invisible\n";
-                    if (options.HasFlag(GMOptions.Superman)) text += "-Superman\n";
-                    if (options.HasFlag(GMOptions.Observer)) text += "-Observer\n";
+                    if (options.HasFlag(GMOptions.GameMaster)) text += "-隐身\n";
+                    if (options.HasFlag(GMOptions.Superman)) text += "-超人\n";
+                    if (options.HasFlag(GMOptions.Observer)) text += "-检查员\n";
                     break;
                 case BuffType.General:
-                    text = string.Format("Mirian Advantage\nExpRate increased by {0}%\n", Values[0]);
+                    text = string.Format("米里安好处\n经验率增加 {0}%\n", Values[0]);
 
                     if (Values.Length > 1)
-                        text += string.Format("DropRate increased by {0}%\n", Values[1]);
+                        text += string.Format("增加掉率 {0}%\n", Values[1]);
                     if (Values.Length > 2)
-                        text += string.Format("GoldRate increased by {0}%\n", Values[2]);
+                        text += string.Format("增加金币掉率 {0}%\n", Values[2]);
                     break;
                 case BuffType.Exp:
-                    text = string.Format("Exp Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("经验\n增加 {0}%\n", Values[0]);
                     break;
                 case BuffType.Gold:
-                    text = string.Format("Gold Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("金币掉率\n增加 {0}%\n", Values[0]);
                     break;
                 case BuffType.Drop:
-                    text = string.Format("Drop Rate\nIncreased by {0}%\n", Values[0]);
+                    text = string.Format("掉率\n增加 {0}%\n", Values[0]);
                     break;
                 case BuffType.BagWeight:
-                    text = string.Format("Bag Weight\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("背包负重\n增加背包负重: {0}.\n", Values[0]);
                     break;
                 case BuffType.Transform:
-                    text = string.Format("Transform\nDisguises your appearance.\n");
+                    text = string.Format("变换\n 伪装你的外观。\n");
                     break;
                 case BuffType.RelationshipEXP:
-                    text = string.Format("Love is in the Air\nExpRate increased by: {0}%.\n", Values[0]);
+                    text = string.Format("恋爱天使\n经验增加 by: {0}%.\n", Values[0]);
                     break;
                 case BuffType.Mentee:
-                    text = string.Format("In Training\nLearn skill points twice as quick.\nExpRate increased by: {0}%.\n", Values[0]);
+                    text = string.Format("训练有素\n技能经验获取速度加倍\n经验增加: {0}%.\n", Values[0]);
                     break;
                 case BuffType.Mentor:
-                    text = string.Format("Mentorship Empowerment\nDamage to monsters increased by {0}%.\n", Values[0]);
+                    text = string.Format("导师的教导\n伤害增加 {0}%.\n", Values[0]);
                     break;
                 case BuffType.Guild:
-                    text = string.Format("Guild Charge\n");
+                    text = string.Format("行会主管\n");
                     text += GameScene.Scene.GuildDialog.ActiveStats;
                     break;
                 case BuffType.Rested:
-                    text = string.Format(GameLanguage.RestedBuff, "\n", Values[0], "\n");
+                    text = string.Format("精力充沛\n增加经验 {0}%\n", Values[0]);
                     break;
 
                 //stats
                 case BuffType.Impact:
-                    text = string.Format("Impact\nIncreases DC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("冲击力\n增加攻击: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Magic:
-                    text = string.Format("Magic\nIncreases MC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("魔法\n增加魔法: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Taoist:
-                    text = string.Format("Taoist\nIncreases SC by: 0-{0}.\n", Values[0]);
+                    text = string.Format("道士\n增加道术: 0-{0}.\n", Values[0]);
                     break;
                 case BuffType.Storm:
-                    text = string.Format("Storm\nIncreases A.Speed by: {0}.\n", Values[0]);
+                    text = string.Format("风暴\n增加攻击速度: {0}.\n", Values[0]);
                     break;
                 case BuffType.HealthAid:
-                    text = string.Format("Health Aid\nIncreases HP by: {0}.\n", Values[0]);
+                    text = string.Format("保健箱 \n增加生命值: {0}.\n", Values[0]);
                     break;
                 case BuffType.ManaAid:
-                    text = string.Format("Mana Aid\nIncreases MP by: {0}.\n", Values[0]);
+                    text = string.Format("魔法援助\n增加魔法值: {0}.\n", Values[0]);
                     break;
                 case BuffType.Defence:
-                    text = string.Format("Defence\nIncreases Max AC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("防御\n增加防御上限: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.MagicDefence:
-                    text = string.Format("Magic Defence\nIncreases Max MAC by: {0}-{0}.\n", Values[0]);
+                    text = string.Format("魔法防御\n增加魔法防御上限: {0}-{0}.\n", Values[0]);
                     break;
                 case BuffType.WonderDrug:
-                    text = string.Format("Wonder Drug\n");
+                    text = string.Format("灵丹妙药\n");
                     switch (Values[0])
                     {
                         case 0:
-                            text += string.Format("Increases Exp Rate by {0}%\n", Values[1]);
+                            text += string.Format("增加经验 {0}%\n", Values[1]);
                             break;
                         case 1:
-                            text += string.Format("Increases Drop Rate by {0}%\n", Values[1]);
+                            text += string.Format("增加掉率 {0}%\n", Values[1]);
                             break;
                         case 2:
-                            text += string.Format("Increases HP by: {0}.\n", Values[1]);
+                            text += string.Format("增加生命值: {0}.\n", Values[1]);
                             break;
                         case 3:
-                            text += string.Format("Increases MP by: {0}.\n", Values[1]);
+                            text += string.Format("增加魔法值: {0}.\n", Values[1]);
                             break;
                         case 4:
-                            text += string.Format("Increases Max AC by: {0}-{0}.\n", Values[1]);
+                            text += string.Format("增加防御上限: {0}-{0}.\n", Values[1]);
                             break;
                         case 5:
-                            text += string.Format("Increases Max MAC by: {0}-{0}.\n", Values[1]);
+                            text += string.Format("增加魔法防御上限: {0}-{0}.\n", Values[1]);
                             break;
                         case 6:
-                            text += string.Format("Increases A.Speed by: {0}.\n", Values[1]);
+                            text += string.Format("增加攻击速度: {0}.\n", Values[1]);
                             break;
                     }
                     break;
                 case BuffType.Knapsack:
-                    text = string.Format("Knapsack\nIncreases BagWeight by: {0}.\n", Values[0]);
+                    text = string.Format("力士\n增加背包负重: {0}.\n", Values[0]);
                     break;
             }
 
             text += Infinite ? GameLanguage.ExpireNever : string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(Math.Round((Expire - CMain.Time) / 1000D)));
 
-            if (Caster.Length > 0) text += string.Format("\nCaster: {0}", Caster);
+            if (Caster.Length > 0) text += string.Format("\n施法者: {0}", Caster);
 
             return text;
         }

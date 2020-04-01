@@ -58,9 +58,8 @@
 
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox textBox2;
-
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
     }
 }

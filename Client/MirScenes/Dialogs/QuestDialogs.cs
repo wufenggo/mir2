@@ -720,7 +720,7 @@ namespace Client.MirScenes.Dialogs
 
             Quests = GameScene.User.CurrentQuests;
 
-            _takenQuestsLabel.Text = string.Format("List: {0}/{1}", Quests.Count, Globals.MaxConcurrentQuests);
+            _takenQuestsLabel.Text = string.Format("列表: {0}/{1}", Quests.Count, Globals.MaxConcurrentQuests);
 
             var groupedQuests = Quests.GroupBy(d => d.QuestInfo.Group).ToList();
 
@@ -1049,7 +1049,7 @@ namespace Client.MirScenes.Dialogs
         public Font Font = new Font(Settings.FontName, 8F);
         public List<string> CurrentLines = new List<string>();
 
-        private const string TaskTitle = "Tasks", ProgressTitle = "Progress";
+        private const string TaskTitle = "任务", ProgressTitle = "进展";
 
         public QuestMessage(MirButton scrollUpButton, MirButton scrollDownButton, MirButton positionBar, int lineCount, bool displayProgress = false)
         {
@@ -1842,7 +1842,7 @@ namespace Client.MirScenes.Dialogs
 
             string name = Quest.QuestInfo.Name;
             string level = string.Format("Lv{0}", Quest.QuestInfo.MinLevelNeeded);
-            string state = quest.Completed ? "(Complete)" : "(In Progress)";
+            string state = quest.Completed ? "(完成)" : "(进行中)";
 
             bool lowLevelQuest = (MapObject.User.Level - quest.QuestInfo.MinLevelNeeded) > 10;
 

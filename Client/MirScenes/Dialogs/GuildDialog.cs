@@ -979,11 +979,11 @@ namespace Client.MirScenes.Dialogs
             {
                 string Error = "";
                 if (GameScene.Scene.GuildDialog.SparePoints < BuffInfo.PointsRequirement)
-                    Error = "Insufficient points available.";
+                    Error = "可用点数不足.";
                 if (GameScene.Scene.GuildDialog.Level < BuffInfo.LevelRequirement)
-                    Error = "Guild level too low.";
+                    Error = "公会级别太低.";
                 if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
+                    Error = "公会等级不允许激活buff.";
                 if (Error != "")
                 {
                     MirMessageBox messageBox = new MirMessageBox(Error);
@@ -998,11 +998,11 @@ namespace Client.MirScenes.Dialogs
             {
                 string Error = "";
                 if (Buff.Active)
-                    Error = "Buff is still active.";
+                    Error = "Buff已激活.";
                 if (GameScene.Scene.GuildDialog.Gold < BuffInfo.ActivationCost)
-                    Error = "Insufficient guild funds.";
+                    Error = "行会金币不足.";
                 if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(RankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
+                    Error = "公会等级不允许激活buff.";
                 if (Error != "")
                 {
                     MirMessageBox messageBox = new MirMessageBox(Error);
@@ -1096,13 +1096,13 @@ namespace Client.MirScenes.Dialogs
                     {
                         if (BuffInfo.LevelRequirement > GameScene.Scene.GuildDialog.Level)
                         {
-                            Buffs[i].Info.Text = "Insufficient Level";
+                            Buffs[i].Info.Text = "级别不足";
                             Buffs[i].Info.ForeColour = Color.Red;
                             Buffs[i].Icon.Index += 2;
                         }
                         else
                         {
-                            Buffs[i].Info.Text = "Available";
+                            Buffs[i].Info.Text = "可用";
                             Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
                             Buffs[i].Icon.Index += 2;
                         }
@@ -1113,20 +1113,20 @@ namespace Client.MirScenes.Dialogs
                         if (BuffInfo.TimeLimit > 0)
                         {
                             if (Buff.Active)
-                                Buffs[i].Info.Text = "Counting down.";
+                                Buffs[i].Info.Text = "冷却中.";
                             else
-                                Buffs[i].Info.Text = "Expired.";
+                                Buffs[i].Info.Text = "已过期.";
                         }
                         else
-                            Buffs[i].Info.Text = "Obtained.";
+                            Buffs[i].Info.Text = "已获得.";
                         Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
                         if (Buff.Active)
                         {
-                            Buffs[i].Obtained.Text = "Active";
+                            Buffs[i].Obtained.Text = "激活";
                             Buffs[i].Icon.Index += 1;
                         }
                         else
-                            Buffs[i].Obtained.Text = "Inactive";
+                            Buffs[i].Obtained.Text = "关闭";
                     }
                 }
             }
@@ -1191,92 +1191,92 @@ namespace Client.MirScenes.Dialogs
 
             if (BuffAc > 0)
             {
-                text += string.Format("Increases AC by: 0-{0}.", BuffAc);
+                text += string.Format("增加 AC by: 0-{0}.", BuffAc);
                 if (text != "") text += "\n";
             }
             if (BuffMac > 0)
             {
-                text += string.Format("Increases MAC by: 0-{0}.", BuffMac);
+                text += string.Format("增加 MAC by: 0-{0}.", BuffMac);
                 if (text != "") text += "\n";
             }
             if (BuffDc > 0)
             {
-                text += string.Format("Increases DC by: 0-{0}.", BuffDc);
+                text += string.Format("增加 DC by: 0-{0}.", BuffDc);
                 if (text != "") text += "\n";
             }
             if (BuffMc > 0)
             {
-                text += string.Format("Increases MC by: 0-{0}.", BuffMc);
+                text += string.Format("增加 MC by: 0-{0}.", BuffMc);
                 if (text != "") text += "\n";
             }
             if (BuffSc > 0)
             {
-                text += string.Format("Increases SC by: 0-{0}.", BuffSc);
+                text += string.Format("增加 SC by: 0-{0}.", BuffSc);
                 if (text != "") text += "\n";
             }
             if (BuffMaxHp > 0)
             {
-                text += string.Format("Increases Hp by: {0}.", BuffMaxHp);
+                text += string.Format("增加 Hp by: {0}.", BuffMaxHp);
                 if (text != "") text += "\n";
             }
             if (BuffMaxMp > 0)
             {
-                text += string.Format("Increases MP by: {0}.", BuffMaxMp);
+                text += string.Format("增加 MP by: {0}.", BuffMaxMp);
                 if (text != "") text += "\n";
             }
             if (BuffHpRegen > 0)
             {
-                text += string.Format("Increases Health regen by: {0}.", BuffHpRegen);
+                text += string.Format("增加 Health regen by: {0}.", BuffHpRegen);
                 if (text != "") text += "\n";
             }
             if (BuffMPRegen > 0)
             {
-                text += string.Format("Increases Mana regen by: {0}.", BuffMPRegen);
+                text += string.Format("增加 Mana regen by: {0}.", BuffMPRegen);
                 if (text != "") text += "\n";
             }
             if (BuffMineRate > 0)
             {
-                text += string.Format("Increases Mining success by: {0}%.", BuffMineRate * 5);
+                text += string.Format("增加 Mining success by: {0}%.", BuffMineRate * 5);
                 if (text != "") text += "\n";
             }
             if (BuffGemRate > 0)
             {
-                text += string.Format("Increases Gem success by: {0}%.", BuffGemRate * 5);
+                text += string.Format("增加 Gem success by: {0}%.", BuffGemRate * 5);
                 if (text != "") text += "\n";
             }
             if (BuffFishRate > 0)
             {
-                text += string.Format("Increases Fishing success by: {0}%.", BuffFishRate * 5);
+                text += string.Format("增加 Fishing success by: {0}%.", BuffFishRate * 5);
                 if (text != "") text += "\n";
             }
             if (BuffExpRate > 0)
             {
-                text += string.Format("Increases Experience by: {0}%.", BuffExpRate);
+                text += string.Format("增加 Experience by: {0}%.", BuffExpRate);
                 if (text != "") text += "\n";
             }
             if (BuffCraftRate > 0)
             {
-                text += string.Format("Increases Crafting success by: {0}%.", BuffCraftRate * 5);
+                text += string.Format("增加 Crafting success by: {0}%.", BuffCraftRate * 5);
                 if (text != "") text += "\n";
             }
             if (BuffSkillRate > 0)
             {
-                text += string.Format("Increases Skill training by: {0}.", BuffSkillRate);
+                text += string.Format("增加 Skill training by: {0}.", BuffSkillRate);
                 if (text != "") text += "\n";
             }
             if (BuffAttack > 0)
             {
-                text += string.Format("Increases Damage by: {0}.", BuffAttack);
+                text += string.Format("增加 Damage by: {0}.", BuffAttack);
                 if (text != "") text += "\n";
             }
             if (BuffDropRate > 0)
             {
-                text += string.Format("Droprate increased by: {0}%.", BuffDropRate);
+                text += string.Format("增加 increased by: {0}%.", BuffDropRate);
                 if (text != "") text += "\n";
             }
             if (BuffGoldRate > 0)
             {
-                text += string.Format("Goldrate increased by: 0-{0}.", BuffGoldRate);
+                text += string.Format("Goldrate 增加 by: 0-{0}.", BuffGoldRate);
                 if (text != "") text += "\n";
             }
 
@@ -1315,17 +1315,17 @@ namespace Client.MirScenes.Dialogs
             string ReqText = "";
             if (Buff.LevelRequirement > 0)
             {
-                ReqText += "Minimum Guild Level: " + Buff.LevelRequirement.ToString();
+                ReqText += "最低公会等级: " + Buff.LevelRequirement.ToString();
             }
             if (Buff.PointsRequirement > 0)
             {
                 if (ReqText != "") ReqText += "\n";
-                ReqText += "Points Required: " + Buff.PointsRequirement.ToString();
+                ReqText += "所需点数: " + Buff.PointsRequirement.ToString();
             }
             if (Buff.ActivationCost > 0)
             {
                 if (ReqText != "") ReqText += "\n";
-                ReqText += "Activation Cost: " + Buff.ActivationCost.ToString() + " gold.";
+                ReqText += "成本: " + Buff.ActivationCost.ToString() + " 金币.";
                 //if (ReqText != "") ReqText += "\n";
             }
 
@@ -1351,11 +1351,11 @@ namespace Client.MirScenes.Dialogs
 
                 if (activeBuff != null && activeBuff.Active)
                 {
-                    text = string.Format("Time Remaining: {0} minutes", activeBuff.ActiveTimeRemaining);
+                    text = string.Format("剩余时间：{0}分钟", activeBuff.ActiveTimeRemaining);
                 }
                 else
                 {
-                    text = string.Format("Buff Length: {0} minutes.", Buff.TimeLimit.ToString());
+                    text = string.Format("Buff时长：{0}分钟.", Buff.TimeLimit.ToString());
                 }
                 MirLabel TimeLabel = new MirLabel
                 {

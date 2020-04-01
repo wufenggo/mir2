@@ -232,32 +232,80 @@ namespace Client.MirScenes
         }
 
 
+        //public void StartGame()
+        //{
+        //    if (!Libraries.Loaded)
+        //    {
+        //        MirMessageBox message = new MirMessageBox(string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100), MirMessageBoxButtons.Cancel);
+
+        //        message.BeforeDraw += (o, e) => message.Label.Text = string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100);
+
+        //        message.AfterDraw += (o, e) =>
+        //        {
+        //            if (!Libraries.Loaded) return;
+        //            message.Dispose();
+        //            StartGame();
+        //        };
+
+        //        message.Show();
+
+        //        return;
+        //    }
+        //    StartGameButton.Enabled = false;
+
+        //    Network.Enqueue(new C.StartGame
+        //    {
+        //        CharacterIndex = Characters[_selected].Index
+        //    });
+        //}
+
         public void StartGame()
         {
             if (!Libraries.Loaded)
             {
-                MirMessageBox message = new MirMessageBox(string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100), MirMessageBoxButtons.Cancel);
 
-                message.BeforeDraw += (o, e) => message.Label.Text = string.Format("Please wait, The game is still loading... {0:##0}%", Libraries.Progress / (double)Libraries.Count * 100);
 
-                message.AfterDraw += (o, e) =>
+                Random random = new Random();
+                MirImageControl loadingOverlay = new MirImageControl
                 {
-                    if (!Libraries.Loaded) return;
-                    message.Dispose();
-                    StartGame();
+                    Library = Libraries.Prguse,
+                    Index =930+ random.Next(0,10),
+                    Visible = true,
+                    Parent = this
                 };
 
-                message.Show();
 
+
+
+                MirAnimatedControl loadProgress = new MirAnimatedControl
+                {
+                    Library = Libraries.Prguse,
+                    Index = 940,
+                    Visible = true,
+                    Parent = loadingOverlay,
+                    Location = new Point(400, 300),
+                    Animated = true,
+                    AnimationCount = 9,
+                    AnimationDelay = 100,
+                    Loop = true,
+                };
+                loadProgress.AfterDraw += (o, e) =>
+                {
+                    if (!Libraries.Loaded) return;
+                    loadProgress.Dispose();
+                    StartGame();
+                  };
                 return;
             }
-            StartGameButton.Enabled = false;
+         StartGameButton.Enabled = false;
 
             Network.Enqueue(new C.StartGame
             {
                 CharacterIndex = Characters[_selected].Index
             });
         }
+
+
 
         public override void Process()
         {
@@ -387,9 +435,9 @@ namespace Client.MirScenes
 
             long time = CMain.Time + p.Milliseconds;
 
-            MirMessageBox message = new MirMessageBox(string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling(p.Milliseconds/1000M)));
+            MirMessageBox message = new MirMessageBox(string.Format("在 {0} 秒内不能登录此角色.", Math.Ceiling(p.Milliseconds/1000M)));
 
-            message.BeforeDraw += (o, e) => message.Label.Text = string.Format("You cannot log onto this character for another {0} seconds.", Math.Ceiling((time - CMain.Time)/1000M));
+            message.BeforeDraw += (o, e) => message.Label.Text = string.Format("在 {0} 秒内不能登录此角色.", Math.Ceiling((time - CMain.Time) / 1000M));
                 
 
             message.AfterDraw += (o, e) =>
@@ -406,7 +454,7 @@ namespace Client.MirScenes
             StartGameButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
+            MirMessageBox.Show(string.Format("此账号被封.\n\n原因: {0}\n解封时间: {1}\n还有: {2:#,##0} 小时, {3} 分钟, {4} 秒", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         public void StartGame(S.StartGame p)
@@ -423,16 +471,16 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show("Starting the game is currently disabled.");
+                    MirMessageBox.Show("现在不能开始游戏.");
                     break;
                 case 1:
-                    MirMessageBox.Show("You are not logged in.");
+                    MirMessageBox.Show("你还没有登录.");
                     break;
                 case 2:
-                    MirMessageBox.Show("Your character could not be found.");
+                    MirMessageBox.Show("没有找到你的角色.");
                     break;
                 case 3:
-                    MirMessageBox.Show("No active map and/or start point found.");
+                    MirMessageBox.Show("没有已激活的地图或者没有出生点.");
                     break;
                 case 4:
                     if (Settings.Resolution == 1024)
