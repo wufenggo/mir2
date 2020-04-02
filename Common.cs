@@ -976,8 +976,8 @@ public enum RequiredClass : byte
     HighArcher = 15,
     High = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
     WarWizTao = Warrior | Wizard | Taoist,
-    None = Low | High,
-    Low = Warrior | Wizard | Taoist | Assassin | Archer,
+    通用 = 基础职业 | High,
+    基础职业 = Warrior | Wizard | Taoist | Assassin | Archer,
     
 
 
@@ -2623,7 +2623,7 @@ public class ItemInfo
     public ItemType Type;
     public ItemGrade Grade;
     public RequiredType RequiredType = RequiredType.Level;
-    public RequiredClass RequiredClass = RequiredClass.None;
+    public RequiredClass RequiredClass = RequiredClass.通用;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
 

@@ -2136,7 +2136,7 @@ namespace Client.MirScenes.Dialogs
         public void StorageRemoveGold()
         {
             if (LastGuildMsg > CMain.Time) return;
-            MirAmountBox amountBox = new MirAmountBox("Gold to retrieve:", 116, Gold);
+            MirAmountBox amountBox = new MirAmountBox("要取回的金币:", 116, Gold);
 
             amountBox.OKButton.Click += (o, a) =>
             {

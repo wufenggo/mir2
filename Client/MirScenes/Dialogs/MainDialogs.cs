@@ -5020,7 +5020,7 @@ namespace Client.MirScenes.Dialogs
             FKeys[Key - 1].PressedIndex = 1658;
         }
     }
-    public sealed class BigMapDialog : MirControl
+    public sealed class BigMapDialog : MirImageControl
     {
         public BigMapDialog()
         {
@@ -5195,7 +5195,7 @@ namespace Client.MirScenes.Dialogs
             {
                 foreach (var node in GameScene.Scene.MapControl.CurrentPath)
                 {
-                    Color colour = Color.White;
+                    Color colour = Color.Red;
 
                     float x = ((node.Location.X - startPointX) * scaleX) + Location.X;
                     float y = ((node.Location.Y - startPointY) * scaleY) + Location.Y;
