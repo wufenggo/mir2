@@ -2863,6 +2863,8 @@ namespace Client.MirScenes
             User.RefreshStats();
 
             OutputMessage(string.Format(GameLanguage.YouGained, p.Item.FriendlyName));
+
+           
         }
         private void GainedQuestItem(S.GainedQuestItem p)
         {

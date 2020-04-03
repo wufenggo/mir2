@@ -2092,7 +2092,7 @@ namespace Server.MirObjects
 
             if (Settings.TestServer)
             {
-                ReceiveChat("Game is currently in test mode.", ChatType.Hint);
+                ReceiveChat("游戏当前处于测试模式.", ChatType.Hint);
                 Chat("@GAMEMASTER");
             }
 
@@ -2102,7 +2102,7 @@ namespace Server.MirObjects
                 if (MyGuild == null)
                 {
                     Info.GuildIndex = -1;
-                    ReceiveChat("You have been removed from the guild.", ChatType.System);
+                    ReceiveChat("你已被从公会中移除.", ChatType.System);
                 }
                 else
                 {
@@ -2111,7 +2111,7 @@ namespace Server.MirObjects
                     {
                         MyGuild = null;
                         Info.GuildIndex = -1;
-                        ReceiveChat("You have been removed from the guild.", ChatType.System);
+                        ReceiveChat("你已被从公会中移除.", ChatType.System);
                     }
                 }
             }
@@ -17124,13 +17124,13 @@ namespace Server.MirObjects
                         }
 
                         if (dropItem == null)
-                            ReceiveChat("Your fish got away!", ChatType.System);
+                            ReceiveChat("你的鱼跑了!", ChatType.System);
                         else if (FreeSpace(Info.Inventory) < 1)
-                            ReceiveChat("You do not have enough space in your bag.", ChatType.System);
+                            ReceiveChat("你的包里没有足够的空间.", ChatType.System);
                         else
                         {
                             GainItem(dropItem);
-                            Report.ItemChanged("FishedItem", dropItem, dropItem.Count, 2);
+                            Report.ItemChanged("鱼尾藻", dropItem, dropItem.Count, 2);
                         }
 
                         if (Envir.Random.Next(100 - Settings.FishingMobSpawnChance) == 0)
@@ -17147,7 +17147,7 @@ namespace Server.MirObjects
                         cancel = true;
                     }
                     else
-                        ReceiveChat("Your fish got away!", ChatType.System);
+                        ReceiveChat("你的鱼跑了!", ChatType.System);
                 }
 
                 FishFound = false;
@@ -17644,13 +17644,13 @@ namespace Server.MirObjects
 
             if (player.Friends.Any(e => e.Info == Info && e.Blocked))
             {
-                ReceiveChat("Player is not accepting your mail.", ChatType.System);
+                ReceiveChat("玩家不接受你的邮件.", ChatType.System);
                 return;
             }
 
             if (Info.Friends.Any(e => e.Info == player && e.Blocked))
             {
-                ReceiveChat("Cannot mail player whilst they are on your blacklist.", ChatType.System);
+                ReceiveChat("当玩家在你的黑名单上时不能给他们发邮件.", ChatType.System);
                 return;
             }
 

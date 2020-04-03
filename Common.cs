@@ -6666,7 +6666,7 @@ public class GameLanguage
                          LowDC = "你的攻击不够.",
                          LowMC = "你的魔法不够.",
                          LowSC = "你的道术不够.",
-                         GameName = "Legend of Mir2",
+                         GameName = "韩版传奇2",
                          ExpandedStorageExpiresOn = "扩展存储到期",
 
                          NotFemale = "你不是女性.",

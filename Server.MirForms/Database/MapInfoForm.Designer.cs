@@ -53,6 +53,7 @@ namespace Server
             this.FileNameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.NoReincarnation = new System.Windows.Forms.CheckBox();
             this.NoTownTeleportCheckbox = new System.Windows.Forms.CheckBox();
             this.NoFightCheckbox = new System.Windows.Forms.CheckBox();
             this.NeedBridleCheckbox = new System.Windows.Forms.CheckBox();
@@ -158,7 +159,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -359,7 +359,7 @@ namespace Server
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.checkBox1);
+            this.tabPage6.Controls.Add(this.NoReincarnation);
             this.tabPage6.Controls.Add(this.NoTownTeleportCheckbox);
             this.tabPage6.Controls.Add(this.NoFightCheckbox);
             this.tabPage6.Controls.Add(this.NeedBridleCheckbox);
@@ -390,6 +390,15 @@ namespace Server
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "属性";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // NoReincarnation
+            // 
+            this.NoReincarnation.Location = new System.Drawing.Point(174, 170);
+            this.NoReincarnation.Name = "NoReincarnation";
+            this.NoReincarnation.Size = new System.Drawing.Size(123, 24);
+            this.NoReincarnation.TabIndex = 0;
+            this.NoReincarnation.Text = "No Reincarnation";
+            this.NoReincarnation.CheckedChanged += new System.EventHandler(this.NoReincarnation_CheckedChanged);
             // 
             // NoTownTeleportCheckbox
             // 
@@ -1492,17 +1501,6 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
-            //// checkBox1
-            //// 
-            //this.checkBox1.AutoSize = true;
-            //this.checkBox1.Location = new System.Drawing.Point(16, 192);
-            //this.checkBox1.Name = "checkBox1";
-            //this.checkBox1.Size = new System.Drawing.Size(72, 16);
-            //this.checkBox1.TabIndex = 44;
-            //this.checkBox1.Text = "禁止转生";
-            //this.checkBox1.UseVisualStyleBackColor = true;
-            //this.checkBox1.CheckedChanged += new System.EventHandler(this.NoReincarnation_CheckedChanged);
-            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1669,6 +1667,6 @@ namespace Server
         private ComboBox ConquestComboBox;
         private Label label25;
         private CheckBox NoTownTeleportCheckbox;
-        private CheckBox checkBox1;
+        private CheckBox NoReincarnation;
     }
 }

@@ -5027,6 +5027,10 @@ namespace Client.MirScenes.Dialogs
 
             MouseDown += OnMouseClick;
             //NotControl = true;
+
+            Index = 801;
+            Library = Libraries.Title;
+                
             Location = new Point(130, 100);
             //Border = true;
             //BorderColour = Color.Lime;
