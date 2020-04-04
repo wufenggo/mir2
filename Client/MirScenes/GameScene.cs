@@ -10749,9 +10749,9 @@ namespace Client.MirScenes
                 case BuffType.MagicShield:
                     text = string.Format("魔法盾\n减少伤害 {0}%.\n", (Values[0] + 2) * 10);
                     break;
-                case BuffType.HumUp:
-                    text = string.Format("飞升 \n增加生命值: {0}-{0}.\n增加魔法值 {1}%.\n", Values[0], Values[1]);
-                    break;
+                //case BuffType.HumUp:
+                //    text = string.Format("飞升 \n增加生命值: {0}-{0}.\n增加魔法值 {1}%.\n", Values[0], Values[1]);
+                //    break;
 
                 //special
                 case BuffType.GameMaster:

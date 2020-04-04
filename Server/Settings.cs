@@ -38,10 +38,10 @@ namespace Server
 
 
         //General
-        public static string VersionPath = Path.Combine(".", "Mir2.Exe");
+      public static string VersionPath = Path.Combine(".", "Mir2.Exe");
         public static bool CheckVersion = true;
         public static byte[] VersionHash;
-        public static string GMPassword = "C#Mir 4.0";
+       public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;
@@ -226,7 +226,7 @@ namespace Server
 
         //character settings
 
-        private static String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer", "HighWarrior", "HighWizard", "HighTaoist", "HighAssassin", "HighArcher"  };
+        private static String[] BaseStatClassNames = { "战士", "法师", "道士", "刺客", "弓箭手", "HighWarrior", "HighWizard", "HighTaoist", "HighAssassin", "HighArcher"  };
         public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer),
                                                                        new BaseStats(MirClass.HighWarrior), new BaseStats(MirClass.HighWizard), new BaseStats(MirClass.HighTaoist), new BaseStats(MirClass.HighAssassin), new BaseStats(MirClass.HighArcher) };//stupple
 

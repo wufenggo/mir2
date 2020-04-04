@@ -2554,6 +2554,13 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(8, 242),
             };
 
+            Grid[(int)EquipmentSlot.Poison] = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Poison,
+                GridType = MirGridType.Equipment,
+                Parent = CharacterPage,
+                Location = new Point(8, 98),
+            };
 
             Grid[(int)EquipmentSlot.Boots] = new MirItemCell
             {
@@ -3349,7 +3356,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class InspectDialog : MirImageControl
     {
-        public static UserItem[] Items = new UserItem[14];
+        public static UserItem[] Items = new UserItem[15];
         public static uint InspectID;
 
         public string Name;
@@ -3409,6 +3416,7 @@ namespace Client.MirScenes.Dialogs
             BeltCell,
             BootsCell,
             StoneCell,
+            PoisonCell,
             MountCell;
 
         public InspectDialog()
@@ -3759,7 +3767,13 @@ namespace Client.MirScenes.Dialogs
                 Parent = CharacterPage,
                 Location = new Point(8, 242),
             };
-
+            PoisonCell = new MirItemCell
+            {
+                ItemSlot = (int)EquipmentSlot.Poison,
+                GridType = MirGridType.Inspect,
+                Parent = CharacterPage,
+                Location = new Point(8, 98),
+            };
             BootsCell = new MirItemCell
             {
                 ItemSlot = (int)EquipmentSlot.Boots,
@@ -5020,7 +5034,7 @@ namespace Client.MirScenes.Dialogs
             FKeys[Key - 1].PressedIndex = 1658;
         }
     }
-    public sealed class BigMapDialog : MirImageControl
+    public sealed class BigMapDialog : MirControl
     {
         public BigMapDialog()
         {

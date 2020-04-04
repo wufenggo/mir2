@@ -13298,7 +13298,11 @@ namespace Server.MirObjects
                 case EquipmentSlot.Mount:
                     if (item.Info.Type != ItemType.Mount)
                         return false;
-                    break;                    
+                    break;
+                case EquipmentSlot.Poison:
+                    if (item.Info.Type != ItemType.Poison && item.Info.Type != ItemType.Amulet)
+                        return false;
+                    break;
 
                 default:
                     return false;
