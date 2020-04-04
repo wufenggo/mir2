@@ -819,6 +819,7 @@ public enum ItemType : byte
     Pets = 36,
     Transform = 37,
     Charm = 38,
+    Poison = 39
 }
 
 public enum MirGridType : byte
@@ -860,7 +861,9 @@ public enum EquipmentSlot : byte
     Belt = 10,
     Boots = 11,
     Stone = 12,
-    Mount = 13
+    Mount = 13,
+    Poison = 14
+        
 }
 
 public enum MountSlot : byte

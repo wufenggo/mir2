@@ -452,6 +452,14 @@ namespace Client.MirControls
                         Locked = true;
                     }
                     break;
+                case ItemType.Poison:
+                    if ((dialog.Grid[(int)EquipmentSlot.Poison].Item == null || dialog.Grid[(int)EquipmentSlot.Poison].Item.Info.Type == ItemType.Amulet) && dialog.Grid[(int)EquipmentSlot.Poison].CanWearItem(Item))
+                    {
+                        Network.Enqueue(new C.EquipItem { Grid = GridType, UniqueID = Item.UniqueID, To = (int)EquipmentSlot.Poison });
+                        dialog.Grid[(int)EquipmentSlot.Poison].Locked = true;
+                        Locked = true;
+                    }
+                    break;
                 case ItemType.Potion:
                 case ItemType.Scroll:
                 case ItemType.Book:
@@ -1641,6 +1649,9 @@ namespace Client.MirControls
                     return type == ItemType.Stone;
                 case EquipmentSlot.Mount:
                     return type == ItemType.Mount;
+                case EquipmentSlot.Poison:
+                    return i.Info.Type == ItemType.Poison || i.Info.Type == ItemType.Amulet;
+
                 default:
                     return false;
             }
