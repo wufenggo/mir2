@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.txtSearchMonster = new System.Windows.Forms.TextBox();
+            this.lblMonsterListCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.MonsterInfoPanel = new System.Windows.Forms.Panel();
@@ -100,6 +102,23 @@
             this.tabPage1.SuspendLayout();
             this.MonsterInfoPanel.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // txtSearchMonster
+            // 
+            this.txtSearchMonster.Location = new System.Drawing.Point(14, 35);
+            this.txtSearchMonster.Name = "txtSearchMonster";
+            this.txtSearchMonster.Size = new System.Drawing.Size(155, 21);
+            this.txtSearchMonster.TabIndex = 1;
+            this.txtSearchMonster.TextChanged += new System.EventHandler(this.txtSearchMonster_TextChanged);
+            this.txtSearchMonster.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearchMonster_KeyUp);
+            // 
+            // lblMonsterListCount
+            // 
+            this.lblMonsterListCount.AutoSize = true;
+            this.lblMonsterListCount.Location = new System.Drawing.Point(12, 329);
+            this.lblMonsterListCount.Name = "lblMonsterListCount";
+            this.lblMonsterListCount.Size = new System.Drawing.Size(0, 12);
+            this.lblMonsterListCount.TabIndex = 29;
             // 
             // tabControl1
             // 
@@ -729,10 +748,10 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MonsterInfoListBox.FormattingEnabled = true;
             this.MonsterInfoListBox.ItemHeight = 12;
-            this.MonsterInfoListBox.Location = new System.Drawing.Point(12, 38);
+            this.MonsterInfoListBox.Location = new System.Drawing.Point(12, 62);
             this.MonsterInfoListBox.Name = "MonsterInfoListBox";
             this.MonsterInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MonsterInfoListBox.Size = new System.Drawing.Size(156, 292);
+            this.MonsterInfoListBox.Size = new System.Drawing.Size(156, 268);
             this.MonsterInfoListBox.TabIndex = 15;
             this.MonsterInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MonsterInfoListBox_SelectedIndexChanged);
             // 
@@ -800,6 +819,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 354);
+            this.Controls.Add(this.lblMonsterListCount);
+            this.Controls.Add(this.txtSearchMonster);
             this.Controls.Add(this.DropBuilderButton);
             this.Controls.Add(this.ExportSelectedButton);
             this.Controls.Add(this.ImportButton);
@@ -813,11 +834,13 @@
             this.Name = "MonsterInfoForm";
             this.Text = "怪物信息表";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MonsterInfoForm_FormClosed);
+            this.Load += new System.EventHandler(this.MonsterInfoForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.MonsterInfoPanel.ResumeLayout(false);
             this.MonsterInfoPanel.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -891,5 +914,7 @@
         private System.Windows.Forms.Button DropBuilderButton;
         private System.Windows.Forms.Label fileNameLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtSearchMonster;
+        private System.Windows.Forms.Label lblMonsterListCount;
     }
 }

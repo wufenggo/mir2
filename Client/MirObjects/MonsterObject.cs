@@ -1005,6 +1005,11 @@ namespace Client.MirObjects
                 case Monster.ShooterAnt:
                     Frames = FrameSet.Monsters[208];
                     break;
+                case Monster.GeneralJinmYo:
+                    Frames = FrameSet.Monsters[209];
+                    break;
+
+
 
 
                 case Monster.BabyPig:
@@ -1494,6 +1499,7 @@ namespace Client.MirObjects
                             case Monster.HellBomb3:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.HellLord], 97, 8, 8 * Frame.Interval, this));
                                 break;
+
                         }
                         break;
                     case MirAction.Attack2:
@@ -1609,6 +1615,8 @@ namespace Client.MirObjects
                             case Monster.IcePillar:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 26, 6, 8 * 100, this) { Start = CMain.Time + 750 });
                                 break;
+
+
                         }
 
                         TargetID = (uint)action.Params[0];
@@ -1982,6 +1990,9 @@ namespace Client.MirObjects
                         {
                             switch (FrameIndex)
                             {
+
+
+
                                 case 3:
                                     {
                                         PlaySwingSound();
@@ -1990,8 +2001,13 @@ namespace Client.MirObjects
                                             case Monster.RightGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RightGuard], 272 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
                                                 break;
+
                                             case Monster.LeftGuard:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.LeftGuard], 272 + (int)Direction * 3, 3, 3 * Frame.Interval, this));
+                                                break;
+
+                                            case Monster.GeneralJinmYo:
+                                                Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GeneralJinmYo], 416 + (int)Direction * 5, 5, Frame.Count * Frame.Interval, this));
                                                 break;
                                             case Monster.Shinsu1:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Shinsu1], 224 + (int)Direction * 6, 6, 6 * Frame.Interval, this));
@@ -2049,6 +2065,7 @@ namespace Client.MirObjects
                                                         Effects.Add(new TrackableEffect(new Effect(Libraries.Pets[((ushort)BaseImage) - 10000], 208, 11, 1500, this), "SnowmanSnow"));
                                                 }
                                                 break;
+
                                         }
                                     }
                                     break;
@@ -2401,6 +2418,19 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
+                                            case Monster.RestlessJar:
+                                                missile = CreateProjectile(476, Libraries.Monsters[(ushort)Monster.RestlessJar], true, 4, 30, 0, true);
+
+                                                if (missile.Target != null)
+                                                {
+                                                    missile.Complete += (o, e) =>
+                                                    {
+                                                        if (missile.Target.CurrentAction == MirAction.Dead) return;
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RestlessJar], 471, 5, 500, missile.Target) { Blend = true });
+                                                        SoundManager.PlaySound(20000 + (ushort)Spell.FrostCrunch * 10 + 2);
+                                                    };
+                                                }
+                                                break;
                                             case Monster.HellBolt:
                                                 ob = MapControl.GetObject(TargetID);
                                                 if (ob != null)
@@ -2478,6 +2508,8 @@ namespace Client.MirObjects
                                             case Monster.FlameQueen:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameQueen], 729, 10, Frame.Count * Frame.Interval, this));
                                                 break;
+
+
                                         }
                                         break;
                                     }
@@ -3455,6 +3487,15 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+
+                case Monster.GeneralJinmYo:
+                    switch (CurrentAction)
+                    {
+                        case MirAction.Attack2:
+                            if (FrameIndex >= 3) Libraries.Monsters[(ushort)Monster.GeneralJinmYo].DrawBlend(456+ FrameIndex + (int)Direction * 7 , DrawLocation, Color.White, true);
+                            break;
+                    }
+                    break;
                 case Monster.TaoistGuard:
                     switch (CurrentAction)
                     {
@@ -3731,6 +3772,10 @@ namespace Client.MirObjects
                             break;
                     }
                     break;
+
+
+
+
             }
 
 

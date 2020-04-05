@@ -11,7 +11,7 @@ namespace Server.MirObjects
 {
     public class MonsterObject : MapObject
     {
-        public static MonsterObject GetMonster(MonsterInfo info)
+        public static MonsterObject GetMonster(MonsterInfo info) //ai数据
         {
             if (info == null) return null;
 
@@ -216,6 +216,10 @@ namespace Server.MirObjects
                     return new VenomSpider(info);
                 case 101:
                     return new FeederAnt(info);
+                case 102:
+                    return new GeneralJinmYo(info);
+                case 103:
+                    return new RestlessJar(info);
 
                 //unfinished
                 case 253:

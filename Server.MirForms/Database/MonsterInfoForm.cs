@@ -45,14 +45,16 @@ namespace Server
 
         private void UpdateInterface()
         {
-            if (MonsterInfoListBox.Items.Count != Envir.MonsterInfoList.Count)
+            if (txtSearchMonster.Text == "")
             {
-                MonsterInfoListBox.Items.Clear();
+                if (MonsterInfoListBox.Items.Count != Envir.MonsterInfoList.Count)
+                {
+                    MonsterInfoListBox.Items.Clear();
 
-                for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
-                    MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                    for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
+                        MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                }
             }
-
             _selectedMonsterInfos = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
 
             if (_selectedMonsterInfos.Count == 0)
@@ -182,17 +184,20 @@ namespace Server
         }
         private void RefreshMonsterList()
         {
-            MonsterInfoListBox.SelectedIndexChanged -= MonsterInfoListBox_SelectedIndexChanged;
+                if (txtSearchMonster.Text == "")
+                {
+                    MonsterInfoListBox.SelectedIndexChanged -= MonsterInfoListBox_SelectedIndexChanged;
 
-            List<bool> selected = new List<bool>();
+                    List<bool> selected = new List<bool>();
 
-            for (int i = 0; i < MonsterInfoListBox.Items.Count; i++) selected.Add(MonsterInfoListBox.GetSelected(i));
-            MonsterInfoListBox.Items.Clear();
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
-            for (int i = 0; i < selected.Count; i++) MonsterInfoListBox.SetSelected(i, selected[i]);
+                    for (int i = 0; i < MonsterInfoListBox.Items.Count; i++) selected.Add(MonsterInfoListBox.GetSelected(i));
+                    MonsterInfoListBox.Items.Clear();
+                    for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                    for (int i = 0; i < selected.Count; i++) MonsterInfoListBox.SetSelected(i, selected[i]);
 
-            MonsterInfoListBox.SelectedIndexChanged += MonsterInfoListBox_SelectedIndexChanged;
-        }
+                    MonsterInfoListBox.SelectedIndexChanged += MonsterInfoListBox_SelectedIndexChanged;
+                }
+            }
         private void MonsterInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateInterface();
@@ -704,6 +709,74 @@ namespace Server
             MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
 
             GenForm.ShowDialog();
+        }
+        private void txtSearchMonster_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (txtSearchMonster.Text != "")
+                {
+                    SearchForMonster();
+
+                }
+                else
+                {
+                    btnClearMonsterSearch_Click(sender, e);
+                }
+            }
+        }
+
+        private void SearchForMonster()
+        {
+            List<MonsterInfo> results = Envir.MonsterInfoList.FindAll(x => x.Name.ToLower().Contains(txtSearchMonster.Text.ToLower()));
+
+            if (results.Count > 0)
+            {
+                MonsterInfoListBox.Items.Clear();
+
+                foreach (MonsterInfo monster in results)
+                {
+                    MonsterInfoListBox.Items.Add(monster);
+                }
+
+                lblMonsterListCount.Text = "Showing " + MonsterInfoListBox.Items.Count.ToString() + " of " + Envir.MonsterInfoList.Count.ToString();
+            }
+        }
+
+        private void btnClearMonsterSearch_Click(object sender, EventArgs e)
+        {
+
+            ResetMonsterList();
+        }
+
+        private void ResetMonsterList()
+        {
+            txtSearchMonster.Text = "";
+
+            MonsterInfoListBox.Items.Clear();
+
+            for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
+                MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+
+            lblMonsterListCount.Text = "Showing " + MonsterInfoListBox.Items.Count.ToString() + " of " + Envir.MonsterInfoList.Count.ToString();
+
+        }
+
+        private void txtSearchMonster_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSearchMonster.Text != "")
+            {
+                SearchForMonster();
+            }
+            else
+            {
+                ResetMonsterList();
+            }
+        }
+
+        private void MonsterInfoForm_Load(object sender, EventArgs e)
+        {
+            txtSearchMonster.Focus();
         }
     }
 }
