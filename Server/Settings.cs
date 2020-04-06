@@ -41,7 +41,10 @@ namespace Server
       public static string VersionPath = Path.Combine(".", "Mir2.Exe");
         public static bool CheckVersion = true;
         public static byte[] VersionHash;
-       public static string GMPassword = "C#Mir 4.0";
+
+
+        public static bool GMPasswordCosl = false;
+        public static string GMPassword = "C#Mir 4.0";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;
@@ -58,7 +61,7 @@ namespace Server
         //Network
         public static string IPAddress = "127.0.0.1";
 
-        public static ushort Port = 7000,
+        public static ushort Port = 7162,
                              TimeOut = 10000,
                              MaxUser = 50,
                              RelogDelay = 50,
@@ -292,7 +295,12 @@ namespace Server
             VersionPath = Reader.ReadString("General", "VersionPath", VersionPath);
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
             RelogDelay = Reader.ReadUInt16("General", "RelogDelay", RelogDelay);
-            GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
+
+            if (GMPasswordCosl)
+            {
+                GMPassword = Reader.ReadString("General", "GMPassword", GMPassword);
+            };
+            
             Multithreaded = Reader.ReadBoolean("General", "Multithreaded", Multithreaded);
             ThreadLimit = Reader.ReadInt32("General", "ThreadLimit", ThreadLimit);
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);

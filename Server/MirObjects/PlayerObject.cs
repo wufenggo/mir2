@@ -980,7 +980,11 @@ namespace Server.MirObjects
                 }
             }
 
-            if (healthRegen > 0) ChangeHP(healthRegen);
+            if (healthRegen > 0)
+            {
+                ChangeHP(healthRegen);
+                BroadcastDamageIndicator(DamageType.Hit, healthRegen);
+            }
             if (HP == MaxHP)
             {
                 PotHealthAmount = 0;
@@ -7536,7 +7540,16 @@ namespace Server.MirObjects
             monster.MaxPetLevel = (byte)(1 + magic.Level * 2);
             monster.Direction = Direction;
             monster.ActionTime = Envir.Time + 1000;
-
+            switch (magic.Level)
+            {
+                case 0:
+                    info.Image = Monster.Shinsu;
+                    break;
+                case 1:
+                    info.Image = Monster.Pig;
+                    break;
+          
+            }
             //Pets.Add(monster);
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, Front);

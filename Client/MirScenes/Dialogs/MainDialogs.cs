@@ -3769,10 +3769,13 @@ namespace Client.MirScenes.Dialogs
             };
             PoisonCell = new MirItemCell
             {
+
                 ItemSlot = (int)EquipmentSlot.Poison,
                 GridType = MirGridType.Inspect,
                 Parent = CharacterPage,
                 Location = new Point(8, 98),
+
+
             };
             BootsCell = new MirItemCell
             {

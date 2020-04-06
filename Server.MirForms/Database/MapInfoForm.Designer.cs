@@ -186,7 +186,7 @@ namespace Server
             this.MapTabs.Location = new System.Drawing.Point(207, 57);
             this.MapTabs.Name = "MapTabs";
             this.MapTabs.SelectedIndex = 0;
-            this.MapTabs.Size = new System.Drawing.Size(540, 252);
+            this.MapTabs.Size = new System.Drawing.Size(701, 372);
             this.MapTabs.TabIndex = 8;
             // 
             // tabPage1
@@ -344,7 +344,7 @@ namespace Server
             // 
             this.FileNameTextBox.Location = new System.Drawing.Point(82, 41);
             this.FileNameTextBox.Name = "FileNameTextBox";
-            this.FileNameTextBox.Size = new System.Drawing.Size(47, 21);
+            this.FileNameTextBox.Size = new System.Drawing.Size(92, 21);
             this.FileNameTextBox.TabIndex = 1;
             this.FileNameTextBox.TextChanged += new System.EventHandler(this.FileNameTextBox_TextChanged);
             // 
@@ -386,7 +386,7 @@ namespace Server
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(532, 226);
+            this.tabPage6.Size = new System.Drawing.Size(693, 346);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "属性";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -647,7 +647,7 @@ namespace Server
             this.tabPage3.Controls.Add(this.SafeZoneInfoListBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(532, 226);
+            this.tabPage3.Size = new System.Drawing.Size(693, 346);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "安全区";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -687,7 +687,7 @@ namespace Server
             this.SafeZoneInfoPanel.Enabled = false;
             this.SafeZoneInfoPanel.Location = new System.Drawing.Point(189, 32);
             this.SafeZoneInfoPanel.Name = "SafeZoneInfoPanel";
-            this.SafeZoneInfoPanel.Size = new System.Drawing.Size(197, 128);
+            this.SafeZoneInfoPanel.Size = new System.Drawing.Size(358, 248);
             this.SafeZoneInfoPanel.TabIndex = 10;
             // 
             // label12
@@ -764,7 +764,7 @@ namespace Server
             this.SafeZoneInfoListBox.Location = new System.Drawing.Point(6, 32);
             this.SafeZoneInfoListBox.Name = "SafeZoneInfoListBox";
             this.SafeZoneInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.SafeZoneInfoListBox.Size = new System.Drawing.Size(177, 124);
+            this.SafeZoneInfoListBox.Size = new System.Drawing.Size(177, 244);
             this.SafeZoneInfoListBox.TabIndex = 9;
             this.SafeZoneInfoListBox.SelectedIndexChanged += new System.EventHandler(this.SafeZoneInfoListBox_SelectedIndexChanged);
             // 
@@ -779,7 +779,7 @@ namespace Server
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(532, 226);
+            this.tabPage2.Size = new System.Drawing.Size(693, 346);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "刷怪";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -832,7 +832,7 @@ namespace Server
             this.RespawnInfoListBox.Location = new System.Drawing.Point(6, 32);
             this.RespawnInfoListBox.Name = "RespawnInfoListBox";
             this.RespawnInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.RespawnInfoListBox.Size = new System.Drawing.Size(260, 136);
+            this.RespawnInfoListBox.Size = new System.Drawing.Size(326, 256);
             this.RespawnInfoListBox.TabIndex = 14;
             this.RespawnInfoListBox.SelectedIndexChanged += new System.EventHandler(this.RespawnInfoListBox_SelectedIndexChanged);
             // 
@@ -862,9 +862,9 @@ namespace Server
             this.RespawnInfoPanel.Controls.Add(this.label13);
             this.RespawnInfoPanel.Controls.Add(this.RXTextBox);
             this.RespawnInfoPanel.Enabled = false;
-            this.RespawnInfoPanel.Location = new System.Drawing.Point(272, 32);
+            this.RespawnInfoPanel.Location = new System.Drawing.Point(338, 32);
             this.RespawnInfoPanel.Name = "RespawnInfoPanel";
-            this.RespawnInfoPanel.Size = new System.Drawing.Size(254, 189);
+            this.RespawnInfoPanel.Size = new System.Drawing.Size(349, 309);
             this.RespawnInfoPanel.TabIndex = 11;
             // 
             // chkrespawnsave
@@ -1064,7 +1064,7 @@ namespace Server
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(532, 226);
+            this.tabPage4.Size = new System.Drawing.Size(693, 346);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "地图连接";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1109,9 +1109,9 @@ namespace Server
             this.MovementInfoPanel.Controls.Add(this.label20);
             this.MovementInfoPanel.Controls.Add(this.SourceXTextBox);
             this.MovementInfoPanel.Enabled = false;
-            this.MovementInfoPanel.Location = new System.Drawing.Point(239, 32);
+            this.MovementInfoPanel.Location = new System.Drawing.Point(345, 6);
             this.MovementInfoPanel.Name = "MovementInfoPanel";
-            this.MovementInfoPanel.Size = new System.Drawing.Size(256, 189);
+            this.MovementInfoPanel.Size = new System.Drawing.Size(348, 309);
             this.MovementInfoPanel.TabIndex = 14;
             // 
             // label25
@@ -1170,7 +1170,7 @@ namespace Server
             this.DestMapComboBox.FormattingEnabled = true;
             this.DestMapComboBox.Location = new System.Drawing.Point(64, 51);
             this.DestMapComboBox.Name = "DestMapComboBox";
-            this.DestMapComboBox.Size = new System.Drawing.Size(182, 20);
+            this.DestMapComboBox.Size = new System.Drawing.Size(228, 20);
             this.DestMapComboBox.TabIndex = 15;
             this.DestMapComboBox.SelectedIndexChanged += new System.EventHandler(this.DestMapComboBox_SelectedIndexChanged);
             // 
@@ -1256,7 +1256,7 @@ namespace Server
             this.MovementInfoListBox.Location = new System.Drawing.Point(6, 32);
             this.MovementInfoListBox.Name = "MovementInfoListBox";
             this.MovementInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MovementInfoListBox.Size = new System.Drawing.Size(227, 160);
+            this.MovementInfoListBox.Size = new System.Drawing.Size(333, 280);
             this.MovementInfoListBox.TabIndex = 13;
             this.MovementInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MovementInfoListBox_SelectedIndexChanged);
             // 
@@ -1269,7 +1269,7 @@ namespace Server
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(532, 226);
+            this.tabPage7.Size = new System.Drawing.Size(693, 346);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "矿区";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1310,7 +1310,7 @@ namespace Server
             this.MineZonepanel.Enabled = false;
             this.MineZonepanel.Location = new System.Drawing.Point(189, 32);
             this.MineZonepanel.Name = "MineZonepanel";
-            this.MineZonepanel.Size = new System.Drawing.Size(241, 128);
+            this.MineZonepanel.Size = new System.Drawing.Size(402, 248);
             this.MineZonepanel.TabIndex = 14;
             // 
             // label27
@@ -1395,7 +1395,7 @@ namespace Server
             this.MZListlistBox.Location = new System.Drawing.Point(6, 32);
             this.MZListlistBox.Name = "MZListlistBox";
             this.MZListlistBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MZListlistBox.Size = new System.Drawing.Size(177, 124);
+            this.MZListlistBox.Size = new System.Drawing.Size(177, 244);
             this.MZListlistBox.TabIndex = 13;
             this.MZListlistBox.SelectedIndexChanged += new System.EventHandler(this.MZListlistBox_SelectedIndexChanged);
             // 
@@ -1428,7 +1428,7 @@ namespace Server
             this.MapInfoListBox.Location = new System.Drawing.Point(12, 57);
             this.MapInfoListBox.Name = "MapInfoListBox";
             this.MapInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.MapInfoListBox.Size = new System.Drawing.Size(189, 244);
+            this.MapInfoListBox.Size = new System.Drawing.Size(189, 364);
             this.MapInfoListBox.TabIndex = 7;
             this.MapInfoListBox.SelectedIndexChanged += new System.EventHandler(this.MapInfoListBox_SelectedIndexChanged);
             // 
@@ -1505,7 +1505,7 @@ namespace Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(759, 310);
+            this.ClientSize = new System.Drawing.Size(920, 430);
             this.Controls.Add(this.VisualizerButton);
             this.Controls.Add(this.ExportMongenButton);
             this.Controls.Add(this.ImportMongenButton);

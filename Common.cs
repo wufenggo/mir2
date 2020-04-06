@@ -972,6 +972,7 @@ public enum RequiredClass : byte
     Taoist = 4,
     Assassin = 8,
     Archer = 16,
+    基础职业 = Warrior | Wizard | Taoist | Assassin | Archer,
     HighWarrior = 11,
     HighWizard = 12,
     HighTaoist = 13,
@@ -980,7 +981,7 @@ public enum RequiredClass : byte
     High = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
     WarWizTao = Warrior | Wizard | Taoist,
     通用 = 基础职业 | High,
-    基础职业 = Warrior | Wizard | Taoist | Assassin | Archer,
+    
     
 
 

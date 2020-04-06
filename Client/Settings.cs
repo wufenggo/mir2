@@ -8,8 +8,8 @@ namespace Client
     class Settings
     {
         public const long CleanDelay = 600000;
-        public static int ScreenWidth = 800, ScreenHeight = 600;
-        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
+        public static int ScreenWidth = 1024, ScreenHeight = 768;
+        private static InIReader Reader = new InIReader(@".\Mir2.dat");
 
         private static bool _useTestConfig;
         public static bool UseTestConfig
@@ -109,9 +109,9 @@ namespace Client
         public static bool DebugMode = false;
 
         //Network
-        public static bool UseConfig = true;
+        public static bool UseConfig = false;
         public static string IPAddress = "127.0.0.1";
-        public static int Port = 7000;
+        public static int Port = 7162;
         public const int TimeOut = 5000;
 
         //Sound
@@ -168,7 +168,7 @@ namespace Client
             DisplayDamage = true,
             TargetDead = false,
             ExpandedBuffWindow = true,
-            ItemFloorGlow = false;
+            ItemFloorGlow = true;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -199,7 +199,7 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://mirfiles.co.uk/mir2/cmir/patch/"; //ftp://212.67.209.184
+        public static string P_Host = @"http://175.24.54.202/cmir/patch/"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
