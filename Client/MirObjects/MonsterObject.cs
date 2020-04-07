@@ -1012,6 +1012,10 @@ namespace Client.MirObjects
 
 
 
+
+
+
+
                 case Monster.BabyPig:
                 case Monster.Chick:
                 case Monster.Kitten:

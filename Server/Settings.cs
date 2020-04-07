@@ -44,7 +44,7 @@ namespace Server
 
 
         public static bool GMPasswordCosl = false;
-        public static string GMPassword = "C#Mir 4.0";
+        public static string GMPassword = "1537561";
         public static bool Multithreaded = true;
         public static int ThreadLimit = 2;
         public static bool TestServer = false;

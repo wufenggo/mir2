@@ -982,8 +982,8 @@ namespace Server.MirObjects
 
             if (healthRegen > 0)
             {
+                BroadcastDamageIndicator(DamageType.Heal, healthRegen);
                 ChangeHP(healthRegen);
-                BroadcastDamageIndicator(DamageType.Hit, healthRegen);
             }
             if (HP == MaxHP)
             {

@@ -43,7 +43,9 @@ public enum DamageType : byte
 {
     Hit = 0,
     Miss = 1,
-    Critical = 2
+    Critical = 2,
+    Heal = 3,
+    Mana = 4
 }
 
 [Flags]
