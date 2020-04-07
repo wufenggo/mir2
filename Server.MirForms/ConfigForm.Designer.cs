@@ -43,6 +43,7 @@
             this.VPathTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.StartHTTPCheckBox = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.HTTPTrustedIPAddressTextBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -77,7 +78,6 @@
             this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
             this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
             this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.StartHTTPCheckBox = new System.Windows.Forms.CheckBox();
             this.configTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -146,7 +146,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(6, 39);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 12);
+            this.label11.Size = new System.Drawing.Size(41, 12);
             this.label11.TabIndex = 23;
             this.label11.Text = "数据库";
             // 
@@ -191,7 +191,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(15, 63);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(77, 12);
+            this.label7.Size = new System.Drawing.Size(71, 12);
             this.label7.TabIndex = 20;
             this.label7.Text = "重登录延迟:";
             // 
@@ -200,7 +200,7 @@
             this.VersionCheckBox.AutoSize = true;
             this.VersionCheckBox.Location = new System.Drawing.Point(89, 39);
             this.VersionCheckBox.Name = "VersionCheckBox";
-            this.VersionCheckBox.Size = new System.Drawing.Size(168, 16);
+            this.VersionCheckBox.Size = new System.Drawing.Size(72, 16);
             this.VersionCheckBox.TabIndex = 3;
             this.VersionCheckBox.Text = "检查版本";
             this.VersionCheckBox.UseVisualStyleBackColor = true;
@@ -228,7 +228,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 12);
+            this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "版本路径:";
             // 
@@ -256,14 +256,25 @@
             this.tabPage2.Text = "网络";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // StartHTTPCheckBox
+            // 
+            this.StartHTTPCheckBox.AutoSize = true;
+            this.StartHTTPCheckBox.Location = new System.Drawing.Point(24, 144);
+            this.StartHTTPCheckBox.Name = "StartHTTPCheckBox";
+            this.StartHTTPCheckBox.Size = new System.Drawing.Size(96, 16);
+            this.StartHTTPCheckBox.TabIndex = 23;
+            this.StartHTTPCheckBox.Text = "启动HTTP服务";
+            this.StartHTTPCheckBox.UseVisualStyleBackColor = true;
+            this.StartHTTPCheckBox.CheckedChanged += new System.EventHandler(this.StartHTTPCheckBox_CheckedChanged);
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(22, 228);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(275, 12);
+            this.label15.Size = new System.Drawing.Size(197, 12);
             this.label15.TabIndex = 22;
-            this.label15.Text = "(http service only allow trusted IP to visit)";
+            this.label15.Text = "（http服务只允许受信任的IP访问）";
             // 
             // HTTPTrustedIPAddressTextBox
             // 
@@ -279,9 +290,9 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(22, 201);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(149, 12);
+            this.label14.Size = new System.Drawing.Size(95, 12);
             this.label14.TabIndex = 20;
-            this.label14.Text = "HTTP Trusted IP Address:";
+            this.label14.Text = "HTTP可信IP地址:";
             // 
             // HTTPIPAddressTextBox
             // 
@@ -297,9 +308,9 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(22, 172);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(101, 12);
+            this.label13.Size = new System.Drawing.Size(77, 12);
             this.label13.TabIndex = 18;
-            this.label13.Text = "HTTP IP Address:";
+            this.label13.Text = "HTTP IP地址:";
             // 
             // MaxUserTextBox
             // 
@@ -315,7 +326,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(28, 90);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(59, 12);
+            this.label5.Size = new System.Drawing.Size(71, 12);
             this.label5.TabIndex = 16;
             this.label5.Text = "最大用户数:";
             // 
@@ -333,7 +344,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(33, 66);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.Size = new System.Drawing.Size(35, 12);
             this.label4.TabIndex = 14;
             this.label4.Text = "超时:";
             // 
@@ -369,7 +380,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(22, 18);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 12);
+            this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 10;
             this.label2.Text = "IP地址:";
             // 
@@ -400,7 +411,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(21, 215);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(137, 12);
+            this.label9.Size = new System.Drawing.Size(89, 12);
             this.label9.TabIndex = 16;
             this.label9.Text = "最大允许分辨率";
             // 
@@ -426,7 +437,7 @@
             this.AllowArcherCheckBox.AutoSize = true;
             this.AllowArcherCheckBox.Location = new System.Drawing.Point(24, 182);
             this.AllowArcherCheckBox.Name = "AllowArcherCheckBox";
-            this.AllowArcherCheckBox.Size = new System.Drawing.Size(228, 16);
+            this.AllowArcherCheckBox.Size = new System.Drawing.Size(108, 16);
             this.AllowArcherCheckBox.TabIndex = 13;
             this.AllowArcherCheckBox.Text = "允许创建弓箭手";
             this.AllowArcherCheckBox.UseVisualStyleBackColor = true;
@@ -436,7 +447,7 @@
             this.AllowAssassinCheckBox.AutoSize = true;
             this.AllowAssassinCheckBox.Location = new System.Drawing.Point(24, 160);
             this.AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
-            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(240, 16);
+            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(96, 16);
             this.AllowAssassinCheckBox.TabIndex = 12;
             this.AllowAssassinCheckBox.Text = "允许创建刺客";
             this.AllowAssassinCheckBox.UseVisualStyleBackColor = true;
@@ -446,7 +457,7 @@
             this.StartGameCheckBox.AutoSize = true;
             this.StartGameCheckBox.Location = new System.Drawing.Point(24, 125);
             this.StartGameCheckBox.Name = "StartGameCheckBox";
-            this.StartGameCheckBox.Size = new System.Drawing.Size(258, 16);
+            this.StartGameCheckBox.Size = new System.Drawing.Size(96, 16);
             this.StartGameCheckBox.TabIndex = 11;
             this.StartGameCheckBox.Text = "允许开始游戏";
             this.StartGameCheckBox.UseVisualStyleBackColor = true;
@@ -456,7 +467,7 @@
             this.DCharacterCheckBox.AutoSize = true;
             this.DCharacterCheckBox.Location = new System.Drawing.Point(24, 103);
             this.DCharacterCheckBox.Name = "DCharacterCheckBox";
-            this.DCharacterCheckBox.Size = new System.Drawing.Size(168, 16);
+            this.DCharacterCheckBox.Size = new System.Drawing.Size(96, 16);
             this.DCharacterCheckBox.TabIndex = 10;
             this.DCharacterCheckBox.Text = "允许删除角色";
             this.DCharacterCheckBox.UseVisualStyleBackColor = true;
@@ -466,7 +477,7 @@
             this.NCharacterCheckBox.AutoSize = true;
             this.NCharacterCheckBox.Location = new System.Drawing.Point(24, 82);
             this.NCharacterCheckBox.Name = "NCharacterCheckBox";
-            this.NCharacterCheckBox.Size = new System.Drawing.Size(192, 16);
+            this.NCharacterCheckBox.Size = new System.Drawing.Size(96, 16);
             this.NCharacterCheckBox.TabIndex = 9;
             this.NCharacterCheckBox.Text = "允许新建角色";
             this.NCharacterCheckBox.UseVisualStyleBackColor = true;
@@ -476,7 +487,7 @@
             this.LoginCheckBox.AutoSize = true;
             this.LoginCheckBox.Location = new System.Drawing.Point(24, 61);
             this.LoginCheckBox.Name = "LoginCheckBox";
-            this.LoginCheckBox.Size = new System.Drawing.Size(162, 16);
+            this.LoginCheckBox.Size = new System.Drawing.Size(72, 16);
             this.LoginCheckBox.TabIndex = 8;
             this.LoginCheckBox.Text = "允许登录";
             this.LoginCheckBox.UseVisualStyleBackColor = true;
@@ -486,7 +497,7 @@
             this.PasswordCheckBox.AutoSize = true;
             this.PasswordCheckBox.Location = new System.Drawing.Point(24, 40);
             this.PasswordCheckBox.Name = "PasswordCheckBox";
-            this.PasswordCheckBox.Size = new System.Drawing.Size(240, 16);
+            this.PasswordCheckBox.Size = new System.Drawing.Size(96, 16);
             this.PasswordCheckBox.TabIndex = 7;
             this.PasswordCheckBox.Text = "允许修改密码";
             this.PasswordCheckBox.UseVisualStyleBackColor = true;
@@ -496,7 +507,7 @@
             this.AccountCheckBox.AutoSize = true;
             this.AccountCheckBox.Location = new System.Drawing.Point(24, 18);
             this.AccountCheckBox.Name = "AccountCheckBox";
-            this.AccountCheckBox.Size = new System.Drawing.Size(180, 16);
+            this.AccountCheckBox.Size = new System.Drawing.Size(96, 16);
             this.AccountCheckBox.TabIndex = 6;
             this.AccountCheckBox.Text = "允许新建账号";
             this.AccountCheckBox.UseVisualStyleBackColor = true;
@@ -537,7 +548,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(18, 18);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(71, 12);
+            this.label6.Size = new System.Drawing.Size(59, 12);
             this.label6.TabIndex = 24;
             this.label6.Text = "保存延时:";
             // 
@@ -569,7 +580,7 @@
             this.SafeZoneHealingCheckBox.AutoSize = true;
             this.SafeZoneHealingCheckBox.Location = new System.Drawing.Point(24, 40);
             this.SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
-            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(210, 16);
+            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(84, 16);
             this.SafeZoneHealingCheckBox.TabIndex = 1;
             this.SafeZoneHealingCheckBox.Text = "安全区回血";
             this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
@@ -580,7 +591,7 @@
             this.SafeZoneBorderCheckBox.AutoSize = true;
             this.SafeZoneBorderCheckBox.Location = new System.Drawing.Point(24, 18);
             this.SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
-            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(150, 16);
+            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(84, 16);
             this.SafeZoneBorderCheckBox.TabIndex = 0;
             this.SafeZoneBorderCheckBox.Text = "安全区边框";
             this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
@@ -590,17 +601,6 @@
             // 
             this.VPathDialog.FileName = "Mir2.Exe";
             this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
-            // 
-            // StartHTTPCheckBox
-            // 
-            this.StartHTTPCheckBox.AutoSize = true;
-            this.StartHTTPCheckBox.Location = new System.Drawing.Point(24, 144);
-            this.StartHTTPCheckBox.Name = "StartHTTPCheckBox";
-            this.StartHTTPCheckBox.Size = new System.Drawing.Size(132, 16);
-            this.StartHTTPCheckBox.TabIndex = 23;
-            this.StartHTTPCheckBox.Text = "Start HTTP Service";
-            this.StartHTTPCheckBox.UseVisualStyleBackColor = true;
-            this.StartHTTPCheckBox.CheckedChanged += new System.EventHandler(this.StartHTTPCheckBox_CheckedChanged);
             // 
             // ConfigForm
             // 

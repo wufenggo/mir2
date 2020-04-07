@@ -213,6 +213,16 @@ namespace Client.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap hf {
+            get {
+                object obj = ResourceManager.GetObject("hf", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap Launch_Base {
             get {
                 object obj = ResourceManager.GetObject("Launch_Base", resourceCulture);
@@ -306,6 +316,46 @@ namespace Client.Properties {
         internal static System.Drawing.Bitmap textboxes {
             get {
                 object obj = ResourceManager.GetObject("textboxes", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 开始游戏 {
+            get {
+                object obj = ResourceManager.GetObject("开始游戏", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 按下开始 {
+            get {
+                object obj = ResourceManager.GetObject("按下开始", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 游戏设置 {
+            get {
+                object obj = ResourceManager.GetObject("游戏设置", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 默认开始 {
+            get {
+                object obj = ResourceManager.GetObject("默认开始", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

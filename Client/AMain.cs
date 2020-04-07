@@ -373,12 +373,12 @@ namespace Launcher
 
         private void Launch_pb_MouseEnter(object sender, EventArgs e)
         {
-            Launch_pb.Image = Client.Properties.Resources.Launch_Hover;
+            Launch_pb.Image = Client.Properties.Resources.默认开始;
         }
 
         private void Launch_pb_MouseLeave(object sender, EventArgs e)
         {
-            Launch_pb.Image = Client.Properties.Resources.Launch_Base1;
+            Launch_pb.Image = Client.Properties.Resources.开始游戏;
         }
 
         private void Close_pb_MouseEnter(object sender, EventArgs e)
@@ -393,12 +393,12 @@ namespace Launcher
 
         private void Launch_pb_MouseDown(object sender, MouseEventArgs e)
         {
-            Launch_pb.Image = Client.Properties.Resources.Launch_Pressed;
+            Launch_pb.Image = Client.Properties.Resources.按下开始;
         }
 
         private void Launch_pb_MouseUp(object sender, MouseEventArgs e)
         {
-            Launch_pb.Image = Client.Properties.Resources.Launch_Base1;
+            Launch_pb.Image = Client.Properties.Resources.开始游戏;
         }
 
         private void Close_pb_MouseDown(object sender, MouseEventArgs e)
@@ -420,22 +420,22 @@ namespace Launcher
 
         private void Config_pb_MouseDown(object sender, MouseEventArgs e)
         {
-            Config_pb.Image = Client.Properties.Resources.Config_Pressed;
+            Config_pb.Image = Client.Properties.Resources.游戏设置;
         }
 
         private void Config_pb_MouseEnter(object sender, EventArgs e)
         {
-            Config_pb.Image = Client.Properties.Resources.Config_Hover;
+            Config_pb.Image = Client.Properties.Resources.游戏设置;
         }
 
         private void Config_pb_MouseLeave(object sender, EventArgs e)
         {
-            Config_pb.Image = Client.Properties.Resources.Config_Base;
+            Config_pb.Image = Client.Properties.Resources.游戏设置;
         }
 
         private void Config_pb_MouseUp(object sender, MouseEventArgs e)
         {
-            Config_pb.Image = Client.Properties.Resources.Config_Base;
+            Config_pb.Image = Client.Properties.Resources.游戏设置;
         }
 
         private void Config_pb_Click(object sender, EventArgs e)
@@ -450,6 +450,11 @@ namespace Launcher
             ProgTotalEnd_pb.Location = new Point((TotalProg_pb.Location.X + TotalProg_pb.Width), 508);
             if (TotalProg_pb.Width == 0) ProgTotalEnd_pb.Visible = false;
             else ProgTotalEnd_pb.Visible = true;
+        }
+
+        private void TotalPercent_label_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void Main_browser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)

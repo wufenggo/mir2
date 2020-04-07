@@ -435,6 +435,9 @@ public enum Monster : ushort
     IcePillar = 231,//done
     FrostYeti = 232,//done
     ManectricSlave = 233,//done
+
+
+
     TrollHammer = 234,//done
     TrollBomber = 235,//done
     TrollStoner = 236,//done

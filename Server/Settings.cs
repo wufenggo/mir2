@@ -507,7 +507,7 @@ namespace Server
             LoadGoods();
             LoadGem();
             //Languahe
-            GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
+            GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "mir.dex"));
         }
         public static void Save()
         {

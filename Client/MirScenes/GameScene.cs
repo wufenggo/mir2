@@ -3082,7 +3082,7 @@ namespace Client.MirScenes
                             obj.Damages.Add(new Damage("暴击", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
                         case DamageType.Heal:
-                            obj.Damages.Add(new Damage("恢复生命" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Green : Color.White, 50));
+                            obj.Damages.Add(new Damage("＋" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Green : Color.White, 50));
                             break;
                     }
 

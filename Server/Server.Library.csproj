@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.1</TargetFrameworks>
-    <OutputPath>..\Build\Server\</OutputPath>
+    <OutputPath>E:\hfxin\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

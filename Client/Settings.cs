@@ -7,8 +7,10 @@ namespace Client
 {
     class Settings
     {
+
+
         public const long CleanDelay = 600000;
-        public static int ScreenWidth = 1024, ScreenHeight = 768;
+        public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2.dat");
 
         private static bool _useTestConfig;
@@ -199,13 +201,13 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://175.24.54.202/cmir/patch/"; //ftp://212.67.209.184
+        public static string P_Host = @"http://175.24.54.202/cmir/patch/12222"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = "https://launcher.mironline.co.uk/web/";
+        public static string P_BrowserAddress = "http://175.24.54.202/timg.jpg";
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 

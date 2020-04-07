@@ -193,4 +193,19 @@
   <data name="CheckF_Hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CheckF_Hover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="开始游戏" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\开始游戏.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="按下开始" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\按下开始.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="游戏设置" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\游戏设置.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="默认开始" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\默认开始.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\QQ图片20200407113347.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

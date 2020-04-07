@@ -58,13 +58,13 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Client\</OutputPath>
+    <OutputPath>..\..\..\韩服传2\Client\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
     <DebugSymbols>false</DebugSymbols>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <LangVersion>6</LangVersion>
@@ -91,11 +91,12 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup />
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -116,6 +117,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -302,6 +304,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MIR2.ICO" />
+    <None Include="Resources\游戏设置.jpg" />
+    <None Include="Resources\关闭游戏.png" />
+    <None Include="Resources\默认开始.png" />
+    <None Include="Resources\开始游戏.jpg" />
+    <None Include="Resources\最小化.png" />
+    <None Include="Resources\注册账号.jpg" />
+    <None Include="Resources\找回密码.jpg" />
+    <None Include="Resources\修改密码.jpg" />
+    <None Include="Resources\进入官网.jpg" />
+    <None Include="Resources\滑动关.png" />
+    <None Include="Resources\滑动.png" />
+    <None Include="Resources\划过开始.png" />
+    <None Include="Resources\按下开始.png" />
+    <None Include="Resources\按下关.png" />
+    <None Include="Resources\按下.png" />
+    <None Include="Resources\按钮禁用.png" />
+    <None Include="Resources\QQ图片20200407113347.png" />
+    <None Include="Resources\Image1.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
