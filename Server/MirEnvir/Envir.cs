@@ -2400,15 +2400,15 @@ namespace Server.MirEnvir
                 return;
             }
 
-            if (p.Class != MirClass.Warrior && p.Class != MirClass.Wizard && p.Class != MirClass.Taoist &&
-                p.Class != MirClass.Assassin && p.Class != MirClass.Archer)
+            if (p.Class != MirClass.战士 && p.Class != MirClass.法师 && p.Class != MirClass.道士 &&
+                p.Class != MirClass.刺客 && p.Class != MirClass.弓箭手)
             {
                 c.Enqueue(new ServerPackets.NewCharacter {Result = 3});
                 return;
             }
 
-            if(p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin ||
-                p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
+            if(p.Class == MirClass.刺客 && !Settings.AllowCreateAssassin ||
+                p.Class == MirClass.弓箭手 && !Settings.AllowCreateArcher)
             {
                 c.Enqueue(new ServerPackets.NewCharacter { Result = 3 });
                 return;

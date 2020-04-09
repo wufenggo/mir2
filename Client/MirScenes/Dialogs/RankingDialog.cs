@@ -39,7 +39,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(365, 3),
+                Location = new Point(300, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
@@ -215,7 +215,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RequestRanks(byte RankType)
         {
-            if (RankType > 6) return;
+            if (RankType > 10) return;
             if ((LastRequest[RankType] != 0) && ((LastRequest[RankType] + 300 * 1000) > CMain.Time))
             {
                 SelectRank(RankType);

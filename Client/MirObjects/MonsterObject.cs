@@ -1663,7 +1663,7 @@ namespace Client.MirObjects
                             if (ob.Race != ObjectType.Player) break;
                             PlayerObject player = ((PlayerObject)ob);
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break; //Archer?
+                            if (player.Class != MirClass.刺客 || StruckWeapon == -1) break; //Archer?
                             StruckWeapon = 1;
                             break;
                         }

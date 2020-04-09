@@ -1718,11 +1718,11 @@ namespace Client.MirScenes
         //    switch (buff.Type)
         //    {
         //        case BuffType.UltimateEnhancer:
-        //            if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer || GameScene.User.Class == MirClass.HighWizard || GameScene.User.Class == MirClass.HighArcher)
+        //            if (GameScene.User.Class == MirClass.法师 || GameScene.User.Class == MirClass.弓箭手 || GameScene.User.Class == MirClass.虹玄法师 || GameScene.User.Class == MirClass.暗鬼弓手)
         //            {
         //                text = string.Format("MC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
         //            }
-        //            else if (GameScene.User.Class == MirClass.Taoist || GameScene.User.Class == MirClass.HighTaoist)
+        //            else if (GameScene.User.Class == MirClass.道士 || GameScene.User.Class == MirClass.翊仙道士)
         //            {
         //                text = string.Format("SC increased by 0-{0} for {1} seconds.", buff.Values[0], (buff.Expire - CMain.Time) / 1000);
         //            }
@@ -1942,7 +1942,7 @@ namespace Client.MirScenes
         {
             User = new UserObject(p.ObjectID, p.Class);//stupple
             User.Load(p);
-            MainDialog.PModeLabel.Visible = User.Class == MirClass.Wizard || User.Class == MirClass.Taoist;
+            MainDialog.PModeLabel.Visible = User.Class == MirClass.法师 || User.Class == MirClass.道士;
             Gold = p.Gold;
             Credit = p.Credit;
 
@@ -7243,7 +7243,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("{0} Awakening({1})", HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeLevel())
+                    Text = string.Format("[{0}] 觉醒[{1}]",HoverItem.Awake.type.ToString(),HoverItem.Awake.getAwakeLevel())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKENAMELabel.DisplayRectangle.Right + 4),
@@ -7285,7 +7285,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = string.Format(realItem.Type != ItemType.Armour ? "Level {0} : {1} + {2}~{3}" : "Level {0} : MAX {1} + {2}~{3}", i + 1, HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeLevelValue(i), HoverItem.Awake.getAwakeLevelValue(i))
+                        Text = string.Format(realItem.Type != ItemType.Armour ? "等级 {0} : {1} + {2}~{3}" : "等级 {0} : MAX {1} + {2}~{3}", i + 1, HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeLevelValue(i), HoverItem.Awake.getAwakeLevelValue(i))
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKE_LEVEL_VALUELabel.DisplayRectangle.Right + 4),
@@ -7429,24 +7429,24 @@ namespace Client.MirScenes
 
                 switch (MapObject.User.Class)
                 {
-                    case MirClass.Warrior:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Warrior))
+                    case MirClass.战士:
+                        if (!realItem.RequiredClass.HasFlag(RequiredClass.战士))
                             colour = Color.Red;
                         break;
-                    case MirClass.Wizard:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Wizard))
+                    case MirClass.法师:
+                        if (!realItem.RequiredClass.HasFlag(RequiredClass.法师))
                             colour = Color.Red;
                         break;
-                    case MirClass.Taoist:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Taoist))
+                    case MirClass.道士:
+                        if (!realItem.RequiredClass.HasFlag(RequiredClass.道士))
                             colour = Color.Red;
                         break;
-                    case MirClass.Assassin:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Assassin))
+                    case MirClass.刺客:
+                        if (!realItem.RequiredClass.HasFlag(RequiredClass.刺客))
                             colour = Color.Red;
                         break;
-                    case MirClass.Archer:
-                        if (!realItem.RequiredClass.HasFlag(RequiredClass.Archer))
+                    case MirClass.弓箭手:
+                        if (!realItem.RequiredClass.HasFlag(RequiredClass.弓箭手))
                             colour = Color.Red;
                         break;
                 }
@@ -9819,7 +9819,7 @@ namespace Client.MirScenes
 
                     GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
-                    if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
+                    if ((User.Class == MirClass.弓箭手 || User.Class == MirClass.暗鬼弓手) && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
                     {
                         if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                         {
@@ -9918,7 +9918,7 @@ namespace Client.MirScenes
                                 MapObject target = null;
                                 if (MapObject.MouseObject is MonsterObject || MapObject.MouseObject is PlayerObject) target = MapObject.MouseObject;
 
-                                if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount)
+                                if ((User.Class == MirClass.弓箭手 || User.Class == MirClass.暗鬼弓手) && User.HasClassWeapon && !User.RidingMount)
                                 {
                                     if (target != null)
                                     {
@@ -9947,7 +9947,7 @@ namespace Client.MirScenes
                             return;
                         }
 
-                        if (MapObject.MouseObject is MonsterObject &&( User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
+                        if (MapObject.MouseObject is MonsterObject &&( User.Class == MirClass.弓箭手 || User.Class == MirClass.暗鬼弓手) && MapObject.TargetObject != null && !MapObject.TargetObject.Dead && User.HasClassWeapon && !User.RidingMount) //ArcherTest - range attack
                         {
                             if (Functions.InRange(MapObject.MouseObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                             {
@@ -10115,7 +10115,7 @@ namespace Client.MirScenes
             if (((!MapObject.TargetObject.Name.EndsWith(")") && !(MapObject.TargetObject is PlayerObject)) || !CMain.Shift) &&
                 (MapObject.TargetObject.Name.EndsWith(")") || !(MapObject.TargetObject is MonsterObject))) return;
             if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, 1)) return;
-            if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
+            if ((User.Class == MirClass.弓箭手 || User.Class == MirClass.暗鬼弓手) && User.HasClassWeapon && (MapObject.TargetObject is MonsterObject || MapObject.TargetObject is PlayerObject)) return; //ArcherTest - stop walking
             direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation);
 
             if (!CanWalk(direction)) return;
@@ -10698,11 +10698,11 @@ namespace Client.MirScenes
                     text = string.Format("天务\n增加防御和魔法防御: {0}-{1}.\n", Values[0], Values[0]);
                     break;
                 case BuffType.UltimateEnhancer:
-                    if (GameScene.User.Class == MirClass.Wizard || GameScene.User.Class == MirClass.Archer)
+                    if (GameScene.User.Class == MirClass.法师 || GameScene.User.Class == MirClass.弓箭手)
                     {
                         text = string.Format("最终强化\n增加魔法: 0-{0}.\n", Values[0]);
                     }
-                    else if (GameScene.User.Class == MirClass.Taoist)
+                    else if (GameScene.User.Class == MirClass.道士)
                     {
                         text = string.Format("最终强化\n增加道术: 0-{0}.\n", Values[0]);
                     }

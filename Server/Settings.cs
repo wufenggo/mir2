@@ -230,8 +230,8 @@ namespace Server
         //character settings
 
         private static String[] BaseStatClassNames = { "战士", "法师", "道士", "刺客", "弓箭手", "HighWarrior", "HighWizard", "HighTaoist", "HighAssassin", "HighArcher"  };
-        public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer),
-                                                                       new BaseStats(MirClass.HighWarrior), new BaseStats(MirClass.HighWizard), new BaseStats(MirClass.HighTaoist), new BaseStats(MirClass.HighAssassin), new BaseStats(MirClass.HighArcher) };//stupple
+        public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.战士), new BaseStats(MirClass.法师), new BaseStats(MirClass.道士), new BaseStats(MirClass.刺客), new BaseStats(MirClass.弓箭手),
+                                                                       new BaseStats(MirClass.碧血战士), new BaseStats(MirClass.虹玄法师), new BaseStats(MirClass.翊仙道士), new BaseStats(MirClass.飞燕刺客), new BaseStats(MirClass.暗鬼弓手) };//stupple
 
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();

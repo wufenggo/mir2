@@ -1926,35 +1926,35 @@ namespace Server.MirObjects
         {
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Warrior)) return false;
+                case MirClass.战士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.战士)) return false;
                     break;
-                case MirClass.Wizard:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Wizard)) return false;
+                case MirClass.法师:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.法师)) return false;
                     break;
-                case MirClass.Taoist:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Taoist)) return false;
+                case MirClass.道士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.道士)) return false;
                     break;
-                case MirClass.Assassin:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Assassin)) return false;
+                case MirClass.刺客:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.刺客)) return false;
                     break;
-                case MirClass.Archer:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.Archer)) return false;
+                case MirClass.弓箭手:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.弓箭手)) return false;
                     break;
-                case MirClass.HighWarrior:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.HighWarrior)) return false;
+                case MirClass.碧血战士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.碧血战士)) return false;
                     break;
-                case MirClass.HighWizard:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.HighWizard)) return false;
+                case MirClass.虹玄法师:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.虹玄法师)) return false;
                     break;
-                case MirClass.HighTaoist:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.HighTaoist)) return false;
+                case MirClass.翊仙道士:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.翊仙道士)) return false;
                     break;
-                case MirClass.HighAssassin:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.HighAssassin)) return false;
+                case MirClass.飞燕刺客:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.飞燕刺客)) return false;
                     break;
-                case MirClass.HighArcher:
-                    if (!info.RequiredClass.HasFlag(RequiredClass.HighArcher)) return false;
+                case MirClass.暗鬼弓手:
+                    if (!info.RequiredClass.HasFlag(RequiredClass.暗鬼弓手)) return false;
                     break;
                 default:
                     return false;
@@ -2155,7 +2155,7 @@ namespace Server.MirObjects
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
-            //if (Class == MirClass.Wizard || Class == MirClass.Taoist)//why could an war, sin, archer not have pets?
+            //if (Class == MirClass.法师 || Class == MirClass.道士)//why could an war, sin, archer not have pets?
                 Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
@@ -2670,36 +2670,36 @@ namespace Server.MirObjects
             MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, 12 + Level / Settings.ClassBaseStats[(byte)Class].HandWeightGain * Level);
             switch (Class)
             {
-                case MirClass.Warrior:
+                case MirClass.战士:
                     MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Wizard:
+                case MirClass.法师:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Taoist:
+                case MirClass.道士:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Assassin:
+                case MirClass.刺客:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.Archer:
+                case MirClass.弓箭手:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.HighWarrior://stupple
+                case MirClass.碧血战士://stupple
                     MaxHP = (ushort)Math.Min(ushort.MaxValue, 14 + (Level / Settings.ClassBaseStats[(byte)Class].HpGain + Settings.ClassBaseStats[(byte)Class].HpGainRate + Level / 20F) * Level);
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 11 + (Level * 3.5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.HighWizard:
+                case MirClass.虹玄法师:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, 13 + ((Level / 5F + 2F) * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.HighTaoist:
+                case MirClass.翊仙道士:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (13 + Level / 8F * 2.2F * Level) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.HighAssassin:
+                case MirClass.飞燕刺客:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 5F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
-                case MirClass.HighArcher:
+                case MirClass.暗鬼弓手:
                     MaxMP = (ushort)Math.Min(ushort.MaxValue, (11 + Level * 4F) + (Level * Settings.ClassBaseStats[(byte)Class].MpGainRate));
                     break;
             }
@@ -3339,11 +3339,11 @@ namespace Server.MirObjects
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + buff.Values[0]);
                         break;
                     case BuffType.UltimateEnhancer:
-                        if (Class == MirClass.Wizard || Class == MirClass.Archer || Class == MirClass.HighWizard || Class == MirClass.HighArcher)
+                        if (Class == MirClass.法师 || Class == MirClass.弓箭手 || Class == MirClass.虹玄法师 || Class == MirClass.暗鬼弓手)
                         {
                             MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + buff.Values[0]);
                         }
-                        else if (Class == MirClass.Taoist || Class == MirClass.HighTaoist)
+                        else if (Class == MirClass.道士 || Class == MirClass.翊仙道士)
                         {
                             MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + buff.Values[0]);
                         }
@@ -3380,35 +3380,35 @@ namespace Server.MirObjects
                     case BuffType.HumUp://stupple
                         switch (Class)
                         {
-                            case MirClass.HighWarrior:
+                            case MirClass.碧血战士:
                                 MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 220));
                                 MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 130));
                                 HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
                                 SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
                                 MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
                                 break;
-                            case MirClass.HighWizard:
+                            case MirClass.虹玄法师:
                                 MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 140));
                                 MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 210));
                                 HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
                                 SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
                                 MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
                                 break;
-                            case MirClass.HighTaoist:
+                            case MirClass.翊仙道士:
                                 MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 170));
                                 MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 180));
                                 HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
                                 SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
                                 MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
                                 break;
-                            case MirClass.HighAssassin:
+                            case MirClass.飞燕刺客:
                                 MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 195));
                                 MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 155));
                                 HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
                                 SpellRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, SpellRecovery + 10));
                                 MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxBagWeight + 80));
                                 break;
-                            case MirClass.HighArcher:
+                            case MirClass.暗鬼弓手:
                                 MaxHP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxHP + 160));
                                 MaxMP = (ushort)Math.Min(ushort.MaxValue, Math.Max(ushort.MinValue, MaxMP + 200));
                                 HealthRecovery = (byte)Math.Min(byte.MaxValue, Math.Max(byte.MinValue, HealthRecovery + 10));
@@ -12930,57 +12930,65 @@ namespace Server.MirObjects
 
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                case MirClass.战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.战士))
                     {
                         ReceiveChat("Warriors cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Wizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                case MirClass.法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.法师))
                     {
                         ReceiveChat("Wizards cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Taoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                case MirClass.道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.道士))
                     {
                         ReceiveChat("Taoists cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.Assassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                case MirClass.刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.刺客))
                     {
                         ReceiveChat("Assassins cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.HighWarrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighWarrior))
+                case MirClass.碧血战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.碧血战士))
                     {
                         ReceiveChat("HighWarriors cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.HighWizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighWizard))
+                case MirClass.虹玄法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.虹玄法师))
                     {
                         ReceiveChat("HighWizards cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.HighTaoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighTaoist))
+                case MirClass.翊仙道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.翊仙道士))
                     {
                         ReceiveChat("HighTaoists cannot use this item.", ChatType.System);
                         return false;
                     }
                     break;
-                case MirClass.HighAssassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighAssassin))
+                case MirClass.飞燕刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.飞燕刺客))
+                    {
+                        ReceiveChat("HighAssassins cannot use this item.", ChatType.System);
+                        return false;
+                    }
+
+                    break;
+                case MirClass.暗鬼弓手:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.暗鬼弓手))
                     {
                         ReceiveChat("HighAssassins cannot use this item.", ChatType.System);
                         return false;
@@ -13337,36 +13345,40 @@ namespace Server.MirObjects
 
             switch (Class)
             {
-                case MirClass.Warrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Warrior))
+                case MirClass.战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.战士))
                         return false;
                     break;
-                case MirClass.Wizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Wizard))
+                case MirClass.法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.法师))
                         return false;
                     break;
-                case MirClass.Taoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Taoist))
+                case MirClass.道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.道士))
                         return false;
                     break;
-                case MirClass.Assassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Assassin))
+                case MirClass.刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.刺客))
                         return false;
                     break;
-                case MirClass.HighWarrior:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighWarrior))
+                case MirClass.碧血战士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.碧血战士))
                         return false;
                     break;
-                case MirClass.HighWizard:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighWizard))
+                case MirClass.虹玄法师:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.虹玄法师))
                         return false;
                     break;
-                case MirClass.HighTaoist:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighTaoist))
+                case MirClass.翊仙道士:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.翊仙道士))
                         return false;
                     break;
-                case MirClass.HighAssassin:
-                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.HighAssassin))
+                case MirClass.飞燕刺客:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.飞燕刺客))
+                        return false;
+                    break;
+                case MirClass.暗鬼弓手:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.暗鬼弓手))
                         return false;
                     break;                 
             }
@@ -19980,7 +19992,7 @@ namespace Server.MirObjects
         {
             if (Level < 60)
             {
-                ReceiveChat("This level is still not enough for the Transform.", ChatType.System);
+                ReceiveChat("等级60才能羽化飞升.", ChatType.System);
                 return;
             }
 
@@ -19988,27 +20000,27 @@ namespace Server.MirObjects
             {
                 if (eqItem != null)
                 {
-                    ReceiveChat("Plase Take Off all you items.", ChatType.System);
+                    ReceiveChat("请脱掉所有装备.", ChatType.System);
                     return;
                 }
             }
 
             switch (Class)
             {
-                case MirClass.Warrior:
-                    Info.Class = MirClass.HighWarrior;
+                case MirClass.战士:
+                    Info.Class = MirClass.碧血战士;
                     break;
-                case MirClass.Wizard:
-                    Info.Class = MirClass.HighWizard;
+                case MirClass.法师:
+                    Info.Class = MirClass.虹玄法师;
                     break;
-                case MirClass.Taoist:
-                    Info.Class = MirClass.HighTaoist;
+                case MirClass.道士:
+                    Info.Class = MirClass.翊仙道士;
                     break;
-                case MirClass.Assassin:
-                    Info.Class = MirClass.HighAssassin;
+                case MirClass.刺客:
+                    Info.Class = MirClass.飞燕刺客;
                     break;
-                case MirClass.Archer:
-                    Info.Class = MirClass.HighArcher;
+                case MirClass.弓箭手:
+                    Info.Class = MirClass.暗鬼弓手;
                     break;
                 default:
                     return;
@@ -20016,14 +20028,14 @@ namespace Server.MirObjects
 
             foreach (var ob in Envir.Players)//// allow user to see whta going off
             {
-                ob.ReceiveChat(string.Format("This hero {0} is now can {1} Hero.", Name, (Info.Class)), ChatType.Announcement);
+                ob.ReceiveChat(string.Format("玩家{0} 羽化飞升成为{1}.", Name, (Info.Class)), ChatType.Announcement);
             }
 
             Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
             Enqueue(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.HumUpEffect });
             Broadcast(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
-            ReceiveChat("Please reconnect to the normal use.", ChatType.System);
+            ReceiveChat("请小退重新连接.", ChatType.System);
 
             AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
         }
@@ -20035,16 +20047,16 @@ namespace Server.MirObjects
         {
             switch (Class)
             {
-                case MirClass.HighWarrior:
-                    return MirClass.Warrior;
-                case MirClass.HighWizard:
-                    return MirClass.Wizard;
-                case MirClass.HighTaoist:
-                    return MirClass.Taoist;
-                case MirClass.HighAssassin:
-                    return MirClass.Assassin;
-                case MirClass.HighArcher:
-                    return MirClass.Archer;
+                case MirClass.碧血战士:
+                    return MirClass.战士;
+                case MirClass.虹玄法师:
+                    return MirClass.法师;
+                case MirClass.翊仙道士:
+                    return MirClass.道士;
+                case MirClass.飞燕刺客:
+                    return MirClass.刺客;
+                case MirClass.暗鬼弓手:
+                    return MirClass.弓箭手;
                 default:
                     return Class;
             }

@@ -92,7 +92,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(123, 449),
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 8F),
+                Font = new Font(Settings.FontName, 9F),
             };
             totalCredits = new MirLabel
             {
@@ -101,7 +101,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(5, 449),
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 8F)
+                Font = new Font(Settings.FontName, 9F)
             };
 
             UpButton = new MirButton
@@ -463,7 +463,7 @@ namespace Client.MirScenes.Dialogs
             if (Visible) return;
             Visible = true;
             ClassFilter = GameScene.User.Class.ToString();
-            SectionFilter = "Show All";
+            SectionFilter = "显示所有";
             ResetTabs();
             ResetClass();
             GetCategories();
@@ -579,10 +579,10 @@ namespace Client.MirScenes.Dialogs
             Deals.Index = 772;
             New.Index = 774;
 
-            if (SectionFilter == "Show All") allItems.Index = 771;
-            if (SectionFilter == "TopItems") topItems.Index = 777;
-            if (SectionFilter == "DealItems") Deals.Index = 773;
-            if (SectionFilter == "NewItems") New.Index = 775;
+            if (SectionFilter == "显示所有") allItems.Index = 771;
+            if (SectionFilter == "热门") topItems.Index = 777;
+            if (SectionFilter == "打折") Deals.Index = 773;
+            if (SectionFilter == "新品") New.Index = 775;
         }
 
         public void ResetClass()
@@ -616,7 +616,7 @@ namespace Client.MirScenes.Dialogs
 
             CategoryList.Clear();
             PositionBar.Location = new Point(120, 117);
-            CategoryList.Add("显示所有l");
+            CategoryList.Add("显示所有");
 
             for (int i = 0; i < shopList.Count; i++)
             {

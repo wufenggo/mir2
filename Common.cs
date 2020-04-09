@@ -728,16 +728,16 @@ public enum MirGender : byte
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum MirClass : byte
 {
-    Warrior = 0,
-    Wizard = 1,
-    Taoist = 2,
-    Assassin = 3,
-    Archer = 4,
-    HighWarrior = 5,
-    HighWizard = 6,
-    HighTaoist = 7,
-    HighAssassin = 8,
-    HighArcher = 9,
+    战士 = 0,
+    法师 = 1,
+    道士 = 2,
+    刺客 = 3,
+    弓箭手 = 4,
+    碧血战士 = 5,
+    虹玄法师 = 6,
+    翊仙道士 = 7,
+    飞燕刺客 = 8,
+    暗鬼弓手 = 9,
 }
 
 public enum MirDirection : byte
@@ -761,7 +761,8 @@ public enum ObjectType : byte
     Spell = 4,
     Monster = 5,
     Deco = 6,
-    Creature = 7
+    Creature = 7,
+    Hero = 8
 }
 
 public enum ChatType : byte
@@ -909,6 +910,15 @@ public enum PetMode : byte
     None = 3,
 }
 
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public enum HeroMode : byte
+{
+    Attack = 0,
+    Defend = 1,
+    Follow = 2,
+    Custom = 3,
+}
+
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum PoisonType : ushort
@@ -969,23 +979,23 @@ public enum SpecialItemMode : short
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RequiredClass : byte
+public enum RequiredClass : ushort
 {
     
-    Warrior = 1,
-    Wizard = 2,
-    Taoist = 4,
-    Assassin = 8,
-    Archer = 16,
-    基础职业 = Warrior | Wizard | Taoist | Assassin | Archer,
-    HighWarrior = 11,
-    HighWizard = 12,
-    HighTaoist = 13,
-    HighAssassin = 14,
-    HighArcher = 15,
-    High = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
-    WarWizTao = Warrior | Wizard | Taoist,
-    通用 = 基础职业 | High,
+     战士 = 1,
+    法师 = 2,
+    道士  = 4,
+    刺客  = 8,
+    弓箭手  =16 ,
+    非仙全职业 = 战士|法师|道士|刺客|弓箭手,
+    碧血战士 = 32,
+    虹玄法师 = 64,
+    翊仙道士 = 128,
+    飞燕刺客 = 256,
+    暗鬼弓手 = 512,
+    飞升 = 碧血战士 | 虹玄法师 | 翊仙道士 | 飞燕刺客 | 暗鬼弓手,
+    战法道 = 战士|法师|道士,
+    通用 = 非仙全职业 | 飞升,
     
     
 
@@ -2513,7 +2523,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if (((byte)info.RequiredClass == (1 << (byte)job)) && (Origin.RequiredGender == info.RequiredGender))
+                if (((ushort)info.RequiredClass == (1 << (ushort)job)) && (Origin.RequiredGender == info.RequiredGender))
                     return info;
         }
         return Origin;
@@ -2526,7 +2536,7 @@ public static class Functions
         {
             ItemInfo info = ItemList[i];
             if (info.Name.StartsWith(Origin.Name))
-                if ((byte)info.RequiredClass == (1 << (byte)job))
+                if ((ushort)info.RequiredClass == (1 << (ushort)job))
                     if ((info.RequiredType == RequiredType.Level) && (info.RequiredAmount <= level) && (output.RequiredAmount <= info.RequiredAmount) && (Origin.RequiredGender == info.RequiredGender))
                         output = info;
         }
@@ -2699,7 +2709,17 @@ public class ItemInfo
         Type = (ItemType) reader.ReadByte();
         if (version >= 40) Grade = (ItemGrade)reader.ReadByte();
         RequiredType = (RequiredType) reader.ReadByte();
-        RequiredClass = (RequiredClass) reader.ReadByte();
+        if (version <= 76)
+        {
+
+            RequiredClass = (RequiredClass)reader.ReadByte();
+        }
+        else
+        {
+            RequiredClass = (RequiredClass)reader.ReadUInt16();
+        }
+        //   RequiredClass = (RequiredClass) reader.ReadInt32(); // stupple ushort
+        //RequiredClass = (RequiredClass) reader.ReadByte();
         RequiredGender = (RequiredGender) reader.ReadByte();
         if(version >= 17) Set = (ItemSet)reader.ReadByte();
 
@@ -2828,7 +2848,7 @@ public class ItemInfo
         writer.Write((byte) Type);
         writer.Write((byte) Grade);
         writer.Write((byte) RequiredType);
-        writer.Write((byte) RequiredClass);
+        writer.Write((ushort) RequiredClass);
         writer.Write((byte) RequiredGender);
         writer.Write((byte) Set);
 
@@ -3010,7 +3030,7 @@ public class ItemInfo
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
                              "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63}",
-            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (byte)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
+            Name, (byte)Type, (byte)Grade, (byte)RequiredType, (ushort)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
@@ -3951,7 +3971,8 @@ public class ClientQuestInfo
         MinLevelNeeded = reader.ReadInt32();
         MaxLevelNeeded = reader.ReadInt32();
         QuestNeeded = reader.ReadInt32();
-        ClassNeeded = (RequiredClass)reader.ReadByte();
+        ClassNeeded = (RequiredClass)reader.ReadInt16(); //stupple?
+     
         Type = (QuestType)reader.ReadByte();
         RewardGold = reader.ReadUInt32();
         RewardExp = reader.ReadUInt32();
@@ -3991,7 +4012,7 @@ public class ClientQuestInfo
         writer.Write(MinLevelNeeded);
         writer.Write(MaxLevelNeeded);
         writer.Write(QuestNeeded);
-        writer.Write((byte)ClassNeeded);
+        writer.Write((ushort)ClassNeeded);
         writer.Write((byte)Type);
         writer.Write(RewardGold);
         writer.Write(RewardExp);
@@ -5285,8 +5306,8 @@ public class BaseStats
     {
         switch (Job)
         {
-            case MirClass.Warrior:
-            case MirClass.HighWarrior:
+            case MirClass.战士:
+            case MirClass.碧血战士:
                 HpGain = 4F;
                 HpGainRate = 4.5F;
                 MpGainRate = 0;
@@ -5310,8 +5331,8 @@ public class BaseStats
                 CritialRateGain = 0;
                 CriticalDamageGain = 0;
                 break;
-            case MirClass.Wizard:
-            case MirClass.HighWizard:
+            case MirClass.法师:
+            case MirClass.虹玄法师:
                 HpGain = 15F;
                 HpGainRate = 1.8F;
                 MpGainRate = 0;
@@ -5335,8 +5356,8 @@ public class BaseStats
                 CritialRateGain = 0;
                 CriticalDamageGain = 0;
                 break;
-            case MirClass.Taoist:
-            case MirClass.HighTaoist:
+            case MirClass.道士:
+            case MirClass.翊仙道士:
                 HpGain = 6F;
                 HpGainRate = 2.5F;
                 MpGainRate = 0;
@@ -5360,8 +5381,8 @@ public class BaseStats
                 CritialRateGain = 0;
                 CriticalDamageGain = 0;
                 break;
-            case MirClass.Assassin:
-            case MirClass.HighAssassin:
+            case MirClass.刺客:
+            case MirClass.飞燕刺客:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
@@ -5385,8 +5406,8 @@ public class BaseStats
                 CritialRateGain = 0;
                 CriticalDamageGain = 0;
                 break;
-            case MirClass.Archer:
-            case MirClass.HighArcher:
+            case MirClass.弓箭手:
+            case MirClass.暗鬼弓手:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;

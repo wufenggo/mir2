@@ -91,29 +91,29 @@ namespace Client.MirScenes
                 Visible = Settings.UseTestConfig
             };
 
-            //ViolenceLabel = new MirImageControl
-            //{
-            //    Index = 89,
-            //    Library = Libraries.Prguse,
-            //    Parent = this,
-            //    Location = new Point(471, 10)
-            //};
+            ViolenceLabel = new MirImageControl
+            {
+                Index = 89,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(471, 10)
+            };
 
-            //MinorLabel = new MirImageControl
-            //{
-            //    Index = 87,
-            //    Library = Libraries.Prguse,
-            //    Parent = this,
-            //    Location = new Point(578, 10)
-            //};
+            MinorLabel = new MirImageControl
+            {
+                Index = 87,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(578, 10)
+            };
 
-            //YouthLabel = new MirImageControl
-            //{
-            //    Index = 88,
-            //    Library = Libraries.Prguse,
-            //    Parent = this,
-            //    Location = new Point(684, 10)
-            //};
+            YouthLabel = new MirImageControl
+            {
+                Index = 88,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(684, 10)
+            };
 
             _connectBox = new MirMessageBox("正在尝试连接到服务器.", MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();

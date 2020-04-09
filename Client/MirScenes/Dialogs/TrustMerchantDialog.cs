@@ -582,7 +582,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = GemSubBtn,
-                Text = "Gems",
+                Text = "宝石",
                 NotControl = true,
             };
             OrbSubBtn = new MirButton
@@ -623,7 +623,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(100, 18),
                 Location = new Point(18, 1),
                 Parent = AwakeSubBtn,
-                Text = "Awakening",
+                Text = "觉醒",
                 NotControl = true,
             };
             #endregion
