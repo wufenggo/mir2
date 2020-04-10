@@ -20,7 +20,7 @@ namespace Client
             {
                 return _useTestConfig;
             }
-            set 
+            set
             {
                 if (value == true)
                 {
@@ -41,8 +41,8 @@ namespace Client
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
-							CWeaponEffectPath = @".\Data\CWeaponEffect\",
-							CHairPath = @".\Data\CHair\",
+                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
+                            CHairPath = @".\Data\CHair\",
                             AArmourPath = @".\Data\AArmour\",
                             AWeaponPath = @".\Data\AWeapon\",
                             AHairPath = @".\Data\AHair\",
@@ -126,11 +126,11 @@ namespace Client
             {
                 if (_volume == value) return;
 
-                _volume = (byte) (value > 100 ? 100 : value);
+                _volume = (byte)(value > 100 ? 100 : value);
 
                 if (_volume == 0)
                     SoundManager.Vol = -10000;
-                else 
+                else
                     SoundManager.Vol = (int)(-3000 + (3000 * (_volume / 100M)));
             }
         }
@@ -172,7 +172,7 @@ namespace Client
             ExpandedBuffWindow = true,
             ItemFloorGlow = true;
 
-        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 } };
 
         //Quests
         public static int[] TrackedQuests = new int[5];
@@ -201,13 +201,19 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://175.24.54.202/cmir/patch/12222"; //ftp://212.67.209.184
+        public static string P_Host = @"http://175.24.54.202/cmir/patch/2222"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
-        public static string P_BrowserAddress = "http://175.24.54.202/timg.jpg";
+
+
+
+
+        public static string P_BrowserAddress = "http://175.24.54.202/";
+
+
         public static string P_Client = Application.StartupPath + "\\";
         public static bool P_AutoStart = false;
 

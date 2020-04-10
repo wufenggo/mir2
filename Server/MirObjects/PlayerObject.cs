@@ -991,8 +991,14 @@ namespace Server.MirObjects
                 HealAmount = 0;
             }
 
-            if (manaRegen > 0) ChangeMP(manaRegen);
-            if (MP == MaxMP) PotManaAmount = 0;
+            if (manaRegen > 0)
+            {
+                BroadcastDamageIndicator(DamageType.Mana, manaRegen);
+                ChangeMP(manaRegen);
+            }
+
+
+          if (MP == MaxMP) PotManaAmount = 0;
         }
         private void ProcessPoison()
         {
@@ -11342,15 +11348,19 @@ namespace Server.MirObjects
                         case 1: //SunPotion
                             ChangeHP(item.Info.HP);
                             ChangeMP(item.Info.MP);
+                            BroadcastDamageIndicator(DamageType.Heal, item.Info.HP);
+                            ChangeHP(item.Info.HP);
+                            BroadcastDamageIndicator(DamageType.Mana, item.Info.MP);
+                            ChangeMP(item.Info.MP);
                             break;
                         case 2: //MysteryWater
                             if (UnlockCurse)
                             {
-                                ReceiveChat("You can already unequip a cursed item.", ChatType.Hint);
+                                ReceiveChat("你已经可以解开诅咒的物品了.", ChatType.Hint);
                                 Enqueue(p);
                                 return;
                             }
-                            ReceiveChat("You can now unequip a cursed item.", ChatType.Hint);
+                            ReceiveChat("你现在可以解开诅咒的物品.", ChatType.Hint);
                             UnlockCurse = true;
                             break;
                         case 3: //Buff
@@ -11436,7 +11446,7 @@ namespace Server.MirObjects
                             temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
                             temp.DuraChanged = false;
 
-                            ReceiveChat("Your weapon has been partially repaired", ChatType.Hint);
+                            ReceiveChat("你的武器已经部分修好了", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 5: //WarGodOil
@@ -11454,13 +11464,13 @@ namespace Server.MirObjects
                             temp.CurrentDura = temp.MaxDura;
                             temp.DuraChanged = false;
 
-                            ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
+                            ReceiveChat("你的武器已经完全修好了", ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
                             if (CurrentMap.Info.NoReincarnation)
                             {
-                                ReceiveChat(string.Format("Cannot use on this map"), ChatType.System);
+                                ReceiveChat(string.Format("无法在此地图上使用"), ChatType.System);
                                 Enqueue(p);
                                 return;
                             }
@@ -11474,7 +11484,7 @@ namespace Server.MirObjects
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
-                                ReceiveChat(String.Format("{0} Credits have been added to your Account", item.Info.Price), ChatType.Hint);
+                                ReceiveChat(String.Format("{0}银币 已添加到您的帐户", item.Info.Price), ChatType.Hint);
                             }
                             break;
                         case 8: //MapShoutScroll

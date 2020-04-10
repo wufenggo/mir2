@@ -474,9 +474,12 @@ namespace Client.MirControls
         private void DrawWeapon()
         {
             MountImage.Visible = false;
+           
 
             if (GameScene.User.Equipment[(int)EquipmentSlot.Armour] != null)
+
                 PreviewImage.Library = Libraries.CArmours[GameScene.User.Equipment[(int)EquipmentSlot.Armour].Info.Shape];
+
             else
                 PreviewImage.Library = Libraries.CArmours[0];
 
@@ -496,6 +499,8 @@ namespace Client.MirControls
 
             if (ViewerItem.Info.Shape >= 100 && ViewerItem.Info.Shape <= 199)
             {
+               
+
                 WeaponImage.Library = Libraries.AWeaponsR[ViewerItem.Info.Shape - 100];
                 WeaponImage2.Library = Libraries.AWeaponsL[ViewerItem.Info.Shape - 100];
                 WeaponImage2.Visible = true;
@@ -527,16 +532,21 @@ namespace Client.MirControls
             }
             if (ViewerItem.Info.Shape >= 200)
             {
+
                 WeaponImage.Library = Libraries.ARWeapons[ViewerItem.Info.Shape - 200];
                 if (Direction >= 6 && Direction <= 8)
                 {
                     PreviewImage.BringToFront();
                     WeaponImage.BringToFront();
                 }
+
                     
+
             }
             
-            if (ViewerItem.Info.Shape < 100) WeaponImage.Library = Libraries.CWeapons[ViewerItem.Info.Shape];
+            if (ViewerItem.Info.Shape < 100) 
+
+               WeaponImage.Library = Libraries.CWeapons[ViewerItem.Info.Shape];
 
 
             WeaponImage.Index = 32 + (6 * (Direction - 1));
@@ -559,7 +569,7 @@ namespace Client.MirControls
                 PreviewImage.Index = 32 + (6 * (Direction - 1));
             else
                 PreviewImage.Index = 840 + (6 * (Direction - 1));
-
+           
             PreviewImage.Library = Libraries.CArmours[ViewerItem.Info.Shape];
             PreviewImage.AnimationCount = 6;
             PreviewImage.Animated = true;

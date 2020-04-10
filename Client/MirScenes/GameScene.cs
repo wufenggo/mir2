@@ -3084,6 +3084,9 @@ namespace Client.MirScenes
                         case DamageType.Heal:
                             obj.Damages.Add(new Damage("＋" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Green : Color.White, 50));
                             break;
+                        case DamageType.Mana:
+                            obj.Damages.Add(new Damage("+" + p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Blue : Color.White, 50));
+                            break;
                     }
 
                 }
