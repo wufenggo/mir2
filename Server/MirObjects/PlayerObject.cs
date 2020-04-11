@@ -10278,7 +10278,77 @@ namespace Server.MirObjects
         }
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
         {
-
+            #region Weapon Effects Pete107 26/1/2016//武器效果
+            UserItem _item = attacker.Info.Equipment[(int)EquipmentSlot.Weapon];
+            Random randy = new Random();
+            if (_item != null && Target != null && randy.Next(0, 100) >= 90)
+            {
+                switch (_item.Info.Effect)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, CurrentLocation);
+                        break;
+                    case 2:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
+                        break;
+                    case 3:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Healing }, CurrentLocation);
+                        break;
+                    case 4:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.RedMoonEvil }, CurrentLocation);
+                        break;
+                    case 5:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.TwinDrakeBlade }, CurrentLocation);
+                        break;
+                    case 6:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, CurrentLocation);
+                        break;
+                    case 7:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
+                        break;
+                    case 8:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GreatFoxSpirit }, CurrentLocation);
+                        break;
+                    case 9:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Entrapment }, CurrentLocation);
+                        break;
+                    case 10:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                        break;
+                    case 11:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
+                        break;
+                    case 12:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Mine }, CurrentLocation);
+                        break;
+                    case 13:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
+                        break;
+                    case 14:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
+                        break;
+                    case 15:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion }, CurrentLocation);
+                        break;
+                    case 16:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MPEater }, CurrentLocation);
+                        break;
+                    case 17:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Hemorrhage }, CurrentLocation);
+                        break;
+                    case 18:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding }, CurrentLocation);
+                        break;
+                    case 19:
+                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            #endregion
 
             for (int i = 0; i < Buffs.Count; i++)
             {

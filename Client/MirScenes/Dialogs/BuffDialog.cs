@@ -304,10 +304,15 @@ namespace Client.MirScenes.Dialogs
                     case BuffType.UltimateEnhancer:
                         switch (GameScene.User.Class)
                         {
+
+
+                            case MirClass.虹玄法师:
                             case MirClass.法师:
+                            case MirClass.暗鬼弓手:
                             case MirClass.弓箭手:
                                 buffMc += buff.Values[0];
                                 break;
+                            case MirClass.翊仙道士:
                             case MirClass.道士:
                                 buffSc += buff.Values[0];
                                 break;
