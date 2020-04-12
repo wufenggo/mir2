@@ -9701,6 +9701,12 @@ namespace Server.MirObjects
                 if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
                     return item;
             }
+            for (int i = 0; i < Info.Inventory.Length; i++)//不用装备护身符
+            {
+                UserItem item = Info.Inventory[i];
+                if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
+                    return item;
+            }
 
             return null;
         }
@@ -9855,8 +9861,22 @@ namespace Server.MirObjects
                     if (Level < magic.Info.Level4 || magic.Info.HumUpTrain == false || (byte)Class <= 4)
                         return;
 
+
                     magic.Experience += exp;
                     if (magic.Experience >= magic.Info.Need4)
+                    {
+                        magic.Level++;
+                        magic.Experience = 0;
+                        RefreshStats();
+                    }
+                    break;
+
+                case 4:///stupple
+                    if (Level < magic.Info.Level5 || magic.Info.HumUpTrain == false || (byte)Class <= 4)
+                        return;
+
+                    magic.Experience += exp;
+                    if (magic.Experience >= magic.Info.Need5)
                     {
                         magic.Level++;
                         magic.Experience = 0;

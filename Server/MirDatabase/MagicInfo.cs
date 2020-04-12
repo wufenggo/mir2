@@ -18,8 +18,8 @@ namespace Server.MirDatabase
         public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
-        public byte Level1, Level2, Level3, Level4;
-        public ushort Need1, Need2, Need3, Need4;
+        public byte Level1, Level2, Level3, Level4, Level5;
+        public ushort Need1, Need2, Need3, Need4, Need5;
         public uint DelayBase = 1800, DelayReduction;
         public ushort PowerBase, PowerBonus;
         public ushort MPowerBase, MPowerBonus;
@@ -47,13 +47,15 @@ namespace Server.MirDatabase
             Level1 = reader.ReadByte();
             Level2 = reader.ReadByte();
             Level3 = reader.ReadByte();
-            if (version > 75)
-                Level4 = reader.ReadByte();
+            if (version > 76)
+            Level4 = reader.ReadByte();
+            Level5 = reader.ReadByte();
             Need1 = reader.ReadUInt16();
             Need2 = reader.ReadUInt16();
             Need3 = reader.ReadUInt16();
-            if (version > 75)
-                Need4 = reader.ReadUInt16();
+            if (version > 76)
+            Need4 = reader.ReadUInt16();
+            Need5 = reader.ReadUInt16();
             DelayBase = reader.ReadUInt32();
             DelayReduction = reader.ReadUInt32();
             PowerBase = reader.ReadUInt16();
@@ -68,7 +70,7 @@ namespace Server.MirDatabase
                 MultiplierBase = reader.ReadSingle();
                 MultiplierBonus = reader.ReadSingle();
             }
-            if (version > 75)
+            if (version > 76)
                 HumUpTrain = reader.ReadBoolean();
         }
 
@@ -83,10 +85,12 @@ namespace Server.MirDatabase
             writer.Write(Level2);
             writer.Write(Level3);
             writer.Write(Level4);
+            writer.Write(Level5);
             writer.Write(Need1);
             writer.Write(Need2);
             writer.Write(Need3);
             writer.Write(Need4);
+            writer.Write(Need5);
             writer.Write(DelayBase);
             writer.Write(DelayReduction);
             writer.Write(PowerBase);
@@ -179,11 +183,13 @@ namespace Server.MirDatabase
                     Level2 = Info.Level2,
                     Level3 = Info.Level3,
                     Level4 = Info.Level4,
+                    Level5 = Info.Level5,
                     Need1 = Info.Need1,
                     Need2 = Info.Need2,
                     Need3 = Info.Need3,
                     Need4 = Info.Need4,
-                    Level = Level,
+                    Need5 = Info.Need5,
+                Level = Level,
                     Key = Key,
                     Experience = Experience,
                     IsTempSpell = IsTempSpell,

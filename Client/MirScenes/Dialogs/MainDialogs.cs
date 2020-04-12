@@ -4685,12 +4685,17 @@ namespace Client.MirScenes.Dialogs
                 case 3://stupple
                     if (magic.IsHumUpTrain && (byte)GameScene.User.Class >= 5 && magic.Level4 <= GameScene.User.Level)
                         ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need4);
+                    break;
+                case 4:
+                    if (magic.IsHumUpTrain && (byte)GameScene.User.Class >= 5 && magic.Level5 <= GameScene.User.Level)
+                        ExpLabel.Text = string.Format("{0}/{1}", Magic.Experience, Magic.Need5);
                     else
                         ExpLabel.Text = "-";
                     break;
-                case 4:
+                case 5:
                     ExpLabel.Text = "-";
                     break;
+
             }
 
             if (Magic.Key > 8)
