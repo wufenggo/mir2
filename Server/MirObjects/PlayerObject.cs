@@ -6819,6 +6819,9 @@ namespace Server.MirObjects
                 case Spell.PetEnhancer:
                     PetEnhancer(target, magic, out cast);
                     break;
+                case Spell.HealingCircle:
+                    HealingCircle(magic, target, out cast);
+                    break;
                 case Spell.TrapHexagon:
                     TrapHexagon(magic, target == null ? location : target.CurrentLocation, out cast);
                     break;
@@ -7681,6 +7684,29 @@ namespace Server.MirObjects
 
             ConsumeItem(item, 1);
             cast = true;
+        }
+
+        //阴阳五行阵
+        private void HealingCircle(UserMagic magic, MapObject target, out bool cast)
+        {
+            cast = false;
+            UserItem amulet = this.GetAmulet(5, 0);
+            bool flag = amulet == null;
+            if (!flag)
+            {
+                this.LevelMagic(magic);
+                int damage = magic.GetDamage(base.GetAttackPower((int)this.MinSC, (int)this.MaxSC));
+                DelayedAction item = new DelayedAction(DelayedType.Magic, MapObject.Envir.Time + 500L, new object[]
+                {
+                    this,
+                    magic,
+                    damage,
+                    this.CurrentLocation
+                });
+                base.CurrentMap.ActionList.Add(item);
+                this.ConsumeItem(amulet, 5);
+                cast = true;
+            }
         }
         private void Reincarnation(UserMagic magic, PlayerObject target, out bool cast)
         {

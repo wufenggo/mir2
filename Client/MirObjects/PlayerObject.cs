@@ -2342,6 +2342,17 @@ namespace Client.MirObjects
 
                             #endregion
 
+
+
+                            #region HealingCircle 阴阳五行阵
+
+                            case Spell.HealingCircle:
+                                Effects.Add(new Effect(Libraries.Magic3, 620, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region EnergyRepulsor
 
                             case Spell.EnergyRepulsor:

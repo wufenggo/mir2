@@ -138,6 +138,23 @@ namespace Server.MirObjects
                             Value = Value/20
                         }, Caster, false, false);
                     break;
+
+                case Spell.HealingCircle://五行阵
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    //伤害敌军
+                    if (ob.IsAttackTarget(Caster))
+                    {
+                        ob.Attacked(Caster, Value * 10 / 8, DefenceType.MAC, false);
+                    }
+                    else if (ob.IsFriendlyTarget(Caster))//治疗友军
+                    {
+                        //if (ob.HealAmount != 0 || ob.PercentHealth == 100) return;
+                        if (ob.HealAmount > Value * 2 || ob.PercentHealth == 100) return;
+                        ob.HealAmount += (ushort)(Value * 2);
+                        Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
+                    }
+                    break;
                 case Spell.Blizzard:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
@@ -316,6 +333,7 @@ namespace Server.MirObjects
                 case Spell.PoisonCloud:
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
+                case Spell.HealingCircle:
                     if (!Show)
                         return null;
 

@@ -1638,6 +1638,64 @@ namespace Server.MirEnvir
 
                 #endregion
 
+
+                #region HealingCircle 五行阵
+                case Spell.HealingCircle:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    show = true;
+                    //3乘3的范围内
+                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+
+                            cell = GetCell(x, y);
+
+                            if (!cell.Valid) continue;
+                            bool cast = true;
+                            if (cell.Objects != null)
+                            {
+                                for (int o = 0; o < cell.Objects.Count; o++)
+                                {
+                                    MapObject target = cell.Objects[o];
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.HealingCircle) continue;
+
+                                    cast = false;
+                                    break;
+                                }
+                            }
+                            if (!cast) continue;
+                            //3级持续时间14秒，伤害和绿毒一样，治疗效果也和治疗术一样
+                            SpellObject ob = new SpellObject
+                            {
+                                Spell = Spell.HealingCircle,
+                                Value = value,
+                                ExpireTime = Envir.Time + 6000 + magic.Level * 3000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                            };
+
+                            show = false;
+
+                            AddObject(ob);
+                            ob.Spawned();
+                        }
+                    }
+                    train = false;
+                    break;
+
+                #endregion
+
                 #region TrapHexagon
 
                 case Spell.TrapHexagon:

@@ -41,6 +41,13 @@ namespace Client.MirObjects
 
             switch (Spell)
             {
+                case Spell.HealingCircle://增加一个阴阳五行
+                    BodyLibrary = Libraries.Magic3;
+                    DrawFrame = 630;
+                    FrameInterval = 100;
+                    FrameCount = 10;
+                    Blend = true;
+                    break;
                 case Spell.TrapHexagon:
                     BodyLibrary = Libraries.Magic;
                     DrawFrame = 1390;
