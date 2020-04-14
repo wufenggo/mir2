@@ -56,6 +56,36 @@ namespace Client.MirObjects
                 return mo.ObjectID == ObjectID;
             });
         }
+        //判断是否可以进入那个格？那个格是否是空的
+        public bool EmptyCell()
+        {
+            //这个是什么？
+            if ((BackImage & 0x20000000) != 0 || (FrontImage & 0x8000) != 0) // + (M2CellInfo[P.X, P.Y].FrontImage & 0x7FFF) != 0)
+                return false;
+            if (CellObjects == null)
+            {
+                return true;
+            }
+            //是否有物体阻挡
+            for (int i = 0; i < CellObjects.Count; i++)
+            {
+                MapObject ob = CellObjects[i];
+                if (ob.Blocking)
+                    return false;
+            }
+            return true;
+        }
+
+        //是否可以行走
+        public bool CanWalk()
+        {
+            //这个是什么？
+            if ((BackImage & 0x20000000) != 0 || (FrontImage & 0x8000) != 0)
+            {
+                return false;
+            }
+            return true;
+        }
         public void DrawObjects()
         {
             if (CellObjects == null) return;

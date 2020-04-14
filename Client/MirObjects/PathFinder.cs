@@ -8,295 +8,225 @@ using System.Text;
 
 namespace Client.MirObjects
 {
-    public class Heap<T> where T : IHeapItem<T>
+
+    /// <summary>
+    /// 自动寻路中的点的定义
+    /// A星寻路法的点定义
+    /// </summary>
+    public class RoutePoint
     {
-        private T[] items;
-        private int currentItemCount;
+        public int y;
+        public int x;
+        public int G;//从开始点到达当前点的距离，移动距离
+        public int H;//当前点到终点的距离，这个是估算值
+        public RoutePoint father;//上一个节点
 
-        public Heap(int maxHeapSize)
+        public RoutePoint()
         {
-            items = new T[maxHeapSize];
+
         }
 
-        public void Add(T item)
+        public RoutePoint(Point p)
         {
-            item.HeapIndex = currentItemCount;
-            items[currentItemCount] = item;
-            SortUp(item);
-            currentItemCount++;
+            this.x = p.X;
+            this.y = p.Y;
         }
 
-        public T RemoveFirst()
+        public RoutePoint(int x, int y)
         {
-            T firstItem = items[0];
-            currentItemCount--;
-
-            items[0] = items[currentItemCount];
-            items[0].HeapIndex = 0;
-
-            SortDown(items[0]);
-
-            return firstItem;
+            this.x = x;
+            this.y = y;
         }
 
-        public void UpdateItem(T item)
+        public RoutePoint(int x0, int y0, int G0, int H0, RoutePoint F)
         {
-            SortUp(item);
+            x = x0;
+            y = y0;
+            G = G0;
+            H = H0;
+            father = F;
         }
 
-        public int Count { get { return currentItemCount; } }
-
-        public bool Contains(T item)
+        public override string ToString()
         {
-            return Equals(items[item.HeapIndex], item);
+            return "{" + x + "," + y + "}";
         }
 
-        private void SortDown(T item)
+        public Point getPoint()
         {
-            while (true)
-            {
-                int childIndexLeft = (item.HeapIndex * 2) + 1;
-                int childIndexRight = (item.HeapIndex * 2) + 2;
-                int swapIndex = 0;
-
-                if (childIndexLeft < currentItemCount)
-                {
-                    swapIndex = childIndexLeft;
-                    if (childIndexRight < currentItemCount)
-                    {
-                        if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
-                        {
-                            swapIndex = childIndexRight;
-                        }
-                    }
-
-                    if (item.CompareTo(items[swapIndex]) < 0)
-                    {
-                        Swap(item, items[swapIndex]);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    return;
-                }
-            }
-        }
-
-        private void SortUp(T item)
-        {
-            int parentIndex = (item.HeapIndex - 1) / 2;
-
-            while (true)
-            {
-                T parentItem = items[parentIndex];
-                if (item.CompareTo(parentItem) > 0)
-                {
-                    Swap(item, parentItem);
-                }
-                else
-                    break;
-
-                parentIndex = (item.HeapIndex - 1) / 2;
-            }
-        }
-
-        private void Swap(T itemA, T itemB)
-        {
-            items[itemA.HeapIndex] = itemB;
-            items[itemB.HeapIndex] = itemA;
-
-            int itemAIndex = itemA.HeapIndex;
-            itemA.HeapIndex = itemB.HeapIndex;
-            itemB.HeapIndex = itemAIndex;
+            return new Point(x, y);
         }
     }
 
-    public interface IHeapItem<T> : IComparable<T>
+    /// <summary>
+    /// 自动寻路的实现
+    /// </summary>
+    public class AutoRoute
     {
-        int HeapIndex
+        //数组用1表示可通过，0表示障碍物,3表示关闭
+        byte[,] R;
+
+        int w, h;//宽，高
+
+        public AutoRoute(byte[,] R)
         {
-            get; set;
-        }
-    }
-
-    public class Node : IHeapItem<Node>
-    {
-        public bool Walkable
-        {
-            get { return Map.EmptyCell(Location); }
-        }
-
-        public MapControl Map;
-        public Point Location;
-        public Node Parent;
-
-        public int GCost, HCost;
-
-        public int FCost
-        {
-            get { return GCost + HCost; }
+            this.R = R;
+            this.w = R.GetLength(0);
+            this.h = R.GetLength(1);
         }
 
-        private int _heapIndex;
+        //开启列表(这个开启列表其实还可以优化的)
+        //List<RoutePoint> Open_List = new List<RoutePoint>();
+        Dictionary<string, RoutePoint> Open_dic = new Dictionary<string, RoutePoint>();
 
-        public int HeapIndex
+        //从开启列表查找F值最小的节点(就是G+H最小的点)
+        private RoutePoint GetMinFFromOpenList()
         {
-            get { return _heapIndex; }
-            set { _heapIndex = value; }
-        }
-
-        public int CompareTo(Node nodeToCompare)
-        {
-            int compare = FCost.CompareTo(nodeToCompare.FCost);
-            if (compare == 0)
+            RoutePoint Pmin = null;
+            //foreach (RoutePoint p in Open_List) if (Pmin == null || Pmin.G + Pmin.H > p.G + p.H) Pmin = p;
+            foreach (RoutePoint p in Open_dic.Values)
             {
-                compare = HCost.CompareTo(nodeToCompare.HCost);
+                if (Pmin == null || Pmin.G + Pmin.H > p.G + p.H) Pmin = p;
             }
-            return -compare;
+            return Pmin;
         }
-
-        public Node(MapControl map, int x, int y)
+        //加入开启列表
+        private void OpenAdd(RoutePoint p)
         {
-            Map = map;
-            Location = new Point(x, y);
-        }
-    }
-
-    public class PathFinder
-    {
-        private Node[,] Grid;
-
-        public MapControl Map;
-
-        public int MaxSize
-        {
-            get { return Map.Width * Map.Height; }
-        }
-
-        public PathFinder(MapControl map)
-        {
-            Map = map;
-
-            CreateGrid();
-        }
-
-        private void CreateGrid()
-        {
-            Grid = new Node[Map.Width, Map.Height];
-
-            for (int x = 0; x < Map.Width; x++)
+            //Open_List.Add(p);
+            string key = p.x + "," + p.y;
+            if (!Open_dic.ContainsKey(key))
             {
-                for (int y = 0; y < Map.Height; y++)
-                {
-                    Grid[x, y] = new Node(Map, x, y);
-                }
+                Open_dic.Add(key, p);
             }
         }
-
-        public List<Node> FindPath(Point start, Point target)
+        //从开启列表删除
+        private void OpenRemove(RoutePoint p)
         {
-            Node startNode = GetNode(start);
-            Node targetNode = GetNode(target);
+            //Open_List.Remove(p);
+            string key = p.x + "," + p.y;
+            Open_dic.Remove(key);
+        }
 
-            Heap<Node> openSet = new Heap<Node>(MaxSize);
-            HashSet<Node> closedSet = new HashSet<Node>();
-
-            openSet.Add(startNode);
-
-            while (openSet.Count > 0)
+        //从开启列表返回对应坐标的点
+        private RoutePoint GetPointFromOpenList(int x, int y)
+        {
+            string key = x + "," + y;
+            if (Open_dic.ContainsKey(key))
             {
-                Node currentNode = openSet.RemoveFirst();
-
-                closedSet.Add(currentNode);
-
-                if (currentNode == targetNode)
-                {
-                    return RetracePath(startNode, targetNode);
-                }
-
-                foreach (Node neighbor in GetNeighbours(currentNode))
-                {
-                    if (!neighbor.Walkable || closedSet.Contains(neighbor))
-                        continue;
-
-                    int newMovementCostToNeighbor = currentNode.GCost + GetDistance(currentNode, neighbor);
-                    if (newMovementCostToNeighbor < neighbor.GCost || !openSet.Contains(neighbor))
-                    {
-                        neighbor.GCost = newMovementCostToNeighbor;
-                        neighbor.HCost = GetDistance(neighbor, targetNode);
-                        neighbor.Parent = currentNode;
-
-                        if (!openSet.Contains(neighbor))
-                            openSet.Add(neighbor);
-                        else
-                        {
-                            openSet.UpdateItem(neighbor);
-                        }
-                    }
-                }
+                return Open_dic[key];
             }
-
             return null;
         }
 
-        public List<Node> RetracePath(Node startNode, Node endNode)
+        //计算某个点的G值
+        private int GetG(RoutePoint p)
         {
-            List<Node> path = new List<Node>();
-            Node currentNode = endNode;
+            if (p.father == null) return 0;
+            if (p.x == p.father.x || p.y == p.father.y) return p.father.G + 10;
+            else return p.father.G + 14;
+        }
 
-            while (currentNode != startNode)
+        //计算某个点的H值
+        private int GetH(RoutePoint p, RoutePoint pb)
+        {
+            return Math.Abs(p.x - pb.x) * 10 + Math.Abs(p.y - pb.y) * 10;
+        }
+
+
+        /// <summary>
+        /// 寻找附近可到坐标
+        /// 附近的8个点
+        /// </summary>
+        /// <param name="cp">当前坐标</param>
+        /// <returns>附近可达坐标数组</returns>
+        private List<RoutePoint> FindNearCell(RoutePoint p0)
+        {
+            List<RoutePoint> NearCellPoints = new List<RoutePoint>();
+            for (int xt = p0.x - 1; xt <= p0.x + 1; xt++)
             {
-                path.Add(currentNode);
-                currentNode = currentNode.Parent;
-            }
-
-            path.Add(startNode);
-            path.Reverse();
-
-            return path;
-        }
-
-        private int GetDistance(Node nodeA, Node nodeB)
-        {
-            int distX = Math.Abs(nodeA.Location.X - nodeB.Location.X);
-            int distY = Math.Abs(nodeA.Location.Y - nodeB.Location.Y);
-
-            if (distX > distY)
-                return 14 * distY + (10 * (distX - distY));
-
-            return 14 * distX + (10 * (distY - distX));
-        }
-
-        private Node GetNode(Point location)
-        {
-            return Grid[location.X, location.Y];
-        }
-
-        private List<Node> GetNeighbours(Node node)
-        {
-            List<Node> neighbours = new List<Node>();
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int y = -1; y <= 1; y++)
+                for (int yt = p0.y - 1; yt <= p0.y + 1; yt++)
                 {
-                    if (x == 0 && y == 0) continue;
-
-                    int checkX = node.Location.X + x;
-                    int checkY = node.Location.Y + y;
-
-                    if (checkX >= 0 && checkX < Grid.GetLength(0) && checkY >= 0 && checkY < Grid.GetLength(1))
+                    //排除超过边界的点
+                    if (xt < 0 || yt < 0 || xt >= w || yt >= h)
                     {
-                        neighbours.Add(Grid[checkX, checkY]);
+                        continue;
+                    }
+                    //排除自己
+                    if (xt == p0.x && yt == p0.y)
+                    {
+                        continue;
+                    }
+                    //排除不通的点
+                    if (R[xt, yt] != 1)
+                    {
+                        continue;
+                    }
+                    NearCellPoints.Add(new RoutePoint(xt, yt));
+                }
+            }
+            return NearCellPoints;
+        }
+
+
+        //入口，开始节点pa,目标节点pb
+        public List<Point> FindeWay(Point _pa, Point _pb)
+        {
+            RoutePoint pa = new RoutePoint(_pa);
+            RoutePoint pb = new RoutePoint(_pb);
+            List<Point> myp = new List<Point>();
+            OpenAdd(pa);
+            bool isEnd = false;//是否结束
+            while (Open_dic.Count > 0 && !isEnd)
+            {
+                RoutePoint p0 = GetMinFFromOpenList();
+                if (p0 == null) return myp;
+                OpenRemove(p0);
+                R[p0.x, p0.y] = 3;//关闭掉
+                foreach (RoutePoint childCell in FindNearCell(p0))
+                {
+                    //如果已经到了终点，把终点的父亲指向当前点，并直接结束掉
+                    if (childCell.x == pb.x && childCell.y == pb.y)
+                    {
+                        pb.father = p0;
+                        isEnd = true;
+                        break;
+                    }
+                    //在开启列表,则取出来，重新计算G值，如果从当前节点过去的G值更低，则更新那个点的G值和父亲
+                    RoutePoint pt = GetPointFromOpenList(childCell.x, childCell.y);
+                    if (pt != null)
+                    {
+                        int G_new = 0;
+                        if (p0.x == pt.x || p0.y == pt.y)
+                            G_new = p0.G + 10;
+                        else
+                            G_new = p0.G + 14;
+
+                        if (G_new < pt.G)
+                        {
+                            pt.father = p0;
+                            pt.G = G_new;
+                        }
+                    }
+                    else
+                    {
+                        //不在开启列表中,全新的点,则加入开启列表
+                        childCell.father = p0;
+                        childCell.G = GetG(childCell);
+                        childCell.H = GetH(childCell, pb);
+                        OpenAdd(childCell);
                     }
                 }
             }
-
-            return neighbours;
+            //终点在列表里，起点不在
+            while (pb.father != null)
+            {
+                myp.Add(pb.getPoint());
+                pb = pb.father;
+            }
+            return myp;
         }
 
     }
+
 }
