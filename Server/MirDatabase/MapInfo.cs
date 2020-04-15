@@ -50,6 +50,7 @@ namespace Server.MirDatabase
             Index = reader.ReadInt32();
             FileName = reader.ReadString();
             Title = reader.ReadString();
+           
             MiniMap = reader.ReadUInt16();
             Light = (LightSetting) reader.ReadByte();
 
@@ -123,6 +124,7 @@ namespace Server.MirDatabase
         {
             writer.Write(Index);
             writer.Write(FileName);
+            
             writer.Write(Title);
             writer.Write(MiniMap);
             writer.Write((byte)Light);

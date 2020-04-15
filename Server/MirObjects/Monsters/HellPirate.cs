@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -23,7 +24,7 @@ namespace Server.MirObjects.Monsters
             
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(3) > 0)
+            if (RandomUtils.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
             }
@@ -33,7 +34,7 @@ namespace Server.MirObjects.Monsters
 
                 MirDirection dir = Functions.PreviousDir(Direction);
                 Point target;
-                Cell cell;
+                //Cell cell;
 
                 for (int i = 0; i < 8; i++)
                 {
@@ -43,13 +44,13 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    cell = CurrentMap.GetCell(target);
+                    //cell = CurrentMap.GetCell(target);
 
-                    if (cell.Objects == null) continue;
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                         if (!ob.IsAttackTarget(this)) continue;
 

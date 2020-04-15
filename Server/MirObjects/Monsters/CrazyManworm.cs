@@ -1,8 +1,10 @@
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //³àÑª¿ñÄ§
     public class CrazyManworm : MonsterObject
     {
         protected internal CrazyManworm(MonsterInfo info)
@@ -20,7 +22,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(3) > 0)
+            if (RandomUtils.Next(3) > 0)
             {
                 base.Attack();
             }

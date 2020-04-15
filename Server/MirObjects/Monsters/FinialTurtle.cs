@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -58,13 +59,13 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    if (Envir.Random.Next(8) == 0)
+                    if (RandomUtils.Next(8) == 0)
                     {
                         Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
                     }
-                    if (Envir.Random.Next(15) == 0)
+                    if (RandomUtils.Next(15) == 0)
                     {
                         Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Frozen, Duration = 5, TickSpeed = 1000 }, this);
                     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
@@ -42,7 +43,7 @@ namespace Server.MirObjects.Monsters
                 int damage = GetAttackPower(MinDC, MaxDC);
                 if (damage == 0) return;
 
-                if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.MagicResist)
+                if (RandomUtils.Next(Settings.MagicResistWeight) >= Target.MagicResist)
                 {
                     int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
 
@@ -102,7 +103,7 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < count; i++)
             {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(4))
+                switch (RandomUtils.Next(4))
                 {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.BoneMonster1));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -31,7 +32,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            if (Envir.Random.Next(5) == 0)
+            if (RandomUtils.Next(6) == 0)
             {
                 TeleportRandom(40, AttackRange);
             }
@@ -84,7 +85,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)
@@ -117,8 +118,8 @@ namespace Server.MirObjects.Monsters
             {
                 Point location;
 
-                location = new Point(Target.CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                          Target.CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                location = new Point(Target.CurrentLocation.X + RandomUtils.Next(-distance, distance + 1),
+                                          Target.CurrentLocation.Y + RandomUtils.Next(-distance, distance + 1));
 
                 if (Teleport(CurrentMap, location, true, 5)) return true;
             }

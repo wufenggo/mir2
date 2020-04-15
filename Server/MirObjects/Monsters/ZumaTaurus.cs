@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //这个是祖玛教主
     class ZumaTaurus : ZumaMonster
     {
         private byte _stage = 7;
@@ -20,7 +22,7 @@ namespace Server.MirObjects.Monsters
         protected override void ProcessAI()
         {
             if (Dead) return;
-            
+            //根据血量判断，召唤帮手，召唤7次帮手
             if (MaxHP >= 7)
             {
                 byte stage = (byte)(HP / (MaxHP / 7));
@@ -57,12 +59,13 @@ namespace Server.MirObjects.Monsters
         }
         private void SpawnSlaves()
         {
+            //一次召唤8个帮手
             int count = Math.Min(8, 40 - SlaveList.Count);
 
             for (int i = 0; i < count; i++)
             {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(7))
+                switch (RandomUtils.Next(7))
                 {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.Zuma1));

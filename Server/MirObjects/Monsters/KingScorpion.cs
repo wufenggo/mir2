@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //虹魔蝎卫
     class KingScorpion : MonsterObject
     {
         protected internal KingScorpion(MonsterInfo info) : base(info)
@@ -47,11 +49,11 @@ namespace Server.MirObjects.Monsters
 
             if (CurrentMap.ValidPoint(target))
             {
-                Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects != null)
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                //Cell cell = CurrentMap.GetCell(target);
+                if (CurrentMap.Objects[target.X, target.Y] != null)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player) continue;
                         if (!ob.IsAttackTarget(this)) continue;
                         range = true;
@@ -60,7 +62,7 @@ namespace Server.MirObjects.Monsters
             }
 
 
-            if (range || Envir.Random.Next(5) == 0)
+            if (range || RandomUtils.Next(5) == 0)
                 Broadcast(new S.ObjectRangeAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
             else
                 Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
@@ -88,12 +90,12 @@ namespace Server.MirObjects.Monsters
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                    //Cell cell = CurrentMap.GetCell(target);
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;

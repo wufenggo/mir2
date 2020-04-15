@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 
@@ -32,7 +33,7 @@ namespace Server.MirObjects.Monsters
             {
                 Attack();
 
-                if (Target.Dead)
+                if (Target == null || Target.Dead)
                     Die();
 
                 return;
@@ -65,9 +66,9 @@ namespace Server.MirObjects.Monsters
 
                 if (targets[i].Attacked(this, damage, DefenceType.ACAgility) <= 0) return;
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                 {
-                    if (Envir.Random.Next(5) == 0)
+                    if (RandomUtils.Next(5) == 0)
                         targets[i].ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
                 }
             }

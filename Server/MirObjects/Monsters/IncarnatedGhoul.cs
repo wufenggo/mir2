@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //肉食性食尸鬼
     class IncarnatedGhoul : MonsterObject
     {
         protected internal IncarnatedGhoul(MonsterInfo info) : base(info)
@@ -36,9 +38,9 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (Envir.Random.Next(15) == 0)
+                if (RandomUtils.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
             }
         }

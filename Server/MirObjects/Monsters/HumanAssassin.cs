@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
@@ -9,38 +10,53 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //刺客的分身，烈火身
     public class HumanAssassin : MonsterObject
     {
         public byte AttackRange = 1;
         public int AttackDamage = 0;
         public bool Summoned;
         public long ExplosionTime;
+        public int maxDamage = 500;//最大伤害量，这个加上等级，3级就是8百
+        private bool isStrengthen = false;//
 
         protected internal HumanAssassin(MonsterInfo info)
             : base(info)
         {
-            ExplosionTime = Envir.Time + 1000 * 10;
+            ExplosionTime = Envir.Time + 1000 * 12;
             Summoned = true;
+            isStrengthen = RandomUtils.Next(100) < 50;
         }
 
         protected override void RefreshBase()
         {
             MaxHP = 1500;
-            MinAC = Master.MinAC;
-            MaxAC = Master.MaxAC;
-            MinMAC = Master.MinMAC;
-            MaxMAC = Master.MaxMAC;
-            MinDC = Master.MinDC;
-            MaxDC = Master.MaxDC;
-            MinMC = Master.MinMC;
-            MaxMC = Master.MaxMC;
-            MinSC = Master.MinSC;
-            MaxSC = Master.MaxSC;
-            Accuracy = Master.Accuracy;
-            Agility = Master.Agility;
-
+            if (Master != null)
+            {
+                MinAC = Master.MinAC;
+                MaxAC = Master.MaxAC;
+                MinMAC = Master.MinMAC;
+                MaxMAC = Master.MaxMAC;
+                MinDC = Master.MinDC;
+                MaxDC = Master.MaxDC;
+                MinMC = Master.MinMC;
+                MaxMC = Master.MaxMC;
+                MinSC = Master.MinSC;
+                MaxSC = Master.MaxSC;
+                Accuracy = Master.Accuracy;
+                Agility = Master.Agility;
+                AttackSpeed = Master.ASpeed;
+            }
+            else
+            {
+                MinAC = 10;
+                MaxAC = 10;
+                MinMAC = 10;
+                MaxMAC = 10;
+                MinDC = 10;
+                MaxDC = 50;
+            }
             MoveSpeed = 100;
-            AttackSpeed = Master.ASpeed;
         }
 
         public override void RefreshAll()
@@ -69,14 +85,14 @@ namespace Server.MirObjects.Monsters
 
             if (!CurrentMap.ValidPoint(location)) return false;
 
-            Cell cell = CurrentMap.GetCell(location);
+            //Cell cell = CurrentMap.GetCell(location);
 
             bool isBreak = false;
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
+            if (CurrentMap.Objects[location.X, location.Y] != null)
+                for (int i = 0; i < CurrentMap.Objects[location.X, location.Y].Count; i++)
                 {
-                    MapObject ob = cell.Objects[i];
+                    MapObject ob = CurrentMap.Objects[location.X, location.Y][i];
                     if (!ob.Blocking) continue;
                     isBreak = true;
                     break;
@@ -88,23 +104,23 @@ namespace Server.MirObjects.Monsters
 
                 if (!CurrentMap.ValidPoint(location)) return false;
 
-                cell = CurrentMap.GetCell(location);
+                //cell = CurrentMap.GetCell(location);
 
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                if (CurrentMap.Objects[location.X, location.Y] != null)
+                    for (int i = 0; i < CurrentMap.Objects[location.X, location.Y].Count; i++)
                     {
-                        MapObject ob = cell.Objects[i];
+                        MapObject ob = CurrentMap.Objects[location.X, location.Y][i];
                         if (!ob.Blocking) continue;
                         return false;
                     }
             }
 
-            CurrentMap.GetCell(CurrentLocation).Remove(this);
+            CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y,this);
 
             Direction = dir;
             RemoveObjects(dir, 1);
             CurrentLocation = location;
-            CurrentMap.GetCell(CurrentLocation).Add(this);
+            CurrentMap.Add(CurrentLocation.X, CurrentLocation.Y,this);
             AddObjects(dir, 1);
 
             if (Hidden)
@@ -135,12 +151,12 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
-            cell = CurrentMap.GetCell(CurrentLocation);
+            //cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
+            for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
+                if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i].Race != ObjectType.Spell) continue;
+                SpellObject ob = (SpellObject)CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
 
                 ob.ProcessSpell(this);
                 //break;
@@ -161,10 +177,14 @@ namespace Server.MirObjects.Monsters
             ProcessSearch();
             ProcessTarget();
 
-            if (Master != null && Master is PlayerObject)
-            {
-                if (Envir.Time > ExplosionTime) Die();
-            }
+            //if (Master != null && Master is PlayerObject)
+            //{
+            //    if (isStrengthen && ((PlayerObject)Master).hasItemSk(ItemSkill.Assassin5))
+            //    {
+            //        maxDamage = 750;
+            //    }
+            //    if (Envir.Time > ExplosionTime) Die();
+            //}
         }
 
         protected override void ProcessSearch()
@@ -176,12 +196,12 @@ namespace Server.MirObjects.Monsters
             //Stacking or Infront of master - Move
             bool stacking = false;
 
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
+            //Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
+            if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y] != null)
+                for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
                 {
-                    MapObject ob = cell.Objects[i];
+                    MapObject ob = CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
                     if (ob == this || !ob.Blocking) continue;
                     stacking = true;
                     break;
@@ -194,7 +214,7 @@ namespace Server.MirObjects.Monsters
                 {
                     MirDirection dir = Direction;
 
-                    switch (Envir.Random.Next(3)) // favour Clockwise
+                    switch (RandomUtils.Next(3)) // favour Clockwise
                     {
                         case 0:
                             for (int i = 0; i < 7; i++)
@@ -218,7 +238,7 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
-            if (Target == null || Envir.Random.Next(3) == 0)
+            if (Target == null || RandomUtils.Next(3) == 0)
                 FindTarget();
         }
 
@@ -246,12 +266,10 @@ namespace Server.MirObjects.Monsters
 
         protected override void Attack()
         {
-            if (AttackDamage >= 500) 
-            {   
+            if (AttackDamage >= maxDamage + PetLevel * 100)
+            {
                 Die();
-                return;
             }
-
             ShockTime = 0;
 
             if (!Target.IsAttackTarget(this))
@@ -309,7 +327,7 @@ namespace Server.MirObjects.Monsters
 
         private void explosionDie()
         {
-            int criticalDamage = Envir.Random.Next(0, 100) <= Accuracy ? MaxDC * 2 : MinDC * 2;
+            int criticalDamage = RandomUtils.Next(0, 100) <= Accuracy ? MaxDC * 2 : MinDC * 2;
             int damage = (MinDC / 5 + 4 * (Level / 20)) * criticalDamage / 20 + MaxDC;
 
             for (int i = 0; i < 16; i++)
@@ -319,14 +337,14 @@ namespace Server.MirObjects.Monsters
 
                 if (!CurrentMap.ValidPoint(hitPoint)) continue;
 
-                Cell cell = CurrentMap.GetCell(hitPoint);
+                //Cell cell = CurrentMap.GetCell(hitPoint);
 
-                if (cell.Objects == null) continue;
+                if (CurrentMap.Objects[hitPoint.X, hitPoint.Y] == null) continue;
 
 
-                for (int j = 0; j < cell.Objects.Count; j++)
+                for (int j = 0; j < CurrentMap.Objects[hitPoint.X, hitPoint.Y].Count; j++)
                 {
-                    MapObject target = cell.Objects[j];
+                    MapObject target = CurrentMap.Objects[hitPoint.X, hitPoint.Y][j];
                     switch (target.Race)
                     {
                         case ObjectType.Monster:

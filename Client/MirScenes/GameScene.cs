@@ -1366,6 +1366,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCMarket:
                     NPCMarket((S.NPCMarket)p);
                     break;
+                case (short)ServerPacketIds.ObjectMonsterChange:
+                    ObjectMonsterChange((S.ObjectMonsterChange)p);
+                    break;
+                case (short)ServerPacketIds.BlizzardStopTime:
+                    BlizzardStopTime((S.BlizzardStopTime)p);
+                    break;
                 case (short)ServerPacketIds.NPCMarketPage:
                     NPCMarketPage((S.NPCMarketPage)p);
                     break;
@@ -3907,6 +3913,9 @@ namespace Client.MirScenes
                     case SpellEffect.RedMoonEvil:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.RedMoonEvil], 32, 6, 400, ob) { Blend = false });
                         break;
+                    case SpellEffect.TreeQueen:
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.TreeQueen], 120, 15, 800, ob) { Blend = false });
+                        break;
                     case SpellEffect.TwinDrakeBlade:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 380, 6, 800, ob));
                         break;
@@ -4073,6 +4082,25 @@ namespace Client.MirScenes
                         break;
                     case SpellEffect.IcePillar:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
+                        break;
+
+                    case SpellEffect.GreatFoxThunder://悲月雷电特效
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GreatFoxSpirit], 355, 20, 2000, ob));
+                        SoundManager.PlaySound(((ushort)Monster.GreatFoxSpirit * 10) + 1);
+                        break;
+                    case SpellEffect.PoisonRain://毒雨效果
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.ShellFighter], 776, 30, 3000, ob));
+                        SoundManager.PlaySound(((ushort)Monster.ShellFighter * 10) + 1);
+                        break;
+
+
+                    case SpellEffect.Focus://基础箭法的集中特效
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 2730, 10, 1000, ob));
+                        SoundManager.PlaySound(20000 + 121 * 10 + 5);
+                        break;
+                    case SpellEffect.FlameRound://基础箭法的集中特效
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 4370, 10, 1000, ob));
+                        SoundManager.PlaySound(20000 + 121 * 10 + 5);
                         break;
                 }
                 return;
@@ -4839,6 +4867,28 @@ namespace Client.MirScenes
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.SitDown, Direction = p.Direction, Location = p.Location });
                 return;
             }
+        }
+
+        //怪物变更
+        private void ObjectMonsterChange(S.ObjectMonsterChange p)
+        {
+            MonsterObject mob;
+            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            {
+                MapObject ob = MapControl.Objects[i];
+                if (ob.ObjectID == p.ObjectID)
+                {
+                    mob = (MonsterObject)ob;
+                    mob.Change(p);
+                    return;
+                }
+            }
+        }
+
+        //冰雨，火雨时间缩短
+        private void BlizzardStopTime(S.BlizzardStopTime p)
+        {
+            User.BlizzardStopTime = p.stopTime + CMain.Time;
         }
 
         private void BaseStatsInfo(S.BaseStatsInfo p)
@@ -8825,6 +8875,7 @@ namespace Client.MirScenes
         public string FileName = String.Empty;
         public string Title = String.Empty;
         public ushort MiniMap, BigMap, Music, SetMusic;
+      
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
@@ -9034,6 +9085,8 @@ namespace Client.MirScenes
             return true;
         }
 
+
+
         public static MapObject GetObject(uint targetID)
         {
             for (int i = 0; i < Objects.Count; i++)
@@ -9044,11 +9097,31 @@ namespace Client.MirScenes
             }
             return null;
         }
+        public static List<MapObject> GetPlayers(Point p, uint distance)
+        {
+            List<MapObject> retlist = new List<MapObject>();
+            for (int i = 0; i < Objects.Count; i++)
+            {
+                MapObject ob = Objects[i];
+                if (ob.Race != ObjectType.Player)
+                {
+                    continue;
+                }
+
+                if (Functions.MaxDistance(p, ob.CurrentLocation) > distance)
+                {
+                    continue;
+                }
+                retlist.Add(ob);
+            }
+            return retlist;
+        }
 
         public override void Draw()
         {
             //Do nothing.
         }
+        //某个点是否在安全区域
 
         protected override void CreateTexture()
         {

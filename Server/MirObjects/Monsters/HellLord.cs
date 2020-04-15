@@ -2,9 +2,15 @@
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Drawing;
+using System;
+using System.Collections.Generic;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
+    /// <summary>
+    /// 炎魔太子
+    /// </summary>
     public class HellLord : MonsterObject
     {   
         protected override bool CanMove { get { return false; } }
@@ -99,7 +105,7 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
 
-            if (Envir.Random.Next(_bombChance) == 0 || _raged)
+            if (RandomUtils.Next(_bombChance) == 0 || _raged)
             {
                 SpawnBomb();
             }
@@ -115,10 +121,28 @@ namespace Server.MirObjects.Monsters
            
         }
 
+        //怪物死亡
+        public override void Die()
+        {
+            //周围20格的怪物全死
+            List<MapObject> objs = CurrentMap.getMapObjects(CurrentLocation.X, CurrentLocation.Y, 20);
+            foreach(MapObject o in objs)
+            {
+                if(o==null||o.Race!= ObjectType.Monster)
+                {
+                    continue;
+                }
+                if(o.EXPOwner!=null || o.Master != null){
+                    continue;
+                }
+                o.Die();
+            }
+            base.Die();
+        }
         private void SpawnQuakes()
         {
-            int count = Envir.Random.Next(1, _raged ? _quakeCount * 2 : _quakeCount);
-            int distance = Envir.Random.Next(_quakeSpreadMin, _quakeSpreadMax);
+            int count = RandomUtils.Next(1, _raged ? _quakeCount * 2 : _quakeCount);
+            int distance = RandomUtils.Next(_quakeSpreadMin, _quakeSpreadMax);
 
             for (int j = 0; j < CurrentMap.Players.Count; j++)
             {
@@ -126,10 +150,10 @@ namespace Server.MirObjects.Monsters
 
                 for (int i = 0; i < count; i++)
                 {
-                    Point location = new Point(playerLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                             playerLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                    Point location = new Point(playerLocation.X + RandomUtils.Next(-distance, distance + 1),
+                                             playerLocation.Y + RandomUtils.Next(-distance, distance + 1));
 
-                    if(Envir.Random.Next(10) == 0)
+                    if(RandomUtils.Next(10) == 0)
                     {
                         location = playerLocation;
                     }
@@ -138,14 +162,14 @@ namespace Server.MirObjects.Monsters
 
                     SpellObject spellObj = null;
 
-                    switch (Envir.Random.Next(2))
+                    switch (RandomUtils.Next(2))
                     {
                         case 0:
                             {
                                 spellObj = new SpellObject
                                 {
                                     Spell = Spell.MapQuake1,
-                                    Value = Envir.Random.Next(Envir.Random.Next(MinDC, MaxDC)),
+                                    Value = RandomUtils.Next(MinDC, MaxDC),
                                     ExpireTime = Envir.Time + (2000),
                                     TickSpeed = 500,
                                     Caster = null,
@@ -160,7 +184,7 @@ namespace Server.MirObjects.Monsters
                                 spellObj = new SpellObject
                                 {
                                     Spell = Spell.MapQuake2,
-                                    Value = Envir.Random.Next(Envir.Random.Next(MinDC, MaxDC)),
+                                    Value = RandomUtils.Next(MinDC, MaxDC),
                                     ExpireTime = Envir.Time + (2000),
                                     TickSpeed = 500,
                                     Caster = null,
@@ -172,26 +196,57 @@ namespace Server.MirObjects.Monsters
                             break;
                     }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + Envir.Random.Next(5000), spellObj);
+                    DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + RandomUtils.Next(5000), spellObj);
                     CurrentMap.ActionList.Add(action);
                 }
             }
 
         }
-
+        //刷新小怪，这里控制下，不要无限刷新？
         private void SpawnBomb()
         {
-            int distance = Envir.Random.Next(_bombSpreadMin, _bombSpreadMax);
+            //当前地图怪物超过1200，不刷新了
+            if (CurrentMap.MonsterCount > 1000)
+            {
+                return;
+            }
+
+            int NearCount = 0;
+            //周围5格的怪物超过200个，也不刷新了
+            for (int d = 0; d <= 5; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+
+                        //Cell cell = CurrentMap.GetCell(x, y);
+                        if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
+                        NearCount+=CurrentMap.Objects[x, y].Count;
+                    }
+                }
+            }
+            if (NearCount > 200)
+            {
+                return;
+            }
+
+            int distance = RandomUtils.Next(_bombSpreadMin, _bombSpreadMax);
 
             for (int j = 0; j < CurrentMap.Players.Count; j++)
             {
                 Point playerLocation = CurrentMap.Players[j].CurrentLocation;
 
-                Point location = new Point(playerLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                             playerLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                Point location = new Point(playerLocation.X + RandomUtils.Next(-distance, distance + 1),
+                                             playerLocation.Y + RandomUtils.Next(-distance, distance + 1));
 
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(3))
+                switch (RandomUtils.Next(3))
                 {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.HellBomb1));
@@ -240,8 +295,8 @@ namespace Server.MirObjects.Monsters
 
             for (int i = 0; i < 50; i++)
             {
-                Point location = new Point(front.X + Envir.Random.Next(-10, 10),
-                                         front.Y + Envir.Random.Next(-10, 10));
+                Point location = new Point(front.X + RandomUtils.Next(-10, 10),
+                                         front.Y + RandomUtils.Next(-10, 10));
 
                 if (CurrentMap.ValidPoint(location))
                 {

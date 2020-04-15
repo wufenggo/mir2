@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -63,11 +64,11 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-                    if (Envir.Random.Next(Settings.MagicResistWeight) >= Target.MagicResist)
+                    if (RandomUtils.Next(Settings.MagicResistWeight) >= Target.MagicResist)
                     {
-                        if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
+                        if (Target.Attacked(this, damage, DefenceType.MACAgility) > 0 && RandomUtils.Next(8) == 0)
                         {
-                            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                             {
                                 int poison = GetAttackPower(MinSC, MaxSC);
 
@@ -87,19 +88,19 @@ namespace Server.MirObjects.Monsters
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                    //Cell cell = CurrentMap.GetCell(target);
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < ob.MagicResist) continue;
-                            if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && Envir.Random.Next(8) == 0)
+                            if (RandomUtils.Next(Settings.MagicResistWeight) < ob.MagicResist) continue;
+                            if (ob.Attacked(this, damage, DefenceType.MACAgility) > 0 && RandomUtils.Next(8) == 0)
                             {
-                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                                 {
                                     int poison = GetAttackPower(MinSC, MaxSC);
 

@@ -1,4 +1,5 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using System.Collections.Generic;
 using S = ServerPackets;
 
@@ -33,7 +34,7 @@ namespace Server.MirObjects.Monsters
 
             if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 3))
             {
-                if (Envir.Random.Next(2) == 0 || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2))
+                if (RandomUtils.Next(2) == 0 || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2))
                 {
                     Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
@@ -106,12 +107,17 @@ namespace Server.MirObjects.Monsters
 
             if (target.Attacked(this, damage, DefenceType.MACAgility) > 0)
             {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                 {
-                    Target.ApplyPoison(new Poison
+                    int Duration = RandomUtils.Next(MaxMC);
+                    if (Duration > 30)
+                    {
+                        Duration = 30;
+                    }
+                    target.ApplyPoison(new Poison
                     {
                         Owner = this,
-                        Duration = Envir.Random.Next(MaxMC),
+                        Duration = Duration,
                         PType = PoisonType.Stun,
                         Value = damage,
                         TickSpeed = 1000
@@ -156,7 +162,7 @@ namespace Server.MirObjects.Monsters
 
             if (Walk(dir)) return;
 
-            switch (Envir.Random.Next(2)) //No favour
+            switch (RandomUtils.Next(2)) //No favour
             {
                 case 0:
                     for (int i = 0; i < 7; i++)

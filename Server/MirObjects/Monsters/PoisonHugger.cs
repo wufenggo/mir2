@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -39,7 +40,7 @@ namespace Server.MirObjects.Monsters
             {
                 if(ranged)
                 {
-                    if(Envir.Random.Next(5) == 0)
+                    if(RandomUtils.Next(5) == 0)
                     {
                         Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
                         Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
@@ -97,9 +98,9 @@ namespace Server.MirObjects.Monsters
             
             if (target.Attacked(this, damage, defence) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
             {
-                if (Envir.Random.Next(5) == 0)
+                if (RandomUtils.Next(5) == 0)
                     target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
             }
         }

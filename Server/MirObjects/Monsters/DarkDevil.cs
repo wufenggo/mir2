@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //虹魔教主
     class DarkDevil : MonsterObject
     {
         private long _areaTime;
@@ -39,7 +41,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            _areaTime = Envir.Time + 2000 + Envir.Random.Next(3)*1000;
+            _areaTime = Envir.Time + 2000 + RandomUtils.Next(3)*1000;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });

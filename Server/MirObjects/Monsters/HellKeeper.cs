@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //地狱守门人
     class HellKeeper : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
@@ -39,21 +41,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     break;
             }
 
@@ -93,21 +95,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     break;
             }
 
@@ -156,7 +158,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            byte attacktype1 = (byte)(Envir.Random.Next(3) > 0 ? 0 : 1);
+            byte attacktype1 = (byte)(RandomUtils.Next(3) > 0 ? 0 : 1);
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
 
@@ -200,9 +202,9 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (Envir.Random.Next(10) == 0)
+                if (RandomUtils.Next(10) == 0)
                 {
                     Target.ApplyPoison(new Poison { Owner = this, Duration = GetAttackPower(MinMC, MaxMC), PType = PoisonType.Stun, TickSpeed = 1000 }, this);
                 }

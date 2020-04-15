@@ -2,237 +2,504 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
 using S = ServerPackets;
 
+
 namespace Server.MirObjects
 {
+    /// <summary>
+    /// 怪物对象
+    /// </summary>
     public class MonsterObject : MapObject
     {
-        public static MonsterObject GetMonster(MonsterInfo info) //ai数据
+        public static MonsterObject GetMonster(MonsterInfo info)
         {
             if (info == null) return null;
-
+           
             switch (info.AI)
             {
                 case 1:
-                case 2:
+                case 2://鸡,鹿
                     return new Deer(info);
-                case 3:
+                case 3://龙蛇宝箱,树
                     return new Tree(info);
-                case 4:
+                case 4://毒蜘蛛
                     return new SpittingSpider(info);
-                case 5:
+                case 5://食人花
                     return new CannibalPlant(info);
-                case 6:
+                case 6://带刀护卫
                     return new Guard(info);
-                case 7:
+                case 7://洞蛆,楔蛾
                     return new CaveMaggot(info);
-                case 8:
+                case 8://掷斧骷髅,黑暗战士,祖玛弓箭手
                     return new AxeSkeleton(info);
-                case 9:
+                case 9://狼,蝎子
                     return new HarvestMonster(info);
-                case 10:
+                case 10://火焰沃玛
                     return new FlamingWooma(info);
-                case 11:
+                case 11://沃玛教主
                     return new WoomaTaurus(info);
-                case 12:
+                case 12://角蝇
                     return new BugBagMaggot(info);
-                case 13:
+                case 13://赤月恶魔
                     return new RedMoonEvil(info);
-                case 14:
+                case 14://触龙神
                     return new EvilCentipede(info);
-                case 15:
+                case 15://祖玛雕像
                     return new ZumaMonster(info);
-                case 16:
+                case 16://祖玛赤雷
                     return new RedThunderZuma(info);
-                case 17:
+                case 17://祖玛教主
                     return new ZumaTaurus(info);
-                case 18:
+                case 18://神兽
                     return new Shinsu(info);
-                case 19:
+                case 19://虹魔蝎卫
                     return new KingScorpion(info);
-                case 20:
+                case 20://虹魔教主
                     return new DarkDevil(info);
-                case 21:
+                case 21://肉食性食尸鬼(未知是什么)
                     return new IncarnatedGhoul(info);
-                case 22:
+                case 22://祖玛教主_封魔
                     return new IncarnatedZT(info);
-                case 23:
+                case 23://商店护卫,变异骷髅
                     return new BoneFamiliar(info);
-                case 24:
+                case 24://僧侣僵尸
                     return new DigOutZombie(info);
-                case 25:
+                case 25://腐肉僵尸
                     return new RevivingZombie(info);
-                case 26:
+                case 26://雷电僵尸
                     return new ShamanZombie(info);
-                case 27:
+                case 27://狂热血蜥蜴,蚂蚁司令官
                     return new Khazard(info);
-                case 28:
+                case 28://恶灵尸王
                     return new ToxicGhoul(info);
-                case 29:
+                case 29://骷髅长枪兵
                     return new BoneSpearman(info);
-                case 30:
+                case 30://黄泉教主
                     return new BoneLord(info);
-                case 31:
+                case 31://牛魔法师
                     return new RightGuard(info);
-                case 32:
+                case 32://牛魔祭祀
                     return new LeftGuard(info);
-                case 33:
+                case 33://牛魔王
                     return new MinotaurKing(info);
-                case 34:
+                case 34://幻影寒虎
                     return new FrostTiger(info);
-                case 35:
+                case 35://沙虫
                     return new SandWorm(info);
-                case 36:
+                case 36://浮龙金蛇
                     return new Yimoogi(info);
-                case 37:
+                case 37://神石毒魔蛛1
                     return new CrystalSpider(info);
-                case 38:
+                case 38://精灵
                     return new HolyDeva(info);
-                case 39:
+                case 39://幻影蜘蛛
                     return new RootSpider(info);
-                case 40:
+                case 40://爆裂蜘蛛
                     return new BombSpider(info);
                 case 41:
-                case 42:
+                case 42://镇魂石
                     return new YinDevilNode(info);
-                case 43:
+                case 43://破凰魔神,火龙教主？
                     return new OmaKing(info);
-                case 44:
+                case 44://狐狸战士
                     return new BlackFoxman(info);
-                case 45:
+                case 45://狐狸法师
                     return new RedFoxman(info);
-                case 46:
+                case 46://狐狸道士
                     return new WhiteFoxman(info);
-                case 47:
+                case 47://悲月魂石
                     return new TrapRock(info);
-                case 48:
+                case 48://九尾魂石
                     return new GuardianRock(info);
-                case 49:
+                case 49://闪电元素
                     return new ThunderElement(info);
-                case 50:
+                case 50://悲月天珠
                     return new GreatFoxSpirit(info);
-                case 51:
+                case 51://悲月刺蛙
                     return new HedgeKekTal(info);
-                case 52:
+                case 52://破天魔龙
                     return new EvilMir(info);
-                case 53:
+                case 53://破天魔龙
                     return new EvilMirBody(info);
-                case 54:
+                case 54://火龙守护兽
                     return new DragonStatue(info);
-                case 55:
+                case 55://分身
                     return new HumanWizard(info);
-                case 56:
+                case 56://练功师
                     return new Trainer(info);
-                case 57:
+                case 57://弓箭护卫
                     return new TownArcher(info);
-                case 58:
+                case 58://大刀护卫
                     return new Guard(info);
-                case 59:
+                case 59://刺客分身
                     return new HumanAssassin(info);
-                case 60:
+                case 60://召唤蜘蛛
                     return new VampireSpider(info);
-                case 61:
+                case 61://召唤蛤蟆
                     return new SpittingToad(info);
-                case 62:
+                case 62://召唤图腾
                     return new SnakeTotem(info);
-                case 63:
+                case 63://鬼魅蛇
                     return new CharmedSnake(info);
-                case 64:
+                case 64://宝贝猪,小鸡
                     return new IntelligentCreatureObject(info);
-                case 65:
+                case 65://赤血利刃
                     return new MutatedManworm(info);
-                case 66:
+                case 66://赤血狂魔
                     return new CrazyManworm(info);
-                case 67:
+                case 67://黑暗多脚怪
                     return new DarkDevourer(info);
-                case 68:
+                case 68://足球
                     return new Football(info);
-                case 69:
+                case 69://紫电小蜘蛛
                     return new PoisonHugger(info);
-                case 70:
+                case 70://剧毒小蜘蛛
                     return new Hugger(info);
-                case 71:
+                case 71://怨恶
                     return new Behemoth(info);
-                case 72:
+                case 72://幽冥龟
                     return new FinialTurtle(info);
-                case 73:
+                case 73://大龟王
                     return new TurtleKing(info);
-                case 74:
+                case 74://光明龟
                     return new LightTurtle(info);
-                case 75:
+                case 75://溶混鬼
                     return new WitchDoctor(info);
-                case 76:
+                case 76://弯刀流魂
                     return new HellSlasher(info);
-                case 77:
+                case 77://拔舌流魂
                     return new HellPirate(info);
-                case 78:
+                case 78://吞魂鬼
                     return new HellCannibal(info);
-                case 79:
+                case 79://地狱守门人
                     return new HellKeeper(info);
-                case 80:
+                case 80://守卫弓手
                     return new ConquestArcher(info);
-                case 81:
+                case 81://大门
                     return new Gate(info);
-                case 82:
+                case 82://城堡Gi西
                     return new Wall(info);
-                case 83:
+                case 83://风暴战士
                     return new Tornado(info);
-                case 84:
+                case 84://野兽王
                     return new WingedTigerLord(info);
 
-                case 86:
+                case 86://冰狱战将
                     return new ManectricClaw(info);
-                case 87:
+                case 87://冰狱天将
                     return new ManectricBlest(info);
-                case 88:
+                case 88://冰狱魔王
                     return new ManectricKing(info);
-                case 89:
+                case 89://冰柱
                     return new IcePillar(info);
-                case 90:
+                case 90://地狱炮兵
                     return new TrollBomber(info);
-                case 91:
+                case 91://地狱统领
                     return new TrollKing(info);
-                case 92:
+                case 92://地狱长矛鬼
                     return new FlameSpear(info);
-                case 93:
+                case 93://地狱魔焰鬼
                     return new FlameMage(info);
-                case 94:
+                case 94://地狱巨镰鬼
                     return new FlameScythe(info);
-                case 95:
+                case 95://地狱双刃鬼
                     return new FlameAssassin(info);
-                case 96:
+                case 96://地狱将军
                     return new FlameQueen(info);
-                case 97:
+                case 97://寒冰守护神,紫电守护神
                     return new HellKnight(info);
-                case 98:
+                case 98://炎魔太子
                     return new HellLord(info);
-                case 99:
+                case 99://寒冰球
                     return new HellBomb(info);
-                case 100:
+                case 100://
                     return new VenomSpider(info);
                 case 101:
-                    return new FeederAnt(info);
+                    return new Jar2(info);
                 case 102:
-                    return new GeneralJinmYo(info);
-                case 103:
                     return new RestlessJar(info);
-
+                case 103://赤血鬼魂
+                    return new CyanoGhast(info);
+                case 104://阳龙王
+                    return new ChieftainSword(info);
+                case 105://暴雪僵尸
+                    return new FrozenZombie(info);
+                case 106://火焰僵尸
+                    return new BurningZombie(info);
+                case 107://DarkBeast LightBeast 暗黑剑齿虎 光明剑齿虎 2种攻击
+                    return new DarkBeast(info);
+                case 108://WhiteMammoth 猛犸象,普通攻击和蹲地板
+                    return new WhiteMammoth(info);
+                case 109://HardenRhino 铁甲犀牛
+                    return new HardenRhino(info);
+                case 110://Demonwolf 赤炎狼 1近身普攻，3格内喷火 火焰灵猫 共用
+                    return new Demonwolf(info);
+                case 111://BloodBaboon 血狒狒
+                    return new BloodBaboon(info);
+                case 112://DeathCrawler 死灵
+                    return new DeathCrawler(info);
+                case 113://AncientBringer 丹墨
+                    return new AncientBringer(info);
+                case 114://CatWidow 长枪灵猫
+                    return new CatWidow(info);
+                case 115://StainHammerCat 铁锤猫卫
+                    return new StainHammerCat(info);
+                case 116://BlackHammerCat 黑镐猫卫
+                    return new BlackHammerCat(info);
+                case 117://StrayCat 双刃猫卫
+                    return new StrayCat(info);
+                case 118://CatShaman 灵猫法师
+                    return new CatShaman(info);
+                case 119://SeedingsGeneral 灵猫圣兽
+                    return new SeedingsGeneral(info);
+                case 120://SeedingsGeneral 灵猫将军
+                    return new GeneralJinmYo(info);
+                case 122://GasToad 神气蛤蟆
+                    return new GasToad(info);
+                case 123://Mantis 螳螂
+                    return new Mantis(info);
+                case 124://SwampWarrior 神殿树人
+                    return new SwampWarrior(info);
+                case 125://SwampWarrior 神殿刺鸟
+                    return new AssassinBird(info);
+                case 126://RhinoWarrior 犀牛勇士
+                    return new RhinoWarrior(info);
+                case 127://RhinoPriest 犀牛牧师
+                    return new RhinoPriest(info);
+                case 128://SwampSlime 泥战士
+                    return new SwampSlime(info);
+                case 129://RockGuard 石巨人
+                    return new RockGuard(info);
+                case 130://MudWarrior 泥土巨人
+                    return new MudWarrior(info);
+                case 131://SmallPot 小如来
+                    return new SmallPot(info);
+                case 132://TreeQueen 树王
+                    return new TreeQueen(info);
+                case 133://ShellFighter 斗争者
+                    return new ShellFighter(info);
+                case 134://黑暗的沸沸 
+                    return new DarkBaboon(info);
+                case 135://双头兽 
+                    return new TwinHeadBeast(info);
+                case 136://奥玛食人族 
+                    return new OmaCannibal(info);
+                case 137://奥玛祝福 普通攻击，砸地板 
+                    return new OmaBlest(info);
+                case 138://奥玛斧头兵 破防
+                    return new OmaSlasher(info);
+                case 139://奥玛刺客 闪现近身，破防，攻击完，又随机闪开
+                    return new OmaAssassin(info);
+                case 140://奥玛法师，随机闪开
+                    return new OmaMage(info);
+                case 141://奥玛巫医，3种攻击手段
+                    return new OmaWitchDoctor(info);
+                case 142://长鼻猴 普通攻击 攻击并净化，回血
+                    return new Mandrill(info);
+                case 143://瘟疫蟹 雷电攻击
+                    return new PlagueCrab(info);
+                case 144://攀缘花 
+                    return new CreeperPlant(info);
+                case 145://幽灵射手 
+                    return new FloatingWraith(info);
+                case 146://幽灵厨子 破防 
+                    return new ArmedPlant(info);
+                case 147://淹死的奴隶 
+                    return new Nadz(info);
+                case 148://复仇的恶灵 
+                    return new AvengingSpirit(info);
+                case 149://复仇的勇士 
+                    return new AvengingWarrior(info);
+                case 150://ClawBeast 水手长 
+                    return new ClawBeast(info);
+                case 151://WoodBox 爆炸箱子 
+                    return new WoodBox(info);
+                case 152://KillerPlant 黑暗船长 
+                    return new KillerPlant(info);
+                case 153://FrozenFighter 雪原战士 
+                    return new FrozenFighter(info);
+                case 154://FrozenKnight 雪原勇士 
+                    return new FrozenKnight(info);
+                case 155://FrozenGolem 雪原鬼尊 
+                    return new FrozenGolem(info);
+                case 156://IcePhantom 雪原恶鬼 
+                    return new IcePhantom(info);
+                case 157://SnowWolf 雪原冰狼 
+                    return new SnowWolf(info);
+                case 158://SnowWolfKing 雪太狼 
+                    return new SnowWolfKing(info);
+                case 159://FrozenMiner 冰魄矿工 
+                    return new FrozenMiner(info);
+                case 160://FrozenAxeman 冰魄斧兵 
+                    return new FrozenAxeman(info);
+                case 161://FrozenMagician 冰魄法师 
+                    return new FrozenMagician(info);
+                case 162://SnowYeti 冰魄雪人 
+                    return new SnowYeti(info);
+                case 163://IceCrystalSoldier 冰晶战士 
+                    return new IceCrystalSoldier(info);
+                case 164://DarkWraith 暗黑战士 
+                    return new DarkWraith(info);
+                case 165://DarkSpirit 幽灵战士 
+                    return new DarkSpirit(info);
+                case 166://CrystalBeast 水晶兽 冰雪守护神 
+                    return new CrystalBeast(info);
+              
                 //unfinished
-                case 253:
+
+                case 250://如果是250，则用image来做怪物AI
+                    return GetMonsterByImage(info);
+
+                case 253://鸟人像？
                     return new FlamingMutant(info);
                 case 254:
                     return new StoningStatue(info);
                 //unfinished END
+                case 255://custom
+                    return new TestAttackMon(info);
 
 
                 case 200://custom
                     return new Runaway(info);
                 case 201://custom
                     return new TalkingMonster(info);
+                case 202://弓箭护卫（战场中的弓箭护卫）
+                    return new WarTownArcher(info);
+                case 210://custom
+                    return new FlameTiger(info);
+          
+                    
+
+                default:
+                    return GetMonsterByImage(info);
+            }
+        }
+
+        //AI不够用，用image来做吧，每个都不一样的，用image来做识别，这个比较好。
+        //之前很多的ai，其实都可以用这个来做，坑了
+        public static MonsterObject GetMonsterByImage(MonsterInfo info)
+        {
+            if (info == null) return null;
+
+            switch (info.Image)
+            {
+                case Monster.Monster403://Monster403 紫花仙子
+                    return new Monster403(info);
+                case Monster.Monster404://Monster404 冰焰鼠
+                    return new Monster404(info);
+                case Monster.Monster405://Monster405 冰蜗牛
+                    return new Monster405(info);
+                case Monster.Monster406://Monster406 冰宫战士
+                    return new Monster406(info);
+                case Monster.Monster407://Monster407 冰宫射手
+                    return new Monster407(info);
+                case Monster.Monster408://Monster408 冰宫卫士
+                    return new Monster408(info);
+                case Monster.Monster409://Monster409 虹花仙子
+                    return new Monster409(info);
+                case Monster.Monster410://Monster410 冰宫鼠卫
+                    return new Monster410(info);
+                case Monster.Monster411://Monster411 冰宫骑士
+                    return new Monster411(info);
+                case Monster.Monster412://Monster412 冰宫刀卫
+                    return new Monster412(info);
+                case Monster.Monster413://Monster413 冰宫护法
+                    return new Monster413(info);
+                case Monster.Monster414://Monster414 冰宫画卷
+                    return new Monster414(info);
+                case Monster.Monster415://Monster415 冰宫画卷
+                    return new Monster415(info);
+                case Monster.Monster416://Monster416 冰宫画卷
+                    return new Monster416(info);
+                case Monster.Monster417://Monster417 冰宫画卷
+                    return new Monster417(info);
+                case Monster.Monster418://Monster418 冰宫学者
+                    return new Monster418(info);
+                case Monster.Monster419://Monster419 冰宫巫师
+                    return new Monster419(info);
+                case Monster.Monster420://Monster420 冰宫祭师
+                    return new Monster420(info);
+                case Monster.Monster421://Monster421 冰雪女皇
+                    return new Monster421(info);
+                case Monster.Monster422:// 未知
+                    return new Monster422(info);
+                case Monster.Monster423:// 未知
+                    return new Monster423(info);
+                case Monster.Monster424:// 昆仑虎
+                    return new Monster424(info);
+                case Monster.Monster425:// 部落祭师
+                    return new Monster425(info);
+                case Monster.Monster426:// 部落法师
+                    return new Monster426(info);
+                case Monster.Monster427:// 部落刺客
+                    return new Monster427(info);
+                case Monster.Monster428:// 老树盘根
+                    return new Monster428(info);
+                case Monster.Monster429:// 叛军道士
+                    return new Monster429(info);
+                case Monster.Monster430:// 多手怪
+                    return new Monster430(info);
+                case Monster.Monster431:// 未知
+                    return new Monster431(info);
+                case Monster.Monster432:// 未知
+                    return new Monster432(info);
+                case Monster.Monster433:// 未知
+                    return new Monster433(info);
+                case Monster.Monster434:// 叛军法师
+                    return new Monster434(info);
+                case Monster.Monster435:// 九尾火狐
+                    return new Monster435(info);
+                case Monster.Monster436:// 叛军刺客
+                    return new Monster436(info);
+                case Monster.Monster437:// 叛军武僧
+                    return new Monster437(info);
+                case Monster.Monster438:// 盘蟹花
+                    return new Monster438(info);
+                case Monster.Monster439:// 叛军武士
+                    return new Monster439(info);
+                case Monster.Monster440:// 叛军射手
+                    return new Monster440(info);
+                case Monster.Monster441:// 叛军战神
+                    return new Monster441(info);
+                case Monster.Monster442:// 叛军箭神
+                    return new Monster442(info);
+                case Monster.Monster443:// 叛军道尊
+                    return new Monster443(info);
+                case Monster.Monster444:// 叛军刺皇
+                    return new Monster444(info);
+                case Monster.Monster445:// 昆仑门
+                    return new Monster445(info);
+                case Monster.Monster446:// 叛军首领
+                    return new Monster446(info);
+                case Monster.Monster447:// 孽火花
+                    return new Monster447(info);
+                case Monster.Monster448:// 孽冰花
+                    return new Monster448(info);
+                case Monster.Monster449:// 毒妖武士
+                    return new Monster449(info);
+                case Monster.Monster450:// 毒妖射手
+                    return new Monster450(info);
+                case Monster.Monster451:// 碑石妖 毒妖林小BOSS
+                    return new Monster451(info);
+                case Monster.Monster452:// 多毒妖 毒妖林小BOSS
+                    return new Monster452(info);
+                case Monster.Monster453:// 巨斧妖 毒妖林小BOSS
+                    return new Monster453(info);
+                case Monster.Monster454:// 毒妖女皇 毒妖林BOSS
+                    return new Monster454(info);
+                case Monster.Monster455:// 未知
+                    return new Monster455(info);
+                case Monster.Monster456:// 未知
+                    return new Monster456(info);
+                case Monster.Monster457:// 未知
+                    return new Monster457(info);
+                case Monster.Monster458:// 未知
+                    return new Monster458(info);
 
                 default:
                     return new MonsterObject(info);
@@ -246,7 +513,7 @@ namespace Server.MirObjects
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
-        
+
         public override string Name
         {
             get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
@@ -298,9 +565,9 @@ namespace Server.MirObjects
         public uint HP, MaxHP;
         public ushort MoveSpeed;
 
-        public virtual uint Experience 
-        { 
-            get { return Info.Experience; } 
+        public virtual uint Experience
+        {
+            get { return Info.Experience; }
         }
         public int DeadDelay
         {
@@ -370,15 +637,15 @@ namespace Server.MirObjects
 
             Undead = Info.Undead;
             AutoRev = info.AutoRev;
-            CoolEye = info.CoolEye > Envir.Random.Next(100);
-            Direction = (MirDirection)Envir.Random.Next(8);
+            CoolEye = info.CoolEye > RandomUtils.Next(100);
+            Direction = (MirDirection)RandomUtils.Next(8);
 
             AMode = AttackMode.All;
             PMode = PetMode.Both;
 
-            RegenTime = Envir.Random.Next(RegenDelay) + Envir.Time;
-            SearchTime = Envir.Random.Next(SearchDelay) + Envir.Time;
-            RoamTime = Envir.Random.Next(RoamDelay) + Envir.Time;
+            RegenTime = RandomUtils.Next(RegenDelay) + Envir.Time;
+            SearchTime = RandomUtils.Next(SearchDelay) + Envir.Time;
+            RoamTime = RandomUtils.Next(RoamDelay) + Envir.Time;
         }
         public bool Spawn(Map temp, Point location)
         {
@@ -397,6 +664,7 @@ namespace Server.MirObjects
             CurrentMap.MonsterCount++;
             return true;
         }
+        //怪物重生
         public bool Spawn(MapRespawn respawn)
         {
             Respawn = respawn;
@@ -405,8 +673,8 @@ namespace Server.MirObjects
 
             for (int i = 0; i < 10; i++)
             {
-                CurrentLocation = new Point(Respawn.Info.Location.X + Envir.Random.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1),
-                                            Respawn.Info.Location.Y + Envir.Random.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1));
+                CurrentLocation = new Point(Respawn.Info.Location.X + RandomUtils.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1),
+                                            Respawn.Info.Location.Y + RandomUtils.Next(-Respawn.Info.Spread, Respawn.Info.Spread + 1));
 
                 if (!respawn.Map.ValidPoint(CurrentLocation)) continue;
 
@@ -433,9 +701,9 @@ namespace Server.MirObjects
         {
             base.Spawned();
             ActionTime = Envir.Time + 2000;
-            if (Info.HasSpawnScript && (Envir.MonsterNPC != null))
+            if (Info.HasSpawnScript && (MessageQueue.Envir.MonsterNPC != null))
             {
-                Envir.MonsterNPC.Call(this,string.Format("[@_SPAWN({0})]", Info.Index));
+                MessageQueue.Envir.MonsterNPC.Call(this, string.Format("[@_SPAWN({0})]", Info.Index));
             }
         }
 
@@ -461,16 +729,16 @@ namespace Server.MirObjects
         public virtual void RefreshAll()
         {
             RefreshBase();
-            
-                MaxHP = (uint)Math.Min(uint.MaxValue, MaxHP + PetLevel * 20);
-                MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
-                MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
-                MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
-                MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + PetLevel * 2);
-                MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
-                MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
 
-            if (Info.Name == Settings.SkeletonName ||Info.Name == Settings.ShinsuName ||Info.Name == Settings.AngelName) 
+            MaxHP = (uint)Math.Min(uint.MaxValue, MaxHP + PetLevel * 20);
+            MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + PetLevel * 2);
+            MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + PetLevel * 2);
+            MinMAC = (ushort)Math.Min(ushort.MaxValue, MinMAC + PetLevel * 2);
+            MaxMAC = (ushort)Math.Min(ushort.MaxValue, MaxMAC + PetLevel * 2);
+            MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
+            MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
+
+            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
             {
                 MoveSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, MoveSpeed - MaxPetLevel * 130)));
                 AttackSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, AttackSpeed - MaxPetLevel * 70)));
@@ -522,7 +790,7 @@ namespace Server.MirObjects
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, (Math.Max(sbyte.MinValue, ASpeed - rASpeed)));
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed - rMSpeed);
                         break;
-                    
+
                     case BuffType.PetEnhancer:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + buff.Values[0]);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + buff.Values[0]);
@@ -538,7 +806,7 @@ namespace Server.MirObjects
             if (ShockTime < Envir.Time) BindingShotCenter = false;
 
             Color colour = Color.White;
-            
+
             switch (PetLevel)
             {
                 case 1:
@@ -600,7 +868,7 @@ namespace Server.MirObjects
 
             if (!Dead && HP == 0) Die();
 
-           // HealthChanged = true;
+            // HealthChanged = true;
             BroadcastHealthChange();
         }
 
@@ -618,12 +886,12 @@ namespace Server.MirObjects
             CurrentMap.RemoveObject(this);
             if (effects) Broadcast(new S.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
-            
+
             CurrentMap.MonsterCount--;
 
             CurrentMap = temp;
             CurrentLocation = location;
-            
+
             CurrentMap.MonsterCount++;
 
             InTrapRock = false;
@@ -638,7 +906,7 @@ namespace Server.MirObjects
             return true;
         }
 
-
+        //怪物死亡
         public override void Die()
         {
             if (Dead) return;
@@ -650,9 +918,9 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (Info.HasDieScript && (Envir.MonsterNPC != null))
+            if (Info.HasDieScript && (MessageQueue.Envir.MonsterNPC != null))
             {
-                Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                MessageQueue.Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
@@ -667,7 +935,7 @@ namespace Server.MirObjects
                 Respawn.Count--;
 
             if (Master == null && EXPOwner != null)
-                 Drop();
+                Drop();
 
             Master = null;
 
@@ -707,24 +975,25 @@ namespace Server.MirObjects
 
                 if (!CurrentMap.ValidPoint(location)) return result;
 
-                Cell cell = CurrentMap.GetCell(location);
+                //Cell cell = CurrentMap.GetCell(location);
 
                 bool stop = false;
-                if (cell.Objects != null)
-                    for (int c = 0; c < cell.Objects.Count; c++)
+                if (CurrentMap.Objects[location.X, location.Y] != null)
+                    for (int c = 0; c < CurrentMap.Objects[location.X, location.Y].Count; c++)
                     {
-                        MapObject ob = cell.Objects[c];
+                        MapObject ob = CurrentMap.Objects[location.X, location.Y][c];
                         if (!ob.Blocking) continue;
                         stop = true;
                     }
                 if (stop) break;
 
-                CurrentMap.GetCell(CurrentLocation).Remove(this);
+                CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y, this);
 
                 Direction = reverse;
                 RemoveObjects(dir, 1);
                 CurrentLocation = location;
-                CurrentMap.GetCell(CurrentLocation).Add(this);
+                //CurrentMap.GetCell(CurrentLocation).Add(this);
+                CurrentMap.Add(CurrentLocation.X, CurrentLocation.Y, this);
                 AddObjects(dir, 1);
 
                 Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -737,12 +1006,12 @@ namespace Server.MirObjects
 
             if (result > 0)
             {
-                Cell cell = CurrentMap.GetCell(CurrentLocation);
+                //Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-                for (int i = 0; i < cell.Objects.Count; i++)
+                for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
                 {
-                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                    SpellObject ob = (SpellObject)cell.Objects[i];
+                    if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i].Race != ObjectType.Spell) continue;
+                    SpellObject ob = (SpellObject)CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
 
                     ob.ProcessSpell(this);
                     //break;
@@ -751,11 +1020,10 @@ namespace Server.MirObjects
 
             return result;
         }
-
+        //怪物掉落物品
+        //怪物掉落物品
         protected virtual void Drop()
         {
-            if (CurrentMap.Info.NoDropMonster)
-                return;
             for (int i = 0; i < Info.Drops.Count; i++)
             {
                 DropInfo drop = Info.Drops[i];
@@ -764,10 +1032,10 @@ namespace Server.MirObjects
 
                 if (EXPOwner != null && EXPOwner.ItemDropRateOffset > 0)
                     rate -= (int)(rate * (EXPOwner.ItemDropRateOffset / 100));
-                
+
                 if (rate < 1) rate = 1;
 
-                if (Envir.Random.Next(rate) != 0) continue;
+                if (RandomUtils.Next(rate) != 0) continue;
 
                 if (drop.Gold > 0)
                 {
@@ -779,7 +1047,7 @@ namespace Server.MirObjects
 
                     if (lowerGoldRange > upperGoldRange) lowerGoldRange = upperGoldRange;
 
-                    int gold = Envir.Random.Next(lowerGoldRange, upperGoldRange);
+                    int gold = RandomUtils.Next(lowerGoldRange, upperGoldRange);
 
                     if (gold <= 0) continue;
 
@@ -788,12 +1056,11 @@ namespace Server.MirObjects
                 else
                 {
                     UserItem item = Envir.CreateDropItem(drop.Item);
-
                     if (item == null) continue;
 
                     if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
                     {
-                        PlayerObject ob = (PlayerObject) EXPOwner;
+                        PlayerObject ob = (PlayerObject)EXPOwner;
 
                         if (ob.CheckGroupQuestItem(item))
                         {
@@ -878,7 +1145,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if(Master != null && TameTime > 0 && Envir.Time >= TameTime)
+            if (Master != null && TameTime > 0 && Envir.Time >= TameTime)
             {
                 Master.Pets.Remove(this);
                 Master = null;
@@ -892,11 +1159,11 @@ namespace Server.MirObjects
             ProcessPoison();
 
 
-         /*   if (!HealthChanged) return;
+            /*   if (!HealthChanged) return;
 
-            HealthChanged = false;
-            
-            BroadcastHealthChange();*/
+               HealthChanged = false;
+
+               BroadcastHealthChange();*/
         }
 
         public override void SetOperateTime()
@@ -1078,12 +1345,6 @@ namespace Server.MirObjects
                 Poison poison = PoisonList[i];
                 if (poison.Owner != null && poison.Owner.Node == null)
                 {
-                    if (poison.PType == PoisonType.Slow)
-                    {
-                        MoveSpeed = Info.MoveSpeed;
-                        AttackSpeed = Info.AttackSpeed;
-                        AttackTime = Envir.Time + AttackSpeed;
-                    }
                     PoisonList.RemoveAt(i);
                     continue;
                 }
@@ -1094,16 +1355,7 @@ namespace Server.MirObjects
                     poison.TickTime = Envir.Time + poison.TickSpeed;
 
                     if (poison.Time >= poison.Duration)
-                    {
-                        if (poison.PType == PoisonType.Slow)
-                        {
-                            MoveSpeed = Info.MoveSpeed;
-                            AttackSpeed = Info.AttackSpeed;
-                            AttackTime = Envir.Time + AttackSpeed;
-                        }
                         PoisonList.RemoveAt(i);
-                        continue;
-                    }
 
                     if (poison.PType == PoisonType.Green || poison.PType == PoisonType.Bleeding)
                     {
@@ -1122,7 +1374,6 @@ namespace Server.MirObjects
 
                         //ChangeHP(-poison.Value);
                         PoisonDamage(-poison.Value, poison.Owner);
-                        
                         if (PoisonStopRegen)
                             RegenTime = Envir.Time + RegenDelay;
                     }
@@ -1153,16 +1404,13 @@ namespace Server.MirObjects
                         DamageRate += 0.5F;
                         break;
                     case PoisonType.Slow:
+                        MoveSpeed += 100;
+                        AttackSpeed += 100;
 
-                        MoveSpeed = (ushort)Math.Min(3500, MoveSpeed + 100);
-                        AttackSpeed = (ushort)Math.Min(3500, AttackSpeed + 100);
- 
                         if (poison.Time >= poison.Duration)
                         {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
-                            //Reset the Attack time
-                            AttackTime = Envir.Time + AttackSpeed;
                         }
                         break;
                 }
@@ -1173,7 +1421,7 @@ namespace Server.MirObjects
                  */
             }
 
-            
+
             if (type == CurrentPoison) return;
 
             CurrentPoison = type;
@@ -1270,7 +1518,7 @@ namespace Server.MirObjects
         {
             if (Envir.Time < SearchTime) return;
             if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)) return;
-            
+
             SearchTime = Envir.Time + SearchDelay;
 
             if (CurrentMap.Inactive(5)) return;
@@ -1285,7 +1533,7 @@ namespace Server.MirObjects
                 {
                     MirDirection dir = Direction;
 
-                    switch (Envir.Random.Next(3)) // favour Clockwise
+                    switch (RandomUtils.Next(3)) // favour Clockwise
                     {
                         case 0:
                             for (int i = 0; i < 7; i++)
@@ -1309,7 +1557,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Target == null || Envir.Random.Next(3) == 0)
+            if (Target == null || RandomUtils.Next(3) == 0)
                 FindTarget();
         }
         protected virtual void ProcessRoam()
@@ -1327,12 +1575,12 @@ namespace Server.MirObjects
             }
 
             RoamTime = Envir.Time + RoamDelay;
-            if (Envir.Random.Next(10) != 0) return;
+            if (RandomUtils.Next(10) != 0) return;
 
-            switch (Envir.Random.Next(3)) //Face Walk
+            switch (RandomUtils.Next(3)) //Face Walk
             {
                 case 0:
-                    Turn((MirDirection)Envir.Random.Next(8));
+                    Turn((MirDirection)RandomUtils.Next(8));
                     break;
                 default:
                     Walk(Direction);
@@ -1357,7 +1605,7 @@ namespace Server.MirObjects
                 Target = null;
                 return;
             }
-            
+
             MoveTo(Target.CurrentLocation);
         }
         protected virtual bool InAttackRange()
@@ -1366,6 +1614,8 @@ namespace Server.MirObjects
 
             return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
         }
+        //这个是怪物的仇恨？
+        //这个循环很坑啊
         protected virtual void FindTarget()
         {
             //if (CurrentMap.Players.Count < 1) return;
@@ -1378,15 +1628,15 @@ namespace Server.MirObjects
                     if (y < 0) continue;
                     if (y >= Current.Height) break;
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d*2)
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
                         if (x >= Current.Width) break;
-                        Cell cell = Current.Cells[x, y];
-                        if (cell.Objects == null || !cell.Valid) continue;
-                        for (int i = 0; i < cell.Objects.Count; i++)
+                        //Cell cell = Current.Cells[x, y];
+                        if (Current.Objects[x, y] == null || !Current.Valid(x, y)) continue;
+                        for (int i = 0; i < Current.Objects[x, y].Count; i++)
                         {
-                            MapObject ob = cell.Objects[i];
+                            MapObject ob = Current.Objects[x, y][i];
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
@@ -1460,11 +1710,11 @@ namespace Server.MirObjects
             if (inRange)
             {
                 if (!CurrentMap.ValidPoint(location)) return;
-                Cell cell = CurrentMap.GetCell(location);
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                //Cell cell = CurrentMap.GetCell(location);
+                if (CurrentMap.Objects[location.X, location.Y] != null)
+                    for (int i = 0; i < CurrentMap.Objects[location.X, location.Y].Count; i++)
                     {
-                        MapObject ob = cell.Objects[i];
+                        MapObject ob = CurrentMap.Objects[location.X, location.Y][i];
                         if (!ob.Blocking) continue;
                         return;
                     }
@@ -1474,7 +1724,7 @@ namespace Server.MirObjects
 
             if (Walk(dir)) return;
 
-            switch (Envir.Random.Next(2)) //No favour
+            switch (RandomUtils.Next(2)) //No favour
             {
                 case 0:
                     for (int i = 0; i < 7; i++)
@@ -1502,16 +1752,16 @@ namespace Server.MirObjects
             if (!CanMove) return;
 
             Direction = dir;
-                
+
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
 
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
+            //Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
+            for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
+                if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i].Race != ObjectType.Spell) continue;
+                SpellObject ob = (SpellObject)CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
 
                 ob.ProcessSpell(this);
                 //break;
@@ -1522,7 +1772,7 @@ namespace Server.MirObjects
         }
 
 
-        public virtual bool Walk(MirDirection dir) 
+        public virtual bool Walk(MirDirection dir)
         {
             if (!CanMove) return false;
 
@@ -1530,23 +1780,25 @@ namespace Server.MirObjects
 
             if (!CurrentMap.ValidPoint(location)) return false;
 
-            Cell cell = CurrentMap.GetCell(location);
+            //Cell cell = CurrentMap.GetCell(location);
 
-            if (cell.Objects != null)
-            for (int i = 0; i < cell.Objects.Count; i++)
+            if (CurrentMap.Objects[location.X, location.Y] != null)
             {
-                MapObject ob = cell.Objects[i];
-                if (!ob.Blocking || Race == ObjectType.Creature) continue;
+                for (int i = 0; i < CurrentMap.Objects[location.X, location.Y].Count; i++)
+                {
+                    MapObject ob = CurrentMap.Objects[location.X, location.Y][i];
+                    if (!ob.Blocking || Race == ObjectType.Creature) continue;
 
-                return false;
+                    return false;
+                }
             }
 
-            CurrentMap.GetCell(CurrentLocation).Remove(this);
+            CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y, this);
 
             Direction = dir;
             RemoveObjects(dir, 1);
             CurrentLocation = location;
-            CurrentMap.GetCell(CurrentLocation).Add(this);
+            CurrentMap.Add(this);
             AddObjects(dir, 1);
 
             if (Hidden)
@@ -1574,12 +1826,12 @@ namespace Server.MirObjects
             Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
-            cell = CurrentMap.GetCell(CurrentLocation);
+            //cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
+            for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
+                if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i].Race != ObjectType.Spell) continue;
+                SpellObject ob = (SpellObject)CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
 
                 ob.ProcessSpell(this);
                 //break;
@@ -1587,12 +1839,91 @@ namespace Server.MirObjects
 
             return true;
         }
+
+        //这里增加一种怪物跑动的方法
+        public virtual bool Run(MirDirection dir, byte distance = 2, bool Blocking = true)
+        {
+            if (!CanMove) return false;
+
+            Point location = Functions.PointMove(CurrentLocation, dir, distance);
+
+            if (!CurrentMap.ValidPoint(location)) return false;
+
+            //Cell cell = CurrentMap.GetCell(location);
+
+            if (CurrentMap.Objects[location.X, location.Y] != null)
+            {
+                for (int i = 0; i < CurrentMap.Objects[location.X, location.Y].Count; i++)
+                {
+                    MapObject ob = CurrentMap.Objects[location.X, location.Y][i];
+                    if (Blocking)
+                    {
+                        if (!ob.Blocking || Race == ObjectType.Creature) continue;
+                    }
+                    return false;
+                }
+            }
+
+            CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y, this);
+
+            Direction = dir;
+            RemoveObjects(dir, distance);
+            CurrentLocation = location;
+            CurrentMap.Add(this);
+            AddObjects(dir, distance);
+
+            if (Hidden)
+            {
+                Hidden = false;
+
+                for (int i = 0; i < Buffs.Count; i++)
+                {
+                    if (Buffs[i].Type != BuffType.Hiding) continue;
+
+                    Buffs[i].ExpireTime = 0;
+                    break;
+                }
+            }
+
+
+            CellTime = Envir.Time + 500;
+            ActionTime = Envir.Time + 300;
+            MoveTime = Envir.Time + MoveSpeed;
+            if (MoveTime > AttackTime)
+                AttackTime = MoveTime;
+
+            InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
+
+            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+
+            //cell = CurrentMap.GetCell(CurrentLocation);
+
+            for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
+            {
+                if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i].Race != ObjectType.Spell) continue;
+                SpellObject ob = (SpellObject)CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
+
+                ob.ProcessSpell(this);
+                //break;
+            }
+
+            return true;
+        }
+
+
+
+
+
+
+
+
         protected virtual void Attack()
         {
             if (BindingShotCenter) ReleaseBindingShot();
 
             ShockTime = 0;
-            
+
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -1612,6 +1943,54 @@ namespace Server.MirObjects
             if (damage == 0) return;
 
             Target.Attacked(this, damage);
+        }
+
+
+
+
+        public List<MapObject> FindFriendsNearby(int distance)
+        {
+            List<MapObject> Friends = new List<MapObject>();
+            for (int d = 0; d <= distance; d++)
+            {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= CurrentMap.Height) break;
+
+                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
+                    {
+                        if (x < 0) continue;
+                        if (x >= CurrentMap.Width) break;
+                        if (!CurrentMap.ValidPoint(x, y)) continue;
+                        //Cell cell = CurrentMap.GetCell(x, y);
+                        if (CurrentMap.Objects[x, y] == null) continue;
+
+                        for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
+                        {
+                            MapObject ob = CurrentMap.Objects[x, y][i];
+                            switch (ob.Race)
+                            {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                    if (ob == this || ob.Dead) continue;
+                                    if (ob.IsAttackTarget(this)) continue;
+                                    if (ob.Race == ObjectType.Player)
+                                    {
+                                        PlayerObject player = ((PlayerObject)ob);
+                                        if (player.GMGameMaster) continue;
+                                    }
+                                    Friends.Add(ob);
+                                    break;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Friends;
         }
 
         public void ReleaseBindingShot()
@@ -1634,12 +2013,12 @@ namespace Server.MirObjects
                     if (x < 0) continue;
                     if (x >= CurrentMap.Width) break;
 
-                    Cell cell = CurrentMap.GetCell(x, y);
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    //Cell cell = CurrentMap.GetCell(x, y);
+                    if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                    for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                     {
-                        MapObject targetob = cell.Objects[i];
+                        MapObject targetob = CurrentMap.Objects[x, y][i];
                         if (targetob == null || targetob.Node == null || targetob.Race != ObjectType.Monster) continue;
                         if (((MonsterObject)targetob).ShockTime == 0) continue;
 
@@ -1667,12 +2046,12 @@ namespace Server.MirObjects
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
                         if (!CurrentMap.ValidPoint(x, y)) continue;
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (cell.Objects == null) continue;
+                        // Cell cell = CurrentMap.GetCell(x, y);
+                        if (CurrentMap.Objects[x, y] == null) continue;
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
+                        for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                         {
-                            MapObject ob = cell.Objects[i];
+                            MapObject ob = CurrentMap.Objects[x, y][i];
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
@@ -1695,48 +2074,7 @@ namespace Server.MirObjects
 
             return false;
         }
-        public bool FindFriendsNearby(int distance)
-        {
-            for (int d = 0; d <= distance; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-                        if (!CurrentMap.ValidPoint(x, y)) continue;
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (cell.Objects == null) continue;
-
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
-                            MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
-                                case ObjectType.Monster:
-                                case ObjectType.Player:
-                                    if (ob == this || ob.Dead) continue;
-                                    if (ob.IsAttackTarget(this)) continue;
-                                    if (ob.Race == ObjectType.Player)
-                                    {
-                                        PlayerObject player = ((PlayerObject)ob);
-                                        if (player.GMGameMaster) continue;
-                                    }
-                                    return true;
-                                default:
-                                    continue;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
 
         public List<MapObject> FindAllNearby(int dist, Point location, bool needSight = true)
         {
@@ -1753,12 +2091,12 @@ namespace Server.MirObjects
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
 
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        //Cell cell = CurrentMap.GetCell(x, y);
+                        if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
+                        for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                         {
-                            MapObject ob = cell.Objects[i];
+                            MapObject ob = CurrentMap.Objects[x, y][i];
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
@@ -1788,14 +2126,14 @@ namespace Server.MirObjects
                     for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
                     {
                         if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;                    
+                        if (x >= CurrentMap.Width) break;
 
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        //Cell cell = CurrentMap.GetCell(x, y);
+                        if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
+                        for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                         {
-                            MapObject ob = cell.Objects[i];
+                            MapObject ob = CurrentMap.Objects[x, y][i];
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
@@ -1866,16 +2204,11 @@ namespace Server.MirObjects
                 if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3) //Not Dear/Hen/Tree
                     return true;
             }
-            else if (attacker.Info.AI == 101)
-            {
-                if (Info.AI != 6 && Info.AI != 58 && Master == null)
-                    return true;
-            }
             else if (Master != null) //Pet Attacked
             {
                 if (attacker.Master == null) //Wild Monster
                     return true;
-                
+
                 //Pet Vs Pet
                 if (Master == attacker.Master)
                     return false;
@@ -1960,89 +2293,46 @@ namespace Server.MirObjects
         }
 
         public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-
-
         {
-            #region Weapon Effects Pete107 26/1/2016武器效果
-            UserItem _item = attacker.Info.Equipment[(int)EquipmentSlot.Weapon];
-            Random randy = new Random();
-            if (_item != null && attacker != null && randy.Next(0, 100) >= 90)
-            {
-                switch (_item.Info.Effect)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, attacker.CurrentLocation);
-                        break;
-                    case 2:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, attacker.CurrentLocation);
-                        break;
-                    case 3:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Healing }, attacker.CurrentLocation);
-                        break;
-                    case 4:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.RedMoonEvil }, attacker.CurrentLocation);
-                        break;
-                    case 5:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.TwinDrakeBlade }, attacker.CurrentLocation);
-                        break;
-                    case 6:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, attacker.CurrentLocation);
-                        break;
-                    case 7:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, attacker.CurrentLocation);
-                        break;
-                    case 8:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.GreatFoxSpirit }, attacker.CurrentLocation);
-                        break;
-                    case 9:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Entrapment }, attacker.CurrentLocation);
-                        break;
-                    case 10:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, attacker.CurrentLocation);
-                        break;
-                    case 11:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, attacker.CurrentLocation);
-                        break;
-                    case 12:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Mine }, attacker.CurrentLocation);
-                        break;
-                    case 13:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, attacker.CurrentLocation);
-                        break;
-                    case 14:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, attacker.CurrentLocation);
-                        break;
-                    case 15:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion }, attacker.CurrentLocation);
-                        break;
-                    case 16:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MPEater }, attacker.CurrentLocation);
-                        break;
-                    case 17:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Hemorrhage }, attacker.CurrentLocation);
-                        break;
-                    case 18:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding }, attacker.CurrentLocation);
-                        break;
-                    case 19:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, attacker.CurrentLocation);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            #endregion
-
             if (Target == null && attacker.IsAttackTarget(this))
             {
                 Target = attacker;
             }
 
-            var armour = GetArmour(type, attacker, out bool hit);
-            if (!hit)
-                return 0;
+            int armour = 0;
+
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.Agility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    break;
+            }
 
             armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
@@ -2057,7 +2347,7 @@ namespace Server.MirObjects
                 return 0;
             }
 
-            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > Envir.Random.Next(100))
+            if ((attacker.CriticalRate * Settings.CriticalRateWeight) > RandomUtils.Next(100))
             {
                 Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
@@ -2101,7 +2391,22 @@ namespace Server.MirObjects
 
             ushort LevelOffset = (ushort)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
 
-            ApplyNegativeEffects(attacker, type, LevelOffset);
+            if (attacker.HasParalysisRing && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == RandomUtils.Next(1, 15))
+            {
+                ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
+            }
+
+            if (attacker.Freezing > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            {
+                if ((RandomUtils.Next(Settings.FreezingAttackWeight) < attacker.Freezing) && (RandomUtils.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + RandomUtils.Next(attacker.Freezing))), TickSpeed = 1000 }, attacker);
+            }
+
+            if (attacker.PoisonAttack > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
+            {
+                if ((RandomUtils.Next(Settings.PoisonAttackWeight) < attacker.PoisonAttack) && (RandomUtils.Next(LevelOffset) == 0))
+                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + RandomUtils.Next(attacker.PoisonAttack)) }, attacker);
+            }
 
             Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
@@ -2155,10 +2460,40 @@ namespace Server.MirObjects
             if (Target == null && attacker.IsAttackTarget(this))
                 Target = attacker;
 
-            
-            var armour = GetArmour(type, attacker, out bool hit);
-            if (!hit)
-                return 0;
+            int armour = 0;
+
+            switch (type)
+            {
+                case DefenceType.ACAgility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.AC:
+                    armour = GetDefencePower(MinAC, MaxAC);
+                    break;
+                case DefenceType.MACAgility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.MAC:
+                    armour = GetDefencePower(MinMAC, MaxMAC);
+                    break;
+                case DefenceType.Agility:
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy)
+                    {
+                        BroadcastDamageIndicator(DamageType.Miss);
+                        return 0;
+                    }
+                    break;
+            }
 
             armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
@@ -2299,27 +2634,27 @@ namespace Server.MirObjects
             base.AddBuff(b);
             RefreshAll();
         }
-        
+
         public override Packet GetInfo()
         {
             return new S.ObjectMonster
-                {
-                    ObjectID = ObjectID,
-                    Name = Name,
-                    NameColour = NameColour,
-                    Location = CurrentLocation,
-                    Image = Info.Image,
-                    Direction = Direction,
-                    Effect = Info.Effect,
-                    AI = Info.AI,
-                    Light = Info.Light,
-                    Dead = Dead,
-                    Skeleton = Harvested,
-                    Poison = CurrentPoison,
-                    Hidden = Hidden,
-                    ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
-                    BindingShotCenter = BindingShotCenter
-                };
+            {
+                ObjectID = ObjectID,
+                Name = Name,
+                NameColour = NameColour,
+                Location = CurrentLocation,
+                Image = Info.Image,
+                Direction = Direction,
+                Effect = Info.Effect,
+                AI = Info.AI,
+                Light = Info.Light,
+                Dead = Dead,
+                Skeleton = Harvested,
+                Poison = CurrentPoison,
+                Hidden = Hidden,
+                ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
+                BindingShotCenter = BindingShotCenter
+            };
         }
 
         public override void ReceiveChat(string text, ChatType type)
@@ -2343,13 +2678,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2368,13 +2703,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2392,13 +2727,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2417,13 +2752,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2442,13 +2777,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2466,13 +2801,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2490,13 +2825,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2515,13 +2850,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2539,13 +2874,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2563,13 +2898,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2589,13 +2924,13 @@ namespace Server.MirObjects
                             if (x < 0 || x >= CurrentMap.Width) continue;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2613,13 +2948,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Remove(this);
                             }
@@ -2643,13 +2978,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2668,13 +3003,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2692,13 +3027,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2716,13 +3051,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2741,13 +3076,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2765,13 +3100,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + Globals.DataRange - b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2790,13 +3125,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2815,13 +3150,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            // Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2839,13 +3174,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2864,13 +3199,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2889,13 +3224,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2913,13 +3248,13 @@ namespace Server.MirObjects
                             int x = CurrentLocation.X - Globals.DataRange + b;
                             if (x < 0 || x >= CurrentMap.Width) continue;
 
-                            Cell cell = CurrentMap.GetCell(x, y);
+                            //Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                             {
-                                MapObject ob = cell.Objects[i];
+                                MapObject ob = CurrentMap.Objects[x, y][i];
                                 if (ob.Race != ObjectType.Player) continue;
                                 ob.Add(this);
                             }
@@ -2928,7 +3263,7 @@ namespace Server.MirObjects
                     break;
             }
         }
-
+      
         public override void Add(PlayerObject player)
         {
             player.Enqueue(GetInfo());
@@ -2938,7 +3273,7 @@ namespace Server.MirObjects
         public override void SendHealth(PlayerObject player)
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
-            byte time = Math.Min(byte.MaxValue, (byte) Math.Max(5, (RevTime - Envir.Time)/1000));
+            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
             player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
 
@@ -2951,9 +3286,9 @@ namespace Server.MirObjects
 
             PetExperience += amount;
 
-            if (PetExperience < (PetLevel + 1)*20000) return;
+            if (PetExperience < (PetLevel + 1) * 20000) return;
 
-            PetExperience = (uint) (PetExperience - ((PetLevel + 1)*20000));
+            PetExperience = (uint)(PetExperience - ((PetLevel + 1) * 20000));
             PetLevel++;
             RefreshAll();
             OperateTime = 0;
@@ -2964,6 +3299,16 @@ namespace Server.MirObjects
             SlaveList.Clear();
             base.Despawn();
         }
+
+    }
+
+    /// <summary>
+    /// 采用怪物对象包裹器，包裹怪物
+    /// 这里只记录简单的怪物的位置，血量，仇恨等个性东西，其他的都用具体的怪物属性
+    /// 采用怪物属性引用的方式，避免大量刷怪占用的内存属性
+    /// </summary>
+    public class MonsterObjectInstance
+    {
 
     }
 }

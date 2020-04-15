@@ -1,5 +1,7 @@
 ﻿using Server.MirDatabase;
 using S = ServerPackets;
+using Server.MirEnvir;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
@@ -18,13 +20,13 @@ namespace Server.MirObjects.Monsters
             : base(info)
         {
             RevivalCount = 0;
-            LifeCount = Envir.Random.Next(3);
+            LifeCount = RandomUtils.Next(2);//这里改下，最多复活2次
         }
 
         public override void Die()
         {
             DieTime = Envir.Time;
-            RevivalTime = (4 + Envir.Random.Next(20)) * 1000;
+            RevivalTime = (4 + RandomUtils.Next(20)) * 1000;
             base.Die();
         }
 
@@ -34,7 +36,8 @@ namespace Server.MirObjects.Monsters
             if (Dead && Envir.Time > DieTime + RevivalTime && RevivalCount < LifeCount)
             {
                 RevivalCount++;
-
+                //复活的把爆率减一倍
+       
                 uint newhp = MaxHP * (100 - (25 * RevivalCount)) / 100;
                 Revive(newhp, false);
             }

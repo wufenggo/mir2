@@ -1,8 +1,11 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //会麻痹的怪
+    //洞蛆/楔蛾/粪虫/粪虫0/月魔蜘蛛
     public class CaveMaggot : HarvestMonster
     {
         protected internal CaveMaggot(MonsterInfo info)
@@ -33,9 +36,9 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MACAgility) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (Envir.Random.Next(20) == 0)
+                if (RandomUtils.Next(20) == 0)
                 {
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                 }

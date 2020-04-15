@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //这个是触龙神
     class EvilCentipede : MonsterObject
     {
         public bool Visible;
@@ -126,11 +128,11 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (Envir.Random.Next(5) == 0)
+                if (RandomUtils.Next(5) == 0)
                     Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-                if (Envir.Random.Next(15) == 0)
+                if (RandomUtils.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
             }
         }

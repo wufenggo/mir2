@@ -4,6 +4,7 @@ using Server.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
+    //沃玛教主
     public class WoomaTaurus : FlamingWooma
     {
         private long _teleTime, _madTime;
@@ -38,13 +39,13 @@ namespace Server.MirObjects.Monsters
 
                     if (CurrentMap.ValidPoint(location))
                     {
-                        Cell cell = CurrentMap.GetCell(location);
+                        //Cell cell = CurrentMap.GetCell(location);
 
-                        if (cell.Objects == null) continue;
+                        if (CurrentMap.Objects[location.X, location.Y] == null) continue;
 
-                        for (int o = 0; o < cell.Objects.Count; o++)
+                        for (int o = 0; o < CurrentMap.Objects[location.X, location.Y].Count; o++)
                         {
-                            if (!cell.Objects[o].Blocking) continue;
+                            if (!CurrentMap.Objects[location.X, location.Y][o].Blocking) continue;
                             count++;
                             break;
                         }

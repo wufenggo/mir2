@@ -612,10 +612,64 @@ public enum Monster : ushort
     Ram2 = 401,
     Kite = 402,
 
-    SoldierAnt = 423,
-    ShooterAnt = 424,
-    ArmouredAnt = 425,
-    FeederAnt = 426,
+    //这里增加雪域怪物
+    Monster403 = 403,
+    Monster404 = 404,
+    Monster405 = 405,
+    Monster406 = 406,
+    Monster407 = 407,
+    Monster408 = 408,
+    Monster409 = 409,
+    Monster410 = 410,
+    Monster411 = 411,
+    Monster412 = 412,
+    Monster413 = 413,
+    Monster414 = 414,
+    Monster415 = 415,
+    Monster416 = 416,
+    Monster417 = 417,
+    Monster418 = 418,
+    Monster419 = 419,
+    Monster420 = 420,
+    Monster421 = 421,
+    Monster422 = 422,
+    Monster423 = 423,
+    Monster424 = 424,
+    Monster425 = 425,
+    Monster426 = 426,
+    Monster427 = 427,
+    Monster428 = 428,
+    Monster429 = 429,
+    Monster430 = 430,
+    Monster431 = 431,
+    Monster432 = 432,
+    Monster433 = 433,
+    Monster434 = 434,
+    Monster435 = 435,
+    Monster436 = 436,
+    Monster437 = 437,
+    Monster438 = 438,
+    Monster439 = 439,
+    Monster440 = 440,
+    Monster441 = 441,
+    Monster442 = 442,
+    Monster443 = 443,
+    Monster444 = 444,
+    Monster445 = 445,
+    Monster446 = 446,
+    Monster447 = 447,
+    Monster448 = 448,
+    Monster449 = 449,
+    Monster450 = 450,
+    Monster451 = 451,
+    Monster452 = 452,
+    Monster453 = 453,
+    Monster454 = 454,
+    Monster455 = 455,
+    Monster456 = 456,
+    Monster457 = 457,
+    Monster458 = 458,
+
 
     EvilMir = 900,
     EvilMirBody = 901,
@@ -649,6 +703,8 @@ public enum Monster : ushort
     BabyMonkey = 10011,//unknown
     AngryBird = 10012,
     Foxey = 10013,
+    //怪物466的另外一个副本
+    Monster20446 = 20446,
 }
 
 public enum MirAction : byte
@@ -700,7 +756,14 @@ public enum MirAction : byte
 
     FishingCast,
     FishingWait,
-    FishingReel
+    FishingReel,
+
+            Standing2,//另外一种形态下的站立
+    Walking2,//另外一种形态下的站立
+    Struck2,//另外一种形态被攻击
+    MoveAttack1,//移动攻击
+    MoveAttack2,//移动攻击
+    MoveAttack3//移动攻击
 }
 
 public enum CellAttribute : byte
@@ -1191,14 +1254,21 @@ public enum Spell : byte
     Blink = 151,
     Portal = 152,
     BattleCry = 153,
-    
-    //Map Events
-    DigOutZombie = 200,
-    Rubble = 201,
-    MapLightning = 202,
-    MapLava = 203,
-    MapQuake1 = 204,
-    MapQuake2 = 205
+
+
+    //Map Events,这几个是什么，好像没放在魔法技能表中,是地图的事件么？
+    DigOutZombie = 200,//这个是僵尸爬出来，在地图上产生的洞
+    Rubble = 201,//挖矿，土翻转出来
+    MapLightning = 202,//地图上的闪电
+    MapLava = 203,//地图上的熔岩
+    MapQuake1 = 204,//地突
+    MapQuake2 = 205,//地突
+    MonKITO = 206,//鬼头2.5秒后自爆
+    MonFireCircle = 207,//鬼圈 6秒后消失
+    MonPoisonFog = 208,//怪物的毒雾，类似毒云吧
+    MonRotateAxe = 209,//怪物的旋转斧头
+    MonGhostFlag1 = 210,//怪物鬼旗
+    MonGhostHead = 211,//怪物鬼头2 3秒或者6秒后爆炸
 }
 
 public enum SpellEffect : byte
@@ -1231,7 +1301,14 @@ public enum SpellEffect : byte
     Behemoth,
     Stunned,
     HumUpEffect,//stupple
-    IcePillar
+    IcePillar,
+
+    TreeQueen,//树的女王的树钉
+    GreatFoxThunder,//悲月的雷电特效
+    Focus,//基本箭法，聚集，焦点，噬血等
+    FlameRound,//火焰环绕
+    PoisonRain,//毒雨
+    DelayedBomb,//自爆效果，爆炸效果（契约兽的自爆）
 }
 
 public enum BuffType : byte
@@ -1550,7 +1627,9 @@ public enum ServerPacketIds : short
     CanConfirmItemRental,
     ConfirmItemRental,
     NewRecipeInfo,
-    OpenBrowser
+    OpenBrowser,
+    ObjectMonsterChange,
+        BlizzardStopTime,
 }
 
 public enum ClientPacketIds : short
@@ -5090,6 +5169,11 @@ public abstract class Packet
                 return new S.NPCConsign();
             case (short)ServerPacketIds.NPCMarket:
                 return new S.NPCMarket();
+
+            case (short)ServerPacketIds.ObjectMonsterChange:
+                return new S.ObjectMonsterChange();
+            case (short)ServerPacketIds.BlizzardStopTime:
+                return new S.BlizzardStopTime();
             case (short)ServerPacketIds.NPCMarketPage:
                 return new S.NPCMarketPage();
             case (short)ServerPacketIds.ConsignItem:
@@ -7263,5 +7347,39 @@ public class GameLanguage
         reader.Write("Language", "NoMentorship", GameLanguage.NoMentorship);
         reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
+    }
+
+
+    //增加一个安全区，用于客户端在安全区进行穿人
+    //安全区域
+    public class SafeZoneInfo
+    {
+        //安全区位置
+        public Point Location;
+        //大小
+        public ushort Size;
+        //是否开始点，新生点（服务器才使用）
+        public bool StartPoint;
+        //地图引用（服务器才使用）
+        public int MapIndex;
+        //安全区归属的战场分组，分组一样的可以进行治疗
+
+        public SafeZoneInfo()
+        {
+
+        }
+
+        public SafeZoneInfo(BinaryReader reader)
+        {
+            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+            Size = reader.ReadUInt16();
+        }
+
+        public void Save(BinaryWriter writer)
+        {
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+            writer.Write(Size);
+        }
     }
 }

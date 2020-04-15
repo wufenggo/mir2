@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //鬼魅蛇
     public class CharmedSnake : MonsterObject
     {
         public bool Summoned;
@@ -72,12 +74,12 @@ namespace Server.MirObjects.Monsters
             //Stacking or Infront of master - Move
             bool stacking = false;
 
-            Cell cell = CurrentMap.GetCell(CurrentLocation);
+            //Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
+            if (CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y] != null)
+                for (int i = 0; i < CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y].Count; i++)
                 {
-                    MapObject ob = cell.Objects[i];
+                    MapObject ob = CurrentMap.Objects[CurrentLocation.X, CurrentLocation.Y][i];
                     if (ob == this || !ob.Blocking) continue;
                     stacking = true;
                     break;
@@ -90,7 +92,7 @@ namespace Server.MirObjects.Monsters
                 {
                     MirDirection dir = Direction;
 
-                    switch (Envir.Random.Next(3)) // favour Clockwise
+                    switch (RandomUtils.Next(3)) // favour Clockwise
                     {
                         case 0:
                             for (int i = 0; i < 7; i++)
@@ -114,7 +116,7 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
-            if (Target == null || Envir.Random.Next(3) == 0) FindTarget();
+            if (Target == null || RandomUtils.Next(3) == 0) FindTarget();
         }
         protected override void ProcessRoam()
         {
@@ -129,12 +131,12 @@ namespace Server.MirObjects.Monsters
             }
 
             RoamTime = Envir.Time + RoamDelay;
-            if (Envir.Random.Next(10) != 0) return;
+            if (RandomUtils.Next(10) != 0) return;
 
-            switch (Envir.Random.Next(3)) //Face Walk
+            switch (RandomUtils.Next(3)) //Face Walk
             {
                 case 0:
-                    Turn((MirDirection)Envir.Random.Next(8));
+                    Turn((MirDirection)RandomUtils.Next(8));
                     break;
                 default:
                     Walk(Direction);
@@ -148,7 +150,11 @@ namespace Server.MirObjects.Monsters
             if (InAttackRange())
             {
                 Attack();
-                if (Target.Dead)
+                if (Target == null)
+                {
+                    return;
+                }
+                if (Target == null || Target.Dead)
                     FindTarget();
 
                 return;
@@ -188,11 +194,11 @@ namespace Server.MirObjects.Monsters
             if (damage == 0) return;
 
             //if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
-            Target.Attacked(this, damage, DefenceType.MAC);
+            Target.Attacked(this, damage, DefenceType.Agility);
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (Envir.Random.Next(10) <= PetLevel)
+                if (RandomUtils.Next(10) <= PetLevel)
                 {
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 4 + PetLevel, TickSpeed = 1000 }, this);
                 }
@@ -214,20 +220,20 @@ namespace Server.MirObjects.Monsters
                     if (x < 0) continue;
                     if (x >= CurrentMap.Width) break;
 
-                    Cell cell = CurrentMap.GetCell(x, y);
+                    //Cell cell = CurrentMap.GetCell(x, y);
 
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if (!CurrentMap.Valid(x,y) || CurrentMap.Objects[x,y] == null) continue;
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                    for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                     {
-                        MapObject target = cell.Objects[i];
+                        MapObject target = CurrentMap.Objects[x, y][i];
                         switch (target.Race)
                         {
                             case ObjectType.Monster:
                             case ObjectType.Player:
                                 //Only targets
                                 if (!target.IsAttackTarget(this) || target.Dead) break;
-                                target.Attacked(this, 10 * PetLevel, DefenceType.MACAgility);
+                                target.Attacked(this, 10 * PetLevel, DefenceType.Agility);
                                 break;
                         }
                     }

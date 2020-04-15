@@ -6,6 +6,7 @@ using Server.MirDatabase;
 using S = ServerPackets;
 using System.Drawing;
 using Server.MirEnvir;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
@@ -56,7 +57,7 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                switch (Envir.Random.Next(5))
+                switch (RandomUtils.Next(5))
                 {
                     case 0:
                     case 1:
@@ -75,14 +76,14 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, CloseRange) && Envir.Random.Next(4) == 0)
+                if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, CloseRange) && RandomUtils.Next(4) == 0)
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                     Point target = Functions.PointMove(CurrentLocation, Direction, 1);
                     Target.Teleport(CurrentMap, target, true, 6);
                 }
-                else if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, CloseRange) && Envir.Random.Next(4) == 0)
+                else if (!Functions.InRange(CurrentLocation, Target.CurrentLocation, CloseRange) && RandomUtils.Next(4) == 0)
                 {
                     Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
@@ -117,12 +118,12 @@ namespace Server.MirObjects.Monsters
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                    //Cell cell = CurrentMap.GetCell(target);
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
@@ -135,7 +136,7 @@ namespace Server.MirObjects.Monsters
                     }
                 }
 
-                if (Envir.Random.Next(8) == 0)
+                if (RandomUtils.Next(8) == 0)
                 {
                     Target.ApplyPoison(new Poison { Owner = this, Duration = 3, PType = PoisonType.Stun, TickSpeed = 1000, }, this);
                 }
@@ -149,7 +150,7 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < count; i++)
             {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(7))
+                switch (RandomUtils.Next(7))
                 {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.Turtle1));
@@ -196,11 +197,11 @@ namespace Server.MirObjects.Monsters
                 Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.TurtleKing });
                 if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    if (Envir.Random.Next(5) == 0)
+                    if (RandomUtils.Next(5) == 0)
                         Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
-                    if (Envir.Random.Next(15) == 0)
+                    if (RandomUtils.Next(15) == 0)
                         Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                 }
             }

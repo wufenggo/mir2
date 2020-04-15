@@ -4,9 +4,11 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Collections.Generic;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
+    //冰狱天将
     public class ManectricBlest : MonsterObject
     {
         private int _attackCount = 0;
@@ -38,9 +40,9 @@ namespace Server.MirObjects.Monsters
                 {
                     targets[i].Attacked(this, damage, DefenceType.MAC);
 
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                    if (RandomUtils.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                     {
-                        if (Envir.Random.Next(5) == 0)
+                        if (RandomUtils.Next(5) == 0)
                         {
                             targets[i].ApplyPoison(new Poison { PType = PoisonType.Frozen, Duration = 5, TickSpeed = 1000 }, this);
                         }
@@ -52,7 +54,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            switch (Envir.Random.Next(3))
+            switch (RandomUtils.Next(3))
             {
                 case 0:
                 case 1:
@@ -67,7 +69,7 @@ namespace Server.MirObjects.Monsters
 
                         MirDirection dir = Functions.PreviousDir(Direction);
                         Point tar;
-                        Cell cell;
+                        //Cell cell;
 
                         for (int i = 0; i < 8; i++)
                         {
@@ -77,13 +79,13 @@ namespace Server.MirObjects.Monsters
 
                             if (!CurrentMap.ValidPoint(tar)) continue;
 
-                            cell = CurrentMap.GetCell(tar);
+                            //cell = CurrentMap.GetCell(tar);
 
-                            if (cell.Objects == null) continue;
+                            if (CurrentMap.Objects[tar.X, tar.Y] == null) continue;
 
-                            for (int o = 0; o < cell.Objects.Count; o++)
+                            for (int o = 0; o < CurrentMap.Objects[tar.X, tar.Y].Count; o++)
                             {
-                                MapObject ob = cell.Objects[o];
+                                MapObject ob = CurrentMap.Objects[tar.X, tar.Y][o];
                                 if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
                                 if (!ob.IsAttackTarget(this)) continue;
 

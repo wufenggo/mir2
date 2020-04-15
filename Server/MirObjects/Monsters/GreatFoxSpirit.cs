@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -53,18 +54,18 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null) return;
             //remark: does this mean nobody gets teleported if the main target is standing closeby + does it mean it always try's to teleport the person with lowest x/y coords?)
-            if (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) > 3 && Envir.Random.Next(10) == 0 && Envir.Time >= RecallTime)
+            if (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) > 3 && RandomUtils.Next(10) == 0 && Envir.Time >= RecallTime)
             {
                 RecallTime = Envir.Time + 10000;
                 List<MapObject> targets = FindAllTargets(30, CurrentLocation);
-                if (targets.Count != 0 && Envir.Random.Next(4) > 0)
+                if (targets.Count != 0 && RandomUtils.Next(4) > 0)
                 {
                     for (int i = 0; i < targets.Count; i++)
                     {
                         if (Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) > 3)
                         {
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
-                            if (!targets[i].Teleport(CurrentMap, Functions.PointMove(CurrentLocation, (MirDirection)((byte)Envir.Random.Next(7)), 1)))
+                            if (RandomUtils.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
+                            if (!targets[i].Teleport(CurrentMap, Functions.PointMove(CurrentLocation, (MirDirection)((byte)RandomUtils.Next(7)), 1)))
                             targets[i].Teleport(CurrentMap, CurrentLocation);
                             return;
                         }
@@ -76,7 +77,7 @@ namespace Server.MirObjects.Monsters
             {
                 Attack();
 
-                if (Target.Dead)
+                if (Target == null || Target.Dead)
                     FindTarget();
 
                 return;
@@ -118,9 +119,9 @@ namespace Server.MirObjects.Monsters
                 if (ranged) Broadcast(new S.ObjectEffect { ObjectID = Target.ObjectID, Effect = SpellEffect.GreatFoxSpirit });
                 if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-                if (Envir.Random.Next(5) == 0)
+                if (RandomUtils.Next(5) == 0)
                     Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Slow, TickSpeed = 1000 }, this);
-                if (Envir.Random.Next(15) == 0)
+                if (RandomUtils.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
             }
         }
@@ -151,13 +152,13 @@ namespace Server.MirObjects.Monsters
                     if (x < 0) continue;
                     if (x >= CurrentMap.Width) break;
 
-                    Cell cell = CurrentMap.GetCell(x, y);
+                    //Cell cell = CurrentMap.GetCell(x, y);
 
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if (!CurrentMap.Valid(x,y) || CurrentMap.Objects[x,y] == null) continue;
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
+                    for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                     {
-                        GuardianRock target = cell.Objects[i] as GuardianRock;
+                        GuardianRock target = CurrentMap.Objects[x, y][i] as GuardianRock;
                         if (target == null) continue;
                         target.Active = Active;
                     }

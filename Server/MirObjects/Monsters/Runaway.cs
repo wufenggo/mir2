@@ -1,4 +1,5 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 
 namespace Server.MirObjects.Monsters
 {
@@ -43,7 +44,7 @@ namespace Server.MirObjects.Monsters
 
             if (Walk(dir)) return;
 
-            switch (Envir.Random.Next(2)) //No favour
+            switch (RandomUtils.Next(2)) //No favour
             {
                 case 0:
                     for (int i = 0; i < 7; i++)

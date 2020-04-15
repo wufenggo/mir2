@@ -1,8 +1,10 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //树
     public class Tree : MonsterObject
     {
         protected override bool CanMove { get { return false; } }
@@ -39,21 +41,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     break;
             }
 
@@ -92,21 +94,21 @@ namespace Server.MirObjects.Monsters
             switch (type)
             {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.AC:
                     armour = GetDefencePower(MinAC, MaxAC);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.MAC:
                     armour = GetDefencePower(MinMAC, MaxMAC);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Agility + 1) > attacker.Accuracy) return 0;
+                    if (RandomUtils.Next(Agility + 1) > attacker.Accuracy) return 0;
                     break;
             }
 

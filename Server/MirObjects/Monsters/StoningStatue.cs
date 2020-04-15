@@ -4,9 +4,11 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Collections.Generic;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
+    //石魔兽
     public class StoningStatue : MonsterObject
     {
         private long _areaTime = long.MaxValue;
@@ -62,7 +64,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            _areaTime = Envir.Time + 5000 + Envir.Random.Next(10) * 1000;
+            _areaTime = Envir.Time + 5000 + RandomUtils.Next(10) * 1000;
 
             Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
@@ -81,12 +83,15 @@ namespace Server.MirObjects.Monsters
             {
                 targets[i].Attacked(this, MaxDC * 3, DefenceType.MACAgility);
 
-                if (Envir.Random.Next(2) == 0)
+                if (RandomUtils.Next(2) == 0)
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                    if (RandomUtils.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                     {
                         int poisonLength = GetAttackPower(MinMC, MaxMC);
-
+                        if (poisonLength > 15)
+                        {
+                            poisonLength = 15;
+                        }
                         targets[i].ApplyPoison(new Poison { Owner = this, PType = PoisonType.Stun, Duration = poisonLength, TickSpeed = 1000 }, this);
                         Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.Stunned, Time = (uint)poisonLength * 1000 });
                     }
@@ -113,12 +118,12 @@ namespace Server.MirObjects.Monsters
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                   //Cell cell = CurrentMap.GetCell(target);
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;

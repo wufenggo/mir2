@@ -1,4 +1,5 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -54,7 +55,7 @@ namespace Server.MirObjects.Monsters
 
         protected long NewSitDownTime()
         {
-            long newtime = Envir.Time + Envir.Random.Next(1000 * 60 * 2);
+            long newtime = Envir.Time + RandomUtils.Next(1000 * 60 * 2);
             return newtime < SitDownTime ? SitDownTime : newtime;
         }
 
@@ -96,9 +97,9 @@ namespace Server.MirObjects.Monsters
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    if (Envir.Random.Next(8) == 0)
+                    if (RandomUtils.Next(8) == 0)
                     {
                         if (Info.Effect == 0)
                         {

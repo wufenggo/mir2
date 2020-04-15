@@ -1,3 +1,4 @@
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //³àÑªÀûÈÐ
     public class MutatedManworm : CrazyManworm
     {
         public int AttackRange = 5;
@@ -21,7 +23,7 @@ namespace Server.MirObjects.Monsters
 
             int ownDamage = GetAttackPower(MinDC, MaxDC);
 
-            if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
+            if (attackerDamage > ownDamage && RandomUtils.Next(2) == 0)
             {
                 TeleportToWeakerTarget();
             }
@@ -35,7 +37,7 @@ namespace Server.MirObjects.Monsters
 
             int ownDamage = GetAttackPower(MinDC, MaxDC);
 
-            if (attackerDamage > ownDamage && Envir.Random.Next(2) == 0)
+            if (attackerDamage > ownDamage && RandomUtils.Next(2) == 0)
             {
                 TeleportToWeakerTarget();
             }
@@ -68,10 +70,10 @@ namespace Server.MirObjects.Monsters
                 Point location;
 
                 if (distance <= 0)
-                    location = new Point(Envir.Random.Next(CurrentMap.Width), Envir.Random.Next(CurrentMap.Height));
+                    location = new Point(RandomUtils.Next(CurrentMap.Width), RandomUtils.Next(CurrentMap.Height));
                 else
-                    location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                    location = new Point(CurrentLocation.X + RandomUtils.Next(-distance, distance + 1),
+                                         CurrentLocation.Y + RandomUtils.Next(-distance, distance + 1));
 
                 if (Teleport(CurrentMap, location, true, 4)) return true;
             }

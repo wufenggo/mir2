@@ -38,7 +38,8 @@ namespace Server.MirDatabase
 
         public ushort AttackSpeed = 2500, MoveSpeed = 1800;
         public uint Experience;
-        
+
+        //怪物的掉落物品
         public List<DropInfo> Drops = new List<DropInfo>();
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
@@ -120,6 +121,8 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion < 18) return;
             AutoRev = reader.ReadBoolean();
             Undead = reader.ReadBoolean();
+         
+
         }
 
         public string GameName
@@ -164,6 +167,7 @@ namespace Server.MirDatabase
             writer.Write(CanTame);
             writer.Write(AutoRev);
             writer.Write(Undead);
+            
         }
 
         public void LoadDrops()
@@ -262,6 +266,7 @@ namespace Server.MirDatabase
             if (!bool.TryParse(data[25], out info.AutoRev)) return;
             if (!bool.TryParse(data[26], out info.Undead)) return;
             if (!byte.TryParse(data[27], out info.CoolEye)) return;
+           
 
             //int count;
 

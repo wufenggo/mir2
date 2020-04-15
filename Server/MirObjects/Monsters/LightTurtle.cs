@@ -1,3 +1,4 @@
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
@@ -22,7 +23,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            if (Envir.Random.Next(3) > 0)
+            if (RandomUtils.Next(3) > 0)
             {
                 base.Attack();
             }
@@ -38,9 +39,9 @@ namespace Server.MirObjects.Monsters
 
                 Target.Attacked(this, damage, DefenceType.ACAgility);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    if (Envir.Random.Next(4) == 0)
+                    if (RandomUtils.Next(4) == 0)
                         Target.ApplyPoison(new Poison { Owner = this, PType = PoisonType.Green, Duration = GetAttackPower(MinSC,MaxSC), TickSpeed = 1000 }, this);
                 }
             }

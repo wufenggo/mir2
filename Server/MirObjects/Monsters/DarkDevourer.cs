@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using Server.MirDatabase;
 using S = ServerPackets;
-
+using Server.Library.MirEnvir;
 namespace Server.MirObjects.Monsters
 {
+    //ºÚ°µ¶à½Å¹Ö
     class DarkDevourer : MonsterObject
     {
         private const byte AttackRange = 9;
@@ -54,7 +55,7 @@ namespace Server.MirObjects.Monsters
 
                 if(Info.Effect == 1)
                 {
-                    if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                    if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                     {
                         Target.ApplyPoison(new Poison
                         {

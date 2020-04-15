@@ -1,7 +1,7 @@
 ﻿using Server.MirDatabase;
 using System.Collections.Generic;
 using S = ServerPackets;
-
+using Server.Library.MirEnvir;
 namespace Server.MirObjects.Monsters
 {
     public class FlameMage : RightGuard
@@ -59,7 +59,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

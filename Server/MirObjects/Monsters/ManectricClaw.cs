@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //±ùÓüÕ½½«
     public class ManectricClaw : MonsterObject
     {
         private const byte AttackRange = 3;
@@ -35,7 +37,7 @@ namespace Server.MirObjects.Monsters
 
             if(ranged || Envir.Time > _thrustTime)
             {
-                if (ranged && Envir.Random.Next(2) == 0)
+                if (ranged && RandomUtils.Next(2) == 0)
                 {
                     MoveTo(Target.CurrentLocation);
                     ActionTime = Envir.Time + 300;
@@ -69,7 +71,7 @@ namespace Server.MirObjects.Monsters
         {
             Point location = CurrentLocation;
             MirDirection direction = Direction;
-            Cell cell;
+            //Cell cell;
 
             int nearDamage = GetAttackPower(MinDC, MaxDC);
             int farDamage = GetAttackPower(MinMC, MaxMC);
@@ -91,13 +93,13 @@ namespace Server.MirObjects.Monsters
 
                     if (!CurrentMap.ValidPoint(hitPoint)) continue;
 
-                    cell = CurrentMap.GetCell(hitPoint);
+                    //cell = CurrentMap.GetCell(hitPoint);
 
-                    if (cell.Objects == null) continue;
+                    if (CurrentMap.Objects[hitPoint.X, hitPoint.Y] == null) continue;
 
-                    for (int k = 0; k < cell.Objects.Count; k++)
+                    for (int k = 0; k < CurrentMap.Objects[hitPoint.X, hitPoint.Y].Count; k++)
                     {
-                        MapObject target = cell.Objects[k];
+                        MapObject target = CurrentMap.Objects[hitPoint.X, hitPoint.Y][k];
                         switch (target.Race)
                         {
                             case ObjectType.Monster:
@@ -106,26 +108,26 @@ namespace Server.MirObjects.Monsters
                                 {
                                     if (target.Attacked(this, j <= 1 ? nearDamage : farDamage, DefenceType.MAC) > 0)
                                     {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+                                        if (RandomUtils.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                                         {
-                                            if (Envir.Random.Next(5) == 0)
+                                            if (RandomUtils.Next(4) == 0)
                                             {
                                                 target.ApplyPoison(new Poison
                                                 {
                                                     Owner = this,
-                                                    Duration = target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                                    Duration = target.Race == ObjectType.Player ? 4 : 5 + RandomUtils.Next(5),
                                                     PType = PoisonType.Slow,
                                                     TickSpeed = 1000,
                                                 }, this);
                                                 target.OperateTime = 0;
                                             }
 
-                                            if (Envir.Random.Next(5) == 0)
+                                            if (RandomUtils.Next(4) == 0)
                                             {
                                                 target.ApplyPoison(new Poison
                                                 {
                                                     Owner = this,
-                                                    Duration = target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Freezing),
+                                                    Duration = target.Race == ObjectType.Player ? 2 : 5 + RandomUtils.Next(this.Freezing),
                                                     PType = PoisonType.Frozen,
                                                     TickSpeed = 1000,
                                                 }, this);

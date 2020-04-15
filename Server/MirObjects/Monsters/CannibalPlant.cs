@@ -5,6 +5,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //食人花
     public class CannibalPlant : HarvestMonster
     {
         public bool Visible;
@@ -31,6 +32,7 @@ namespace Server.MirObjects.Monsters
         {
             Visible = false;
         }
+
 
         protected override void ProcessAI()
         {

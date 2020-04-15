@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
@@ -61,7 +62,7 @@ namespace Server.MirObjects.Monsters
 
                 if (!Visible && visible && !Target.Dead && !Target.InTrapRock)
                 {
-                    SpawnCorner = (byte)(Envir.Random.Next(4) * 2);
+                    SpawnCorner = (byte)(RandomUtils.Next(4) * 2);
                     if (Teleport(CurrentMap, Functions.PointMove(Target.CurrentLocation, (MirDirection)SpawnCorner, 1), false))
                     {
                         ActionTime = Envir.Time + 1000;
@@ -95,7 +96,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(8) == 0 && !ChildRock) Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 3, TickSpeed = 1000 }, this, true);
+            if (RandomUtils.Next(8) == 0 && !ChildRock) Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 3, TickSpeed = 1000 }, this, true);
 
             if (Target.Dead)
                 Die();
@@ -110,9 +111,9 @@ namespace Server.MirObjects.Monsters
                     if (CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1))
                         Target.InTrapRock = false;
                 }
-                if (Info.HasDieScript && (Envir.MonsterNPC != null))
+                if (Info.HasDieScript && (MessageQueue.Envir.MonsterNPC != null))
                 {
-                    Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                    MessageQueue.Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
                 }
 
 

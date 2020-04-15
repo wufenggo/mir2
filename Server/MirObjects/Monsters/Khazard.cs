@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //狂热血蜥蜴
     class Khazard : MonsterObject
     {
         public long PullTime;
@@ -75,7 +77,7 @@ namespace Server.MirObjects.Monsters
 
                 if (target == Target.CurrentLocation)
                 {
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < Target.MagicResist) continue;
+                    if (RandomUtils.Next(Settings.MagicResistWeight) < Target.MagicResist) continue;
                     MirDirection pushdir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
                     Target.Pushed(this, pushdir, i);
                 }
@@ -89,7 +91,7 @@ namespace Server.MirObjects.Monsters
             if (InAttackRange() && CanAttack)
             {
                 Attack();
-                if (Target.Dead)
+                if (Target == null || Target.Dead)
                     FindTarget();
 
                 return;

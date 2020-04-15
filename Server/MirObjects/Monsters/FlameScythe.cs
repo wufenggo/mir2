@@ -4,6 +4,7 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Collections.Generic;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
@@ -50,7 +51,7 @@ namespace Server.MirObjects.Monsters
                 {
                     for (int i = 0; i < targets.Count; i++)
                     {
-                        if (Envir.Random.Next(Settings.MagicResistWeight) >= targets[i].MagicResist)
+                        if (RandomUtils.Next(Settings.MagicResistWeight) >= targets[i].MagicResist)
                         {
                             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, targets[i], damage, DefenceType.MACAgility);
                             ActionList.Add(action);
@@ -80,6 +81,7 @@ namespace Server.MirObjects.Monsters
                 Target = null;
                 return;
             }
+            
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
@@ -91,7 +93,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

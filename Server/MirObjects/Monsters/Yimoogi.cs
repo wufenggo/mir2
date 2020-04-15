@@ -108,7 +108,7 @@ namespace Server.MirObjects.Monsters
                             PType = PoisonType.Red,
                             TickSpeed = 2000
                         }, this);
-                    }             
+                    }
                 }
                 else
                 {
@@ -135,7 +135,7 @@ namespace Server.MirObjects.Monsters
                 if (TeleportRandom(40, 0))
                 {
                     FinalTeleport = true;
-         
+
                     MonsterObject mob = null;
                     for (int i = 0; i < WhiteSnakeCount; i++)
                     {
@@ -160,7 +160,7 @@ namespace Server.MirObjects.Monsters
 
             if (IsChild && SisterMobReady())
             {
-                if (Functions.InRange(CurrentLocation, SisterMob.CurrentLocation, 2) && Target == null && 
+                if (Functions.InRange(CurrentLocation, SisterMob.CurrentLocation, 2) && Target == null &&
                 Functions.MaxDistance(CurrentLocation, SisterMob.CurrentLocation) < 10)
                 {
                     MoveTo(SisterMob.CurrentLocation);
@@ -207,7 +207,7 @@ namespace Server.MirObjects.Monsters
             Yimoogi childmob = (Yimoogi)mob;
 
             if (!childmob.Spawn(CurrentMap, Front))
-               childmob.Spawn(CurrentMap, CurrentLocation);
+                childmob.Spawn(CurrentMap, CurrentLocation);
 
             if (Target != null)
             {

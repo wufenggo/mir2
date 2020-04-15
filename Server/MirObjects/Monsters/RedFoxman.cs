@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
@@ -33,7 +34,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            //byte spelltype = Envir.Random.Next(2) == 0 ? (byte)1 : (byte)2;
+            //byte spelltype = RandomUtils.Next(2) == 0 ? (byte)1 : (byte)2;
             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
 
@@ -57,7 +58,7 @@ namespace Server.MirObjects.Monsters
 
             if (InAttackRange() && (Envir.Time < FearTime))
             {
-                if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) && Envir.Time > TeleportTime && Envir.Random.Next(8) == 0)
+                if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1) && Envir.Time > TeleportTime && RandomUtils.Next(8) == 0)
                 {
                     TeleportTime = Envir.Time + 10000;
                     TeleportRandom(40, 4);
@@ -88,7 +89,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)
@@ -120,10 +121,10 @@ namespace Server.MirObjects.Monsters
                 Point location;
 
                 if (distance <= 0)
-                    location = new Point(Envir.Random.Next(CurrentMap.Width), Envir.Random.Next(CurrentMap.Height));
+                    location = new Point(RandomUtils.Next(CurrentMap.Width), RandomUtils.Next(CurrentMap.Height));
                 else
-                    location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                    location = new Point(CurrentLocation.X + RandomUtils.Next(-distance, distance + 1),
+                                         CurrentLocation.Y + RandomUtils.Next(-distance, distance + 1));
 
                 if (Teleport(CurrentMap, location, true, 2)) return true;
             }

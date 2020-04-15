@@ -1952,6 +1952,86 @@ namespace ServerPackets
         }
 
     }
+
+    //怪物的变化，状态变化，用这个好一点。
+    //这里改变，不改变位置，朝向这些，避免冲突哦
+    public sealed class ObjectMonsterChange : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObjectMonsterChange; }
+        }
+
+        public uint ObjectID;
+        public string Name = string.Empty;
+        public Color NameColour;
+        public Monster Image;
+        public byte Effect, AI, Light;
+        public bool Dead, Skeleton;
+        public PoisonType Poison;
+        public bool Hidden, Extra;
+        public byte ExtraByte;//扩展字段，状态等
+        public long ShockTime;
+        public bool BindingShotCenter;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            Name = reader.ReadString();
+            NameColour = Color.FromArgb(reader.ReadInt32());
+            Image = (Monster)reader.ReadUInt16();
+            Effect = reader.ReadByte();
+            AI = reader.ReadByte();
+            Light = reader.ReadByte();
+            Dead = reader.ReadBoolean();
+            Skeleton = reader.ReadBoolean();
+            Poison = (PoisonType)reader.ReadUInt16();
+            Hidden = reader.ReadBoolean();
+            ShockTime = reader.ReadInt64();
+            BindingShotCenter = reader.ReadBoolean();
+            Extra = reader.ReadBoolean();
+            ExtraByte = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(Name);
+            writer.Write(NameColour.ToArgb());
+            writer.Write((ushort)Image);
+            writer.Write(Effect);
+            writer.Write(AI);
+            writer.Write(Light);
+            writer.Write(Dead);
+            writer.Write(Skeleton);
+            writer.Write((ushort)Poison);
+            writer.Write(Hidden);
+            writer.Write(ShockTime);
+            writer.Write(BindingShotCenter);
+            writer.Write(Extra);
+            writer.Write((byte)ExtraByte);
+        }
+    }
+    //冰雨，火雨攻击时间缩短
+    public sealed class BlizzardStopTime : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.BlizzardStopTime; }
+        }
+
+        public int stopTime;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            stopTime = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(stopTime);
+        }
+    }
     public sealed class ObjectAttack : Packet
     {
         public override short Index
@@ -2506,7 +2586,9 @@ namespace ServerPackets
         public Point Location;
         public MirDirection Direction;
         public byte MapDarkLight;
-
+        //地图信息增加安全区,用于客户端判断是否在安全区，在安全区则可以穿人，穿怪
+        //安全区域
+       
 
         protected override void ReadPacket(BinaryReader reader)
         {

@@ -1,4 +1,5 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using Server.MirEnvir;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //冰狱魔王
     public class ManectricKing : MonsterObject
     {
         public long FearTime;
@@ -59,18 +61,18 @@ namespace Server.MirObjects.Monsters
                 {
                     int delay = Functions.MaxDistance(CurrentLocation, targets[i].CurrentLocation) * 50 + 750; //50 MS per Step
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, targets[i], damage, DefenceType.ACAgility);
                     ActionList.Add(action);
                 }
 
-                MassAttackTime = Envir.Time + 2000 + (Envir.Random.Next(5) * 1000);
+                MassAttackTime = Envir.Time + 2000 + (RandomUtils.Next(5) * 1000);
                 ActionTime = Envir.Time + 800;
                 AttackTime = Envir.Time + (AttackSpeed);
                 return;
             }
 
             if (Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange - 1) 
-                && Envir.Random.Next(3) == 0)
+                && RandomUtils.Next(3) == 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 LineAttack(AttackRange - Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) + 1, true);
@@ -99,12 +101,12 @@ namespace Server.MirObjects.Monsters
 
                 if (!CurrentMap.ValidPoint(target)) continue;
 
-                Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
+                //Cell cell = CurrentMap.GetCell(target);
+                if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                for (int o = 0; o < cell.Objects.Count; o++)
+                for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                 {
-                    MapObject ob = cell.Objects[o];
+                    MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                     if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                     {
                         if (!ob.IsAttackTarget(this)) continue;

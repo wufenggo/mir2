@@ -4,6 +4,7 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 using System.Collections.Generic;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
@@ -34,7 +35,7 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                switch (Envir.Random.Next(5))
+                switch (RandomUtils.Next(5))
                 {
                     case 0:
                     case 1:
@@ -52,9 +53,9 @@ namespace Server.MirObjects.Monsters
                         Attack2();
                         break;
                 }
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
-                    if (Envir.Random.Next(15) == 0)
+                    if (RandomUtils.Next(15) == 0)
                     {
                         Target.ApplyPoison(new Poison { Owner = this, Duration = 5, PType = PoisonType.Bleeding, Value = GetAttackPower(MinDC, MinDC), TickSpeed = 1000 }, this);
                     }
@@ -62,13 +63,13 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                if (Envir.Random.Next(2) == 0)
+                if (RandomUtils.Next(2) == 0)
                 {
                     MoveTo(Target.CurrentLocation);
                 }
                 else
                 {
-                    switch (Envir.Random.Next(2))
+                    switch (RandomUtils.Next(2))
                     {
                         case 0:
                             Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
@@ -91,9 +92,9 @@ namespace Server.MirObjects.Monsters
 
                                     if (targets[i].Attacked(this, damage, DefenceType.ACAgility) > 0)
                                     {
-                                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                                        if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                                         {
-                                            if (Envir.Random.Next(15) == 0)
+                                            if (RandomUtils.Next(15) == 0)
                                             {
                                                 targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
                                             }
@@ -130,22 +131,22 @@ namespace Server.MirObjects.Monsters
         {
             Point target = Functions.PointMove(CurrentLocation, Direction, 1);
 
-            Cell cell = CurrentMap.GetCell(target);
+            //Cell cell = CurrentMap.GetCell(target);
 
-            if (cell.Objects != null)
+            if (CurrentMap.Objects[target.X, target.Y] != null)
             {
-                for (int o = 0; o < cell.Objects.Count; o++)
+                for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                 {
-                    MapObject t = cell.Objects[o];
+                    MapObject t = CurrentMap.Objects[target.X, target.Y][o];
                     if (t == null || t.Race != ObjectType.Player) continue;
 
                     if (t.IsAttackTarget(this))
                     {
                         t.Pushed(this, Direction, 4);
 
-                        if (Envir.Random.Next(Settings.PoisonResistWeight) >= t.PoisonResist)
+                        if (RandomUtils.Next(Settings.PoisonResistWeight) >= t.PoisonResist)
                         {
-                            if (Envir.Random.Next(3) == 0)
+                            if (RandomUtils.Next(3) == 0)
                             {
                                 t.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Stun, TickSpeed = 1000 }, this);
                             }
@@ -168,7 +169,7 @@ namespace Server.MirObjects.Monsters
             for (int i = 0; i < count; i++)
             {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(4))
+                switch (RandomUtils.Next(4))
                 {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.BehemothMonster1));
@@ -186,7 +187,7 @@ namespace Server.MirObjects.Monsters
                 if (!mob.Spawn(CurrentMap, Front))
                     mob.Spawn(CurrentMap, CurrentLocation);
                 
-                mob.Target = targets[Envir.Random.Next(targets.Count)];
+                mob.Target = targets[RandomUtils.Next(targets.Count)];
                 mob.ActionTime = Envir.Time + 2000;
                 SlaveList.Add(mob);
             }

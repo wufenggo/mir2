@@ -5,6 +5,8 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //护卫，带刀护卫，皇家护卫等，会自动移动的
+    //AI是6，58
     public class Guard : MonsterObject
     {
         public override bool Blocking
@@ -66,7 +68,15 @@ namespace Server.MirObjects.Monsters
         protected override void Attack()
         {
             if (!Target.IsAttackTarget(this)) return;
-
+            ////不攻击副本的怪物
+            //if (Target.Race == ObjectType.Monster)
+            //{
+            //    MonsterObject fbobj = (MonsterObject)Target;
+            //    if (fbobj.IsCopy)
+            //    {
+            //        return;
+            //    }
+            //}
             Point target = Target.Back;
             MirDirection dir = Functions.DirectionFromPoint(target, Target.CurrentLocation);
 

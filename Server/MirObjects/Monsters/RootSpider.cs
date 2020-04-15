@@ -1,16 +1,18 @@
 ﻿using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //幻影蜘蛛
     class RootSpider : BugBagMaggot
     {
 
         protected internal RootSpider(MonsterInfo info)
             : base(info)
         {
-            byte randomdirection = (byte)Envir.Random.Next(3);
+            byte randomdirection = (byte)RandomUtils.Next(3);
             Direction = (MirDirection)randomdirection;
         }
 

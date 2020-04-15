@@ -1,8 +1,10 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //狐狸道士
     public class WhiteFoxman : MonsterObject
     {
         public long FearTime, TeleportTime;
@@ -34,7 +36,7 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(8) != 0)
+            if (RandomUtils.Next(8) != 0)
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
@@ -50,10 +52,10 @@ namespace Server.MirObjects.Monsters
             {
                 Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
                 {
                     int levelgap = 50 - Target.Level;
-                    if (Envir.Random.Next(20) < 4 + levelgap)
+                    if (RandomUtils.Next(20) < 4 + levelgap)
                         Target.ApplyPoison(new Poison
                         {
                             Owner = this,
@@ -97,7 +99,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

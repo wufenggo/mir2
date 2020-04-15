@@ -1,8 +1,11 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //射手类的怪 
+    //掷斧骷髅/掷斧骷髅0/掷斧骷髅_无效/祖玛弓箭手精英/黑暗战士/黑暗战士0/祖玛弓箭手6/祖玛弓箭手7/骷髅弓箭手/骷髅弓箭手0/魔龙射手1/魔龙射手2
     public class AxeSkeleton : MonsterObject
     {
         public long FearTime;
@@ -77,7 +80,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

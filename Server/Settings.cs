@@ -154,8 +154,8 @@ namespace Server
                             VampireName = "吸血蜘蛛",
                             ToadName = "蟾蜍",
                             SnakeTotemName = "蛇图腾",
-                            SnakesName = "鬼魅蛇";
-
+                            SnakesName = "鬼魅蛇",
+                            SnowWolfName = "雪原冰狼";
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
                              ParalysisRing = "Paralysis",

@@ -9,6 +9,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
+    //召唤图腾
     public class SnakeTotem : MonsterObject
     {
         public bool Summoned;
@@ -49,12 +50,13 @@ namespace Server.MirObjects.Monsters
                     if (selfDestruct)
                     {
                         Die();
-                        DieTime = Envir.Time + 3000;
+                        //DieTime = Envir.Time + 3000;
                     }
                 }
-                base.Process();
+                //base.Process();
             }
-            else if (Envir.Time >= DieTime) Despawn();
+            base.Process();
+            //else if (Envir.Time >= DieTime) Despawn();
         }
 
         public override void Process(DelayedAction action)
@@ -109,12 +111,12 @@ namespace Server.MirObjects.Monsters
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
 
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        //Cell cell = CurrentMap.GetCell(x, y);
+                        if (!CurrentMap.Valid(x,y) || CurrentMap.Objects[x,y] == null) continue;
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
+                        for (int i = 0; i < CurrentMap.Objects[x, y].Count; i++)
                         {
-                            MapObject ob = cell.Objects[i];
+                            MapObject ob = CurrentMap.Objects[x, y][i];
                             switch (ob.Race)
                             {
                                 case ObjectType.Monster:
@@ -160,7 +162,7 @@ namespace Server.MirObjects.Monsters
         {
             base.Die();
 
-            DeadTime = 0;
+            //DeadTime = 0;
             
             //Kill Minions
             for (int i = SlaveList.Count - 1; i >= 0; i--)

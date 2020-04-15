@@ -1,7 +1,9 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 
 namespace Server.MirObjects.Monsters
 {
+    //鹿，包括羊等非攻击型的怪物
     public class Deer : HarvestMonster
     {
         private bool _runAway;
@@ -21,14 +23,14 @@ namespace Server.MirObjects.Monsters
 
             RemainingSkinCount = 5;
 
-            if (Envir.Random.Next(7) == 0)
+            if (RandomUtils.Next(7) == 0)
             {
                 _runAway = true;
-                Quality = (short)(Envir.Random.Next(8) * 2000);
+                Quality = (short)(RandomUtils.Next(8) * 2000);
                 MoveSpeed -= 300;
             }
             else
-                Quality = (short)(Envir.Random.Next(4) * 1000);
+                Quality = (short)(RandomUtils.Next(4) * 1000);
         }
 
         public override void RefreshAll()
@@ -53,7 +55,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

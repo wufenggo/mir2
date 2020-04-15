@@ -1,4 +1,5 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
+using Server.MirDatabase;
 using System.Collections.Generic;
 using S = ServerPackets;
 
@@ -23,12 +24,17 @@ namespace Server.MirObjects.Monsters
 
             if(target.Attacked(this, damage, defence) > 0)
             {
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
+                if (RandomUtils.Next(Settings.PoisonResistWeight) >= target.PoisonResist)
                 {
+                    int Duration = GetAttackPower(MinMC, MaxMC);
+                    if (Duration > 15)
+                    {
+                        Duration = 15;
+                    }
                     target.ApplyPoison(new Poison
                     {
                         Owner = this,
-                        Duration = GetAttackPower(MinMC, MaxMC),
+                        Duration = Duration,
                         PType = PoisonType.Slow,
                         TickSpeed = 1000,
                     }, this);
@@ -64,7 +70,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Walk(dir)) return;
 
-                switch (Envir.Random.Next(2)) //No favour
+                switch (RandomUtils.Next(2)) //No favour
                 {
                     case 0:
                         for (int i = 0; i < 7; i++)

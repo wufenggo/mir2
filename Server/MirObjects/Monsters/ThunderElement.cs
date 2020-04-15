@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
@@ -82,8 +83,8 @@ namespace Server.MirObjects.Monsters
 
             if (result > 0)
             {
-                if (pusher is PlayerObject) Attacked((PlayerObject)pusher, Math.Max(50, Envir.Random.Next((int)MaxHP)), DefenceType.Repulsion);
-                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, Math.Max(50, Envir.Random.Next((int)MaxHP)), DefenceType.Repulsion);
+                if (pusher is PlayerObject) Attacked((PlayerObject)pusher, Math.Max(50, RandomUtils.Next((int)MaxHP)), DefenceType.Repulsion);
+                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, Math.Max(50, RandomUtils.Next((int)MaxHP)), DefenceType.Repulsion);
             }
             return result;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Concurrent;
+using Server.MirEnvir;
 
 namespace Server
 {
@@ -12,7 +13,8 @@ namespace Server
         {
             get { return instance; }
         }
-
+        public static readonly Envir Envir = new Envir();
+        public static readonly Envir EditEnvir = Envir;
         public readonly ConcurrentQueue<string> MessageLog = new ConcurrentQueue<string>();
         public readonly ConcurrentQueue<string> DebugLog = new ConcurrentQueue<string>();
         public readonly ConcurrentQueue<string> ChatLog = new ConcurrentQueue<string>();

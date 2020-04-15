@@ -4,6 +4,7 @@ using System.Drawing;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
+using Server.Library.MirEnvir;
 
 namespace Server.MirObjects.Monsters
 {
@@ -73,7 +74,7 @@ namespace Server.MirObjects.Monsters
 
             int damage;
 
-            if (!ranged && Envir.Random.Next(3) > 0)
+            if (!ranged && RandomUtils.Next(3) > 0)
             {
                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 damage = GetAttackPower(MinDC, MaxDC);
@@ -89,13 +90,13 @@ namespace Server.MirObjects.Monsters
                     if (targets[i].IsAttackTarget(this))
                     {
                         levelgap = 60 - targets[i].Level;
-                        if (Envir.Random.Next(20) < 4 + levelgap)
+                        if (RandomUtils.Next(20) < 4 + levelgap)
                         {
-                            if (Envir.Random.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
-                            if (targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 3 + Envir.Random.Next(3)) > 0
-                            && Envir.Random.Next(8) == 0)
+                            if (RandomUtils.Next(Settings.MagicResistWeight) < targets[i].MagicResist) continue;
+                            if (targets[i].Pushed(this, Functions.DirectionFromPoint(CurrentLocation, targets[i].CurrentLocation), 3 + RandomUtils.Next(3)) > 0
+                            && RandomUtils.Next(8) == 0)
                             {
-                                if (Envir.Random.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
+                                if (RandomUtils.Next(Settings.PoisonResistWeight) >= targets[i].PoisonResist)
                                 {
                                     targets[i].ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this, true);
                                 }
@@ -140,12 +141,12 @@ namespace Server.MirObjects.Monsters
                 {
                     if (!CurrentMap.ValidPoint(target)) continue;
 
-                    Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                    //Cell cell = CurrentMap.GetCell(target);
+                    if (CurrentMap.Objects[target.X, target.Y] == null) continue;
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
+                    for (int o = 0; o < CurrentMap.Objects[target.X, target.Y].Count; o++)
                     {
-                        MapObject ob = cell.Objects[o];
+                        MapObject ob = CurrentMap.Objects[target.X, target.Y][o];
                         if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player)
                         {
                             if (!ob.IsAttackTarget(this)) continue;
