@@ -24,7 +24,7 @@ namespace Client.MirObjects
         public Spell Spell;
         public int FrameCount, FrameInterval, FrameIndex;
         public bool Repeat;
-        
+        public int EffectStart, EffectCount, EffectInterval, EffectIndex;
 
         public SpellObject(uint objectID) : base(objectID)
         {
@@ -168,6 +168,91 @@ namespace Client.MirObjects
                     FrameCount = 8;
                     Blend = true;
                     break;
+
+
+                case Spell.MonKITO://鬼头
+                    BodyLibrary = Libraries.Monsters[446];
+                    if (info.Param)
+                    {
+                        DrawFrame = 965;
+                        FrameInterval = 100;
+                        FrameCount = 8;
+                        Repeat = false;
+                    }
+                    else
+                    {
+                        DrawFrame = 954;
+                        FrameInterval = 100;
+                        FrameCount = 10;
+                        Repeat = true;
+                    }
+                    //Light = 1;
+                    Blend = true;
+                    break;
+                case Spell.MonFireCircle://鬼头
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster446];
+                    DrawFrame = 1373;
+                    FrameInterval = 100;
+                    FrameCount = 5;
+                    Repeat = true;
+                    if (info.Param)
+                    {
+                        MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1380, 4, 400, CurrentLocation) { Blend = true });
+                    }
+                    //Light = 1;
+                    Blend = true;
+                    break;
+                case Spell.MonPoisonFog://怪物的毒雾，类似毒云吧
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster452];
+                    DrawFrame = 400;
+                    FrameInterval = 100;
+                    FrameCount = 7;
+                    Repeat = true;
+                    //Light = 1;
+                    Blend = true;
+                    break;
+                case Spell.MonRotateAxe://怪物的旋转斧头
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster453];
+                    DrawFrame = 653;
+                    FrameInterval = 150;
+                    FrameCount = 5;
+                    Repeat = true;
+                    //Light = 1;
+                    Blend = true;
+                    break;
+                case Spell.MonGhostFlag1://怪物鬼旗
+                    BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster453];
+                    DrawFrame = 675;
+                    FrameInterval = 100;
+                    FrameCount = 8;
+                    Repeat = true;
+                    //Light = 1;
+                    Blend = false;
+                    //MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster453], 683, 7, 700, CurrentLocation) { Blend = true });
+                    break;
+                case Spell.MonGhostHead://鬼头2
+                    BodyLibrary = Libraries.Monsters[454];
+                    if (info.Param)
+                    {
+                        DrawFrame = 1041;
+                        FrameInterval = 100;
+                        FrameCount = 11;
+                        Repeat = false;
+                        Blend = true;
+                    }
+                    else
+                    {
+                        DrawFrame = 1024;
+                        FrameInterval = 100;
+                        FrameCount = 6;
+                        Repeat = true;
+                        EffectStart = 1035;
+                        EffectCount = 6;
+                        EffectInterval = 100;
+                        Blend = false;
+                    }
+                    break;
+                    //Light = 1;
             }
 
 

@@ -5899,7 +5899,7 @@ namespace Server.MirObjects
         {
             int result = 0;
             MirDirection reverse = Functions.ReverseDirection(dir);
-            Cell cell;
+            
             for (int i = 0; i < distance; i++)
             {
                 Point location = Functions.PointMove(CurrentLocation, dir, 1);

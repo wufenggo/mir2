@@ -17,7 +17,7 @@ namespace Server.MirObjects.Monsters
         private long ProcessTime;
         private int _AttackSpeed;
         private ushort _MoveSpeed;
-        private byte _stage = 0;//0:正常 1：狂暴
+        private byte _stage = 1;//0:正常 1：狂暴
 
         protected internal Monster421(MonsterInfo info)
             : base(info)
