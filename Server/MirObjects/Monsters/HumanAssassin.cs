@@ -115,12 +115,12 @@ namespace Server.MirObjects.Monsters
                     }
             }
 
-            CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y,this);
+            CurrentMap.Remove(CurrentLocation.X, CurrentLocation.Y, this);
 
             Direction = dir;
             RemoveObjects(dir, 1);
             CurrentLocation = location;
-            CurrentMap.Add(CurrentLocation.X, CurrentLocation.Y,this);
+            CurrentMap.Add(CurrentLocation.X, CurrentLocation.Y, this);
             AddObjects(dir, 1);
 
             if (Hidden)

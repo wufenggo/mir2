@@ -2160,12 +2160,13 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
-
                 #region Trap
 
                 case Spell.Trap:
                     value = (int)data[2];
-                    location = (Point)data[3];
+                    //location = (Point)data[3];
+                    MapObject originalTarget = (MapObject)data[3];
+                    location = originalTarget.CurrentLocation;
                     MonsterObject selectTarget = null;
 
                     if (!ValidPoint(location)) break;
@@ -2211,7 +2212,6 @@ namespace Server.MirEnvir
                     break;
 
                 #endregion
-
                 #region OneWithNature
 
                 case Spell.OneWithNature:
