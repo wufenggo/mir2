@@ -910,7 +910,10 @@ namespace Client.MirScenes.Dialogs
             if (pet == null) return;
             if (PetType == IntelligentCreatureType.None || PetType != pet.PetType) setnew = true;//force new
 
-            if (setnew) SetButtonInfo(pet);
+            if (setnew)
+            {
+                SetButtonInfo(pet);
+            }
             else
             {
                 NameLabel.Text = pet.CustomName.ToString();
@@ -1098,7 +1101,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class IntelligentCreatureOptionsDialog : MirImageControl
     {
-        public readonly string[] OptionNames = { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
+        public readonly string[] OptionNames = { "全部物品", "金币", "武器", "防具", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
         public IntelligentCreatureItemFilter Filter;
         public Point locationOffset = new Point(450, 63);
 
@@ -1313,6 +1316,8 @@ namespace Client.MirScenes.Dialogs
 
         private Color GradeNameColor(ItemGrade grade)
         {
+
+           
             switch (grade)
             {
                 case ItemGrade.Common:

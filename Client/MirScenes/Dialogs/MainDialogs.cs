@@ -915,9 +915,21 @@ namespace Client.MirScenes.Dialogs
 
                     string[] parts = l.Text.Split(':', ' ');
                     if (parts.Length == 0) return;
-
-                    string name = Regex.Replace(parts[0], "[^A-Za-z0-9]", "");
-
+                    //修改这里对私聊的完善，支持
+                    //string name = Regex.Replace(parts[0], "[^A-Za-z0-9]", "");
+                    string name = parts[0];
+                    if (name == null)
+                    {
+                        return;
+                    }
+                    if (name.EndsWith("=>"))
+                    {
+                        name = name.Substring(0, name.IndexOf("=>"));
+                    }
+                    if (name.StartsWith("/"))
+                    {
+                        name = name.Substring(1);
+                    }
                     ChatTextBox.SetFocus();
                     ChatTextBox.Text = string.Format("/{0} ", name);
                     ChatTextBox.Visible = true;

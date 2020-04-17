@@ -61,8 +61,12 @@ namespace Server.MirEnvir
         //雷电时间，地火时间，空闲时间
         public long LightningTime, FireTime, InactiveTime;
         //怪物总数，空闲总次数
-        public int MonsterCount, InactiveCount;
+        public int MonsterCount;
+        public uint InactiveCount = 100;
+        public int FireInterval = 15000;//默认间隔2-15秒,触发雷电，熔岩伤害
         //NPC
+
+
         public List<NPCObject> NPCs = new List<NPCObject>();
         //玩家
         public List<PlayerObject> Players = new List<PlayerObject>();
@@ -835,7 +839,7 @@ namespace Server.MirEnvir
             }
         }
 
-
+        //根据地图名称查找地图，创建副本
 
 
 
@@ -1814,7 +1818,7 @@ namespace Server.MirEnvir
                                 Spell = Spell.Blizzard,
                                 Value = value,
                                 ExpireTime = Envir.Time + 3000,
-                                TickSpeed = 440,
+                                TickSpeed = 500,
                                 Caster = player,
                                 CurrentLocation = new Point(x, y),
                                 CastLocation = location,
@@ -1875,7 +1879,7 @@ namespace Server.MirEnvir
                                 Spell = Spell.MeteorStrike,
                                 Value = value,
                                 ExpireTime = Envir.Time + 3000,
-                                TickSpeed = 440,
+                                TickSpeed = 500,
                                 Caster = player,
                                 CurrentLocation = new Point(x, y),
                                 CastLocation = location,
@@ -2146,7 +2150,17 @@ namespace Server.MirEnvir
 
                                                 tempOb.ChangeMP(-tempValue);
                                             }
-
+                                            //这里增加伤害,群体伤害，40%的真实伤害
+                                            int dvalue = value * 4 / 10 + value / 15 * magic.Level;
+                                            if (dvalue < 10)
+                                            {
+                                                dvalue = 10;
+                                            }
+                                            if (dvalue > 60)
+                                            {
+                                                dvalue = 60;
+                                            }
+                                            target.Attacked(player, dvalue, DefenceType.Agility, false);
                                             train = true;
                                         }
                                         break;

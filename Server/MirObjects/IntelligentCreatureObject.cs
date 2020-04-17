@@ -5,6 +5,7 @@ using Server.MirDatabase;
 using Server.MirEnvir;
 using S = ServerPackets;
 
+
 namespace Server.MirObjects
 {
     public class IntelligentCreatureObject : MonsterObject
@@ -127,7 +128,7 @@ namespace Server.MirObjects
                     PickupAllItems(Target.CurrentLocation);
                     Target = null;
                     doDelayedPickup = false;
-                    if(TargetList.Count > 0)
+                    if (TargetList.Count > 0)
                         TargetList.RemoveAt(0);
                     if (TargetList.Count == 0)
                     {
@@ -160,7 +161,7 @@ namespace Server.MirObjects
 
         public void ProcessAnimVariant()
         {
-            
+
             if (Envir.Time > animvariantTicker)
             {
                 animvariantTicker = Envir.Time + animvariantDelay;
@@ -180,7 +181,7 @@ namespace Server.MirObjects
                         Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         break;
                     default:
-                        switch(Envir.Random.Next(10))
+                        switch (Envir.Random.Next(10))
                         {
                             case 0:
                                 Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
@@ -239,8 +240,8 @@ namespace Server.MirObjects
                 ProcessRoam();
             }
             ProcessTarget();
-        }      
-        
+        }
+
         protected override void ProcessSearch()
         {
             if (Target == null)
@@ -266,12 +267,12 @@ namespace Server.MirObjects
             if (Master != null)
             {
                 if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, 2))
-                    MoveTo(Functions.PointMove(Master.CurrentLocation,Master.Direction, -2));
+                    MoveTo(Functions.PointMove(Master.CurrentLocation, Master.Direction, -2));
                 else
                     if (Envir.Random.Next(100) >= 60) ProcessAnimVariant();//random anims
             }
         }
-        
+
         protected override void ProcessTarget()
         {
             if (Target == null || !CanAttack) return;
@@ -288,7 +289,7 @@ namespace Server.MirObjects
                 return;
             }
         }
-        
+
         protected override void FindTarget()
         {
             if (Fullness < CreatureRules.MinimalFullness) return;
@@ -376,6 +377,7 @@ namespace Server.MirObjects
                     {
                         if (x < 0) continue;
                         if (x >= CurrentMap.Width) break;
+
                         //Cell cell = CurrentMap.GetCell(x, y);
                         if (!CurrentMap.Valid(x, y) || CurrentMap.Objects[x, y] == null) continue;
 
@@ -392,7 +394,7 @@ namespace Server.MirObjects
                                 if (!((PlayerObject)Master).CanGainItem(item.Item)) continue;
                                 if (CheckItemAgainstFilter(item.Item.Info.Type))
                                 {
-                                    if(item.Item.Info.Grade >= ItemFilter.PickupGrade)
+                                    if (item.Item.Info.Grade >= ItemFilter.PickupGrade)
                                         TargetList.Add(ob);
                                     break;
                                 }
@@ -554,7 +556,6 @@ namespace Server.MirObjects
 
             int count = CurrentMap.Objects[Target.CurrentLocation.X, Target.CurrentLocation.Y].Count;
 
-
             for (int i = 0; i < count; i++)
             {
                 PickUpItem(Target.CurrentLocation);
@@ -582,11 +583,11 @@ namespace Server.MirObjects
 
                     if (item.Item.Info.ShowGroupPickup && IsMasterGroupMember(Master))
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
-                            Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+                            Master.GroupMembers[j].ReceiveChat(Name + " 拾取: {" + item.Item.Name + "}", ChatType.Hint);
 
                     if (item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary)
                     {
-                        Master.ReceiveChat("Pet Picked up: {" + item.Item.Name + "}", ChatType.Hint);
+                        Master.ReceiveChat("宠物拾取物品: {" + item.Item.Name + "}", ChatType.Hint);
                         ((PlayerObject)Master).Enqueue(new S.IntelligentCreaturePickup { ObjectID = ObjectID });
                     }
 
@@ -697,7 +698,7 @@ namespace Server.MirObjects
         public void ProcessBlackStoneProduction()
         {
             if (!CreatureRules.CanProduceBlackStone) return;
-            blackstoneTime ++;
+            blackstoneTime++;
             if (blackstoneTime >= blackstoneProduceTime)
             {
                 blackstoneTime = blackstoneProduceTime;

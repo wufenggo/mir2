@@ -155,7 +155,11 @@ namespace Server
                             ToadName = "蟾蜍",
                             SnakeTotemName = "蛇图腾",
                             SnakesName = "鬼魅蛇",
-                            SnowWolfName = "雪原冰狼";
+                            SnowWolfName = "雪原冰狼",
+                            KingGuardName = "将军随从",
+                            KingGuardName1 = "将军军师",
+                            KingGuardName2 = "将军侍卫";
+
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
                              ParalysisRing = "Paralysis",

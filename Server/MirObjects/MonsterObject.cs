@@ -388,6 +388,9 @@ namespace Server.MirObjects
 
             switch (info.Image)
             {
+                case Monster.KingGuard://Monster403 紫花仙子
+                    return new KingGuard(info);
+
                 case Monster.Monster403://Monster403 紫花仙子
                     return new Monster403(info);
                 case Monster.Monster404://Monster404 冰焰鼠
