@@ -1899,6 +1899,61 @@ namespace Server.MirEnvir
 
                 #endregion
 
+                #region HealingCircle 五行阵
+                case Spell.HealingCircle:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    show = true;
+                    //3乘3的范围内
+                    for (int y = location.Y - 3; y <= location.Y + 3; y++)
+                    {
+                        if (y < 0) continue;
+                        if (y >= Height) break;
+
+                        for (int x = location.X - 3; x <= location.X + 3; x++)
+                        {
+                            if (x < 0) continue;
+                            if (x >= Width) break;
+                            if (!Valid(x, y)) continue;
+
+                            bool cast = true;
+                            if (Objects[x, y] != null)
+                            {
+                                for (int o = 0; o < Objects[x, y].Count; o++)
+                                {
+                                    MapObject target = Objects[x, y][o];
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.HealingCircle) continue;
+
+                                    cast = false;
+                                    break;
+                                }
+                            }
+                            if (!cast) continue;
+                            //3级持续时间14秒，伤害和绿毒一样，治疗效果也和治疗术一样
+                            SpellObject ob = new SpellObject
+                            {
+                                Spell = Spell.HealingCircle,
+                                Value = value,
+                                ExpireTime = Envir.Time + 6000 + magic.Level * 3000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                            };
+
+                            show = false;
+
+                            AddObject(ob);
+                            ob.Spawned();
+                        }
+                    }
+                    train = false;
+                    break;
+
+                #endregion
+
                 #region TrapHexagon
 
                 case Spell.TrapHexagon:
@@ -2440,7 +2495,48 @@ namespace Server.MirEnvir
                     }
                     break;
 
+                #endregion
+
+                #region MonKITO 昆仑终极BOSS的鬼头 3秒爆炸
+                case Spell.MonKITO:
+                    value = (int)data[2];
+                    front = (Point)data[3];
+                    int trapID1 = (int)data[4];
+                    if (ValidPoint(front))
+                    {
+                        //cell = GetCell(front);
+                        bool cast = true;
+                        if (cast)
+                        {
+                            player.LevelMagic(magic);
+                            System.Drawing.Point[] Traps = new Point[3];
+                            Traps[0] = front;
+                            Traps[1] = Functions.Left(front, player.Direction);
+                            Traps[2] = Functions.Right(front, player.Direction);
+                            for (int i = 0; i <= 2; i++)
+                            {
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = Spell.ExplosiveTrap,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + (10 + value / 2) * 1000,
+                                    TickSpeed = 500,
+                                    Caster = player,
+                                    CurrentLocation = Traps[i],
+                                    CurrentMap = this,
+                                    ExplosiveTrapID = trapID1,
+                                    ExplosiveTrapCount = i
+                                };
+                                AddObject(ob);
+                                ob.Spawned();
+                                player.ArcherTrapObjectsArray[trapID1, i] = ob;
+                            }
+                        }
+                    }
+                    break;
+
                     #endregion
+
             }
 
             if (train)

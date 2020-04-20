@@ -206,7 +206,17 @@ namespace Server.MirObjects
                     DetonateTrapNow();
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
                     break;
+                
                 case Spell.MapLava:
+                    if (ob is PlayerObject)
+                    {
+                        PlayerObject pOb = (PlayerObject)ob;
+                        if (pOb.Observer)
+                            return;
+                        //这里要有伤害啊
+                        ob.Struck(Value, DefenceType.MAC);
+                    }
+                    break;
                 case Spell.MapLightning:
                     {
                         if (ob is PlayerObject player)
