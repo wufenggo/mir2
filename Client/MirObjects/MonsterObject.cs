@@ -3447,7 +3447,7 @@ namespace Client.MirObjects
                                                 {
                                                     missile.Complete += (o, e) =>
                                                     {
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1182, 8, 800, missile.Target));
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1178, 8, 800, missile.Target));
                                                     };
                                                 }
                                                 break;

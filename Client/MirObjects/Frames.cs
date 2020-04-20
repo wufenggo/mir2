@@ -3745,7 +3745,7 @@ namespace Client.MirObjects
             EffectCount = effectcount;
             EffectSkip = effectskip;
             EffectInterval = effectinterval;
-
+           
             EStart2 = eStart2;
             ECount2 = eCount2;
             ESkip2 = eSkip2;

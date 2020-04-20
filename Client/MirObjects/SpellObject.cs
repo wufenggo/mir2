@@ -191,7 +191,7 @@ namespace Client.MirObjects
                     break;
                 case Spell.MonFireCircle://鬼头
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster446];
-                    DrawFrame = 1373;
+                    DrawFrame = 1366;
                     FrameInterval = 100;
                     FrameCount = 5;
                     Repeat = true;
