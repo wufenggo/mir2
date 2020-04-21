@@ -559,6 +559,11 @@ namespace Client.MirScenes.Dialogs
                     return 173;
                 case BuffType.General:
                     return 182;
+                case BuffType.HumUp:
+                    return 186;
+
+
+
                 case BuffType.Exp:
                     return 260;
                 case BuffType.Drop:

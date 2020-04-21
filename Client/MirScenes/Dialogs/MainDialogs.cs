@@ -5057,7 +5057,8 @@ namespace Client.MirScenes.Dialogs
     public sealed class BigMapDialog : MirControl
     {
         private MirLabel pointlab;
-
+        List<MirLabel> ListLabelTown = new List<MirLabel>();
+        List<NameTown> ListTown = new List<NameTown>();
 
         public BigMapDialog()
         {
@@ -5067,6 +5068,7 @@ namespace Client.MirScenes.Dialogs
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
+            loadTonw();
             //加入坐标显示
             pointlab = new MirLabel
             {
@@ -5080,6 +5082,29 @@ namespace Client.MirScenes.Dialogs
             //鼠标移动事件监听，鼠标移动的时候，显示坐标变换
             this.MouseMove += (o, e) => OnMouseMove();
             this.MouseDown += (o, e) => OnMouseDown(o, e);
+        }
+
+        public void loadTonw()
+        {
+            string path = Path.Combine(Settings.MapPath, "Map.txt");
+            if (!File.Exists(path))
+            {
+                string[] contents = new[]
+                    {
+                        "",
+                    };
+
+
+                File.WriteAllLines(path, contents);
+                return;
+            }
+            string[] lines = File.ReadAllLines(path);
+
+
+            foreach (var info in lines)
+            {
+                ListTown.Add(new NameTown(info));
+            }
         }
 
         private void OnBeforeDraw()
@@ -5161,8 +5186,30 @@ namespace Client.MirScenes.Dialogs
 
                 DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
             }
-            //这里画自动寻路的路径
-            for (int i = 0; i < map.RouteList.Count; i++)
+            for (int i = 0; i < ListTown.Count; i++)
+            {
+
+                if (ListTown[i].BigMap != map.BigMap) continue;
+                float xx = ((ListTown[i].Location.X - startPointX) * scaleX);
+                float yy = ((ListTown[i].Location.Y - startPointY) * scaleY);
+
+
+                ListLabelTown.Add(new MirLabel
+                {
+                    AutoSize = true,
+                    Parent = this,
+                    Font = new Font(Settings.FontName, 9f, FontStyle.Regular),
+                    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                    Text = ListTown[i].Name,
+                    ForeColour = ListTown[i].Color,
+                    Location = new Point((int)(xx), (int)(yy)),
+                    NotControl = true,
+                    Visible = true,
+                    Modal = true
+                });
+            }
+                //这里画自动寻路的路径
+                for (int i = 0; i < map.RouteList.Count; i++)
             {
                 Color colour = Color.White;
                 float x = ((map.RouteList[i].X - startPointX) * scaleX) + Location.X;
@@ -5189,7 +5236,7 @@ namespace Client.MirScenes.Dialogs
             {
                 y = (int)(y / scaleY);
             }
-            pointlab.Text = x + "," + y;
+            pointlab.Text ="地图坐标："+ x + "," + y;
             //MirLog.debug(CMain.MPoint.X+","+ CMain.MPoint.Y);
         }
 
@@ -5233,7 +5280,38 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
+        public sealed class NameTown
+        {
+            public int BigMap;
+            public Point Location;
+            public string Name;
+            public Color Color;
 
+
+            public NameTown(string path)
+            {
+                int x;
+                int y;
+
+
+                string[] data = path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+                if (data.Length < 4) return;
+
+                if (!int.TryParse(data[1], out x)) return;
+                if (!int.TryParse(data[2], out y)) return;
+
+
+                BigMap = Convert.ToInt32(data[0].ToString());
+                Name = data[3].ToString();
+                Location = new Point(x, y);
+                Color = Color.FromName(data[4].ToString());
+
+            }
+
+
+        }
         public void Toggle()
         {
             Visible = !Visible;
