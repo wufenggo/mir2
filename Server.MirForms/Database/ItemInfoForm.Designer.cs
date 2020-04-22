@@ -31,6 +31,8 @@
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label58 = new System.Windows.Forms.Label();
+            this.label57 = new System.Windows.Forms.Label();
             this.globalDropNotify_CheckBox = new System.Windows.Forms.CheckBox();
             this.CanAwaken = new System.Windows.Forms.CheckBox();
             this.label56 = new System.Windows.Forms.Label();
@@ -193,8 +195,6 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.label57 = new System.Windows.Forms.Label();
-            this.label58 = new System.Windows.Forms.Label();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -287,6 +287,26 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "通用";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.ForeColor = System.Drawing.Color.Red;
+            this.label58.Location = new System.Drawing.Point(401, 138);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(65, 12);
+            this.label58.TabIndex = 125;
+            this.label58.Text = "【小于29】";
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.ForeColor = System.Drawing.Color.Red;
+            this.label57.Location = new System.Drawing.Point(544, 141);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(59, 12);
+            this.label57.TabIndex = 125;
+            this.label57.Text = "【小于4】";
             // 
             // globalDropNotify_CheckBox
             // 
@@ -869,7 +889,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(173, 60);
+            this.label49.Location = new System.Drawing.Point(160, 60);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(59, 12);
             this.label49.TabIndex = 115;
@@ -877,7 +897,7 @@
             // 
             // ReflecttextBox
             // 
-            this.ReflecttextBox.Location = new System.Drawing.Point(76, 57);
+            this.ReflecttextBox.Location = new System.Drawing.Point(99, 57);
             this.ReflecttextBox.MaxLength = 3;
             this.ReflecttextBox.Name = "ReflecttextBox";
             this.ReflecttextBox.Size = new System.Drawing.Size(30, 21);
@@ -886,7 +906,7 @@
             // 
             // HpDrainRatetextBox
             // 
-            this.HpDrainRatetextBox.Location = new System.Drawing.Point(238, 57);
+            this.HpDrainRatetextBox.Location = new System.Drawing.Point(251, 57);
             this.HpDrainRatetextBox.MaxLength = 3;
             this.HpDrainRatetextBox.Name = "HpDrainRatetextBox";
             this.HpDrainRatetextBox.Size = new System.Drawing.Size(30, 21);
@@ -895,7 +915,7 @@
             // 
             // CriticalDamagetextBox
             // 
-            this.CriticalDamagetextBox.Location = new System.Drawing.Point(238, 33);
+            this.CriticalDamagetextBox.Location = new System.Drawing.Point(251, 33);
             this.CriticalDamagetextBox.MaxLength = 3;
             this.CriticalDamagetextBox.Name = "CriticalDamagetextBox";
             this.CriticalDamagetextBox.Size = new System.Drawing.Size(30, 21);
@@ -904,7 +924,7 @@
             // 
             // CriticalRatetextBox
             // 
-            this.CriticalRatetextBox.Location = new System.Drawing.Point(76, 33);
+            this.CriticalRatetextBox.Location = new System.Drawing.Point(99, 33);
             this.CriticalRatetextBox.MaxLength = 3;
             this.CriticalRatetextBox.Name = "CriticalRatetextBox";
             this.CriticalRatetextBox.Size = new System.Drawing.Size(30, 21);
@@ -914,7 +934,7 @@
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(173, 36);
+            this.label51.Location = new System.Drawing.Point(160, 36);
             this.label51.Name = "label51";
             this.label51.Size = new System.Drawing.Size(59, 12);
             this.label51.TabIndex = 120;
@@ -923,7 +943,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(488, 14);
+            this.label37.Location = new System.Drawing.Point(493, 10);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(71, 12);
             this.label37.TabIndex = 78;
@@ -976,7 +996,7 @@
             // 
             // MaxACTextBox
             // 
-            this.MaxACTextBox.Location = new System.Drawing.Point(166, 14);
+            this.MaxACTextBox.Location = new System.Drawing.Point(178, 14);
             this.MaxACTextBox.MaxLength = 3;
             this.MaxACTextBox.Name = "MaxACTextBox";
             this.MaxACTextBox.Size = new System.Drawing.Size(30, 21);
@@ -994,7 +1014,7 @@
             // 
             // MinMACTextBox
             // 
-            this.MinMACTextBox.Location = new System.Drawing.Point(261, 14);
+            this.MinMACTextBox.Location = new System.Drawing.Point(267, 14);
             this.MinMACTextBox.MaxLength = 3;
             this.MinMACTextBox.Name = "MinMACTextBox";
             this.MinMACTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1048,7 +1068,7 @@
             // 
             // MaxDCTextBox
             // 
-            this.MaxDCTextBox.Location = new System.Drawing.Point(166, 38);
+            this.MaxDCTextBox.Location = new System.Drawing.Point(178, 38);
             this.MaxDCTextBox.MaxLength = 3;
             this.MaxDCTextBox.Name = "MaxDCTextBox";
             this.MaxDCTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1066,7 +1086,7 @@
             // 
             // PoisonAttacktextbox
             // 
-            this.PoisonAttacktextbox.Location = new System.Drawing.Point(166, 160);
+            this.PoisonAttacktextbox.Location = new System.Drawing.Point(178, 160);
             this.PoisonAttacktextbox.MaxLength = 3;
             this.PoisonAttacktextbox.Name = "PoisonAttacktextbox";
             this.PoisonAttacktextbox.Size = new System.Drawing.Size(30, 21);
@@ -1075,7 +1095,7 @@
             // 
             // MinMCTextBox
             // 
-            this.MinMCTextBox.Location = new System.Drawing.Point(261, 38);
+            this.MinMCTextBox.Location = new System.Drawing.Point(267, 38);
             this.MinMCTextBox.MaxLength = 3;
             this.MinMCTextBox.Name = "MinMCTextBox";
             this.MinMCTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1102,7 +1122,7 @@
             // 
             // Freezingtextbox
             // 
-            this.Freezingtextbox.Location = new System.Drawing.Point(166, 195);
+            this.Freezingtextbox.Location = new System.Drawing.Point(178, 195);
             this.Freezingtextbox.MaxLength = 3;
             this.Freezingtextbox.Name = "Freezingtextbox";
             this.Freezingtextbox.Size = new System.Drawing.Size(30, 21);
@@ -1138,7 +1158,7 @@
             // 
             // Holytextbox
             // 
-            this.Holytextbox.Location = new System.Drawing.Point(166, 216);
+            this.Holytextbox.Location = new System.Drawing.Point(178, 216);
             this.Holytextbox.MaxLength = 3;
             this.Holytextbox.Name = "Holytextbox";
             this.Holytextbox.Size = new System.Drawing.Size(30, 21);
@@ -1147,7 +1167,7 @@
             // 
             // MinSCTextBox
             // 
-            this.MinSCTextBox.Location = new System.Drawing.Point(453, 40);
+            this.MinSCTextBox.Location = new System.Drawing.Point(458, 36);
             this.MinSCTextBox.MaxLength = 3;
             this.MinSCTextBox.Name = "MinSCTextBox";
             this.MinSCTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1174,7 +1194,7 @@
             // 
             // HPratetextbox
             // 
-            this.HPratetextbox.Location = new System.Drawing.Point(261, 62);
+            this.HPratetextbox.Location = new System.Drawing.Point(267, 62);
             this.HPratetextbox.MaxLength = 3;
             this.HPratetextbox.Name = "HPratetextbox";
             this.HPratetextbox.Size = new System.Drawing.Size(30, 21);
@@ -1255,7 +1275,7 @@
             // 
             // MPTextBox
             // 
-            this.MPTextBox.Location = new System.Drawing.Point(166, 62);
+            this.MPTextBox.Location = new System.Drawing.Point(178, 62);
             this.MPTextBox.MaxLength = 3;
             this.MPTextBox.Name = "MPTextBox";
             this.MPTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1282,7 +1302,7 @@
             // 
             // PoisonResisttextBox
             // 
-            this.PoisonResisttextBox.Location = new System.Drawing.Point(166, 134);
+            this.PoisonResisttextBox.Location = new System.Drawing.Point(178, 134);
             this.PoisonResisttextBox.MaxLength = 3;
             this.PoisonResisttextBox.Name = "PoisonResisttextBox";
             this.PoisonResisttextBox.Size = new System.Drawing.Size(30, 21);
@@ -1327,7 +1347,7 @@
             // 
             // AgilityTextBox
             // 
-            this.AgilityTextBox.Location = new System.Drawing.Point(453, 83);
+            this.AgilityTextBox.Location = new System.Drawing.Point(458, 79);
             this.AgilityTextBox.MaxLength = 3;
             this.AgilityTextBox.Name = "AgilityTextBox";
             this.AgilityTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1354,7 +1374,7 @@
             // 
             // HealthRecoveryTextbox
             // 
-            this.HealthRecoveryTextbox.Location = new System.Drawing.Point(453, 62);
+            this.HealthRecoveryTextbox.Location = new System.Drawing.Point(458, 58);
             this.HealthRecoveryTextbox.MaxLength = 3;
             this.HealthRecoveryTextbox.Name = "HealthRecoveryTextbox";
             this.HealthRecoveryTextbox.Size = new System.Drawing.Size(30, 21);
@@ -1390,7 +1410,7 @@
             // 
             // StrongTextbox
             // 
-            this.StrongTextbox.Location = new System.Drawing.Point(261, 86);
+            this.StrongTextbox.Location = new System.Drawing.Point(267, 86);
             this.StrongTextbox.MaxLength = 3;
             this.StrongTextbox.Name = "StrongTextbox";
             this.StrongTextbox.Size = new System.Drawing.Size(30, 21);
@@ -1399,7 +1419,7 @@
             // 
             // LuckTextBox
             // 
-            this.LuckTextBox.Location = new System.Drawing.Point(166, 86);
+            this.LuckTextBox.Location = new System.Drawing.Point(178, 86);
             this.LuckTextBox.MaxLength = 4;
             this.LuckTextBox.Name = "LuckTextBox";
             this.LuckTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1445,7 +1465,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(182, 113);
+            this.label30.Location = new System.Drawing.Point(219, 115);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(29, 12);
             this.label30.TabIndex = 67;
@@ -1453,7 +1473,7 @@
             // 
             // ACRateTextbox
             // 
-            this.ACRateTextbox.Location = new System.Drawing.Point(452, 12);
+            this.ACRateTextbox.Location = new System.Drawing.Point(457, 8);
             this.ACRateTextbox.MaxLength = 3;
             this.ACRateTextbox.Name = "ACRateTextbox";
             this.ACRateTextbox.Size = new System.Drawing.Size(30, 21);
@@ -1462,7 +1482,7 @@
             // 
             // HWeightTextBox
             // 
-            this.HWeightTextBox.Location = new System.Drawing.Point(261, 110);
+            this.HWeightTextBox.Location = new System.Drawing.Point(267, 110);
             this.HWeightTextBox.MaxLength = 4;
             this.HWeightTextBox.Name = "HWeightTextBox";
             this.HWeightTextBox.Size = new System.Drawing.Size(30, 21);
@@ -1489,7 +1509,7 @@
             // 
             // WWeightTextBox
             // 
-            this.WWeightTextBox.Location = new System.Drawing.Point(453, 112);
+            this.WWeightTextBox.Location = new System.Drawing.Point(458, 108);
             this.WWeightTextBox.MaxLength = 4;
             this.WWeightTextBox.Name = "WWeightTextBox";
             this.WWeightTextBox.Size = new System.Drawing.Size(32, 21);
@@ -1965,26 +1985,6 @@
             this.Gameshop_button.Text = "添加到商城";
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
-            // 
-            // label57
-            // 
-            this.label57.AutoSize = true;
-            this.label57.ForeColor = System.Drawing.Color.Red;
-            this.label57.Location = new System.Drawing.Point(544, 141);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(59, 12);
-            this.label57.TabIndex = 125;
-            this.label57.Text = "【小于4】";
-            // 
-            // label58
-            // 
-            this.label58.AutoSize = true;
-            this.label58.ForeColor = System.Drawing.Color.Red;
-            this.label58.Location = new System.Drawing.Point(401, 138);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(65, 12);
-            this.label58.TabIndex = 125;
-            this.label58.Text = "【小于29】";
             // 
             // ItemInfoForm
             // 

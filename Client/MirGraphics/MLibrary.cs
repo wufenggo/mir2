@@ -28,7 +28,14 @@ namespace Client.MirGraphics
             Magic2 = new MLibrary(Settings.DataPath + "Magic2"),
             Magic3 = new MLibrary(Settings.DataPath + "Magic3"),
             Effect = new MLibrary(Settings.DataPath + "Effect"),
+           
+            BuffEffect = new MLibrary(Settings.DataPath + "BuffEffect"),
+
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
+
+
+
+
             GuildSkill = new MLibrary(Settings.DataPath + "GuildSkill"),
             ItemEffects = new MLibrary(Settings.DataPath + "ItemEffects");
 
@@ -431,6 +438,8 @@ namespace Client.MirGraphics
             Magic3.Initialize();
             Progress++;
             MagicC.Initialize();
+            Progress++;
+            BuffEffect.Initialize();
             Progress++;
 
             Effect.Initialize();

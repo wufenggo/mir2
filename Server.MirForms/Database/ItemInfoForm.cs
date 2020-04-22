@@ -69,24 +69,24 @@ namespace Server
             }
             else
             {
-                tabControl1.TabPages[3].Text = "Special Stats";
-                ParalysischeckBox.Text = "Paralysis ring";
-                TeleportcheckBox.Text = "Teleport ring";
-                ClearcheckBox.Text = "Clear ring";
-                ProtectioncheckBox.Text = "Protection ring";
-                RevivalcheckBox.Text = "Revival ring";
-                MusclecheckBox.Text = "Muscle ring";
-                FlamecheckBox.Text = "Flame ring";
-                HealingcheckBox.Text = "Healing ring";
-                ProbecheckBox.Text = "Probe necklace";
-                SkillcheckBox.Text = "Skill necklace";
-                NoDuraLosscheckBox.Text = "No dura loss";
-                PickaxecheckBox.Text = "Pickaxe";
-                label50.Text = "Critical rate:";
-                label52.Text = "Reflect:";
-                label51.Text = "Critical Dmg:";
+                tabControl1.TabPages[3].Text = "特殊属性";
+                ParalysischeckBox.Text = "麻痹戒指";
+                TeleportcheckBox.Text = "传送戒指";
+                ClearcheckBox.Text = "隐身戒指";
+                ProtectioncheckBox.Text = "保护戒指";
+                RevivalcheckBox.Text = "复活戒指";
+                MusclecheckBox.Text = "超重戒指";
+                FlamecheckBox.Text = "火焰戒指";
+                HealingcheckBox.Text = "治疗戒指";
+                ProbecheckBox.Text = "探测项链";
+                SkillcheckBox.Text = "技巧项链";
+                NoDuraLosscheckBox.Text = "永不磨损";
+                PickaxecheckBox.Text = "新属性";
+                label50.Text = "暴击率:";
+                label52.Text = "反伤:";
+                label51.Text = "暴击伤害:";
                 label49.Text = "HP Drain:";
-                BlinkcheckBox.Text = "Blink";
+                BlinkcheckBox.Text = "闪现";
             }
         }
 

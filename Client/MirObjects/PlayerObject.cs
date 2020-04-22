@@ -1166,6 +1166,14 @@ namespace Client.MirObjects
             }
 
             #region Common
+
+            if ((byte)Class > 4 && TransformType > 0)
+            {
+                Frames = FrameSet.Players;
+            }
+
+
+
             //Harvest
             if (CurrentAction == MirAction.Harvest && TransformType < 0)
             {
@@ -1200,6 +1208,7 @@ namespace Client.MirObjects
 
         public virtual void SetEffects()
         {
+            long delay = 0;
             for (int i = Effects.Count - 1; i >= 0; i--)
             {
                 if (Effects[i] is SpecialEffect) Effects[i].Remove();
@@ -1229,7 +1238,65 @@ namespace Client.MirObjects
                 }
             }
 
-			long delay = 5000;
+
+
+
+
+            if ((byte)Class > 4)
+            {
+                switch ((byte)Class)
+                {
+                    case 5: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 260, 14, 2200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect = new SpecialEffect(Libraries.BuffEffect, 865, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect.SetStart(CMain.Time + delay);
+                        Effects.Add(effect);
+                        break;
+                    case 6: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 190, 10, 1500, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect1 = new SpecialEffect(Libraries.BuffEffect, 850, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect1.SetStart(CMain.Time + delay);
+                        Effects.Add(effect1);
+                        break;
+                    case 7: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 180, 10, 1800, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect2 = new SpecialEffect(Libraries.BuffEffect, 910, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect2.SetStart(CMain.Time + delay);
+                        Effects.Add(effect2);
+                        break;
+                    case 8: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 210, 10, 1600, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect3 = new SpecialEffect(Libraries.BuffEffect, 835, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect3.SetStart(CMain.Time + delay);
+                        Effects.Add(effect3);
+                        break;
+                    case 9: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 200, 10, 1600, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect4 = new SpecialEffect(Libraries.BuffEffect, 925, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect4.SetStart(CMain.Time + delay);
+                        Effects.Add(effect4);
+                        break;
+
+
+
+                }
+            }
+            if (TransformType >= 0)
+            {
+
+                switch (TransformType)
+                {
+                    case 27:
+                        Effects.Add(new SpecialEffect(Libraries.Magic3, 3470, 8, 800, this, true, false, 0) { Repeat = true });
+                        SpecialEffect specialEffect = new SpecialEffect(Libraries.Magic3, 3510 + CMain.Random.Next(6) * 20, 16, 3200, this, false, false, 0) { Repeat = true, Delay = 60000 };
+                        specialEffect.SetStart(CMain.Time + 60000);
+                        Effects.Add(specialEffect);
+                        break;
+                }
+            }
+
+
+            
 
             if (LevelEffects == LevelEffects.None) return;
 
