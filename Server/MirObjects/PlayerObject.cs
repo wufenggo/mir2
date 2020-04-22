@@ -1302,7 +1302,7 @@ namespace Server.MirObjects
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
                     Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
-                    ReceiveChat("You have been given a second chance at life", ChatType.System);
+                    ReceiveChat("你得到了第二次生命的机会", ChatType.System);
                     return;
                 }
             }
@@ -1313,20 +1313,20 @@ namespace Server.MirObjects
 
                 if (AtWar(hitter) || WarZone)
                 {
-                    hitter.ReceiveChat(string.Format("You've been protected by the law"), ChatType.System);
+                    hitter.ReceiveChat(string.Format("你受到法律保护"), ChatType.System);
                 }
                 else if (Envir.Time > BrownTime && PKPoints < 200)
                 {
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
 
                     hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
-                    hitter.ReceiveChat(string.Format("You have murdered {0}", Name), ChatType.System);
-                    ReceiveChat(string.Format("You have been murdered by {0}", LastHitter.Name), ChatType.System);
+                    hitter.ReceiveChat(string.Format("你谋杀了 {0}", Name), ChatType.System);
+                    ReceiveChat(string.Format("你被谋杀了 {0}", LastHitter.Name), ChatType.System);
 
                     if (weapon != null && weapon.Luck > (Settings.MaxLuck * -1) && Envir.Random.Next(4) == 0)
                     {
                         weapon.Luck--;
-                        hitter.ReceiveChat("Your weapon has been cursed.", ChatType.System);
+                        hitter.ReceiveChat("你的武器已经被诅咒了.", ChatType.System);
                         hitter.Enqueue(new S.RefreshItem { Item = weapon });
                     }
                 }
@@ -1411,7 +1411,7 @@ namespace Server.MirObjects
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                            ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
+                            ReceiveChat($"你的 {item.FriendlyName} 死亡破碎了.", ChatType.System2);
                             Report.ItemChanged("Death Drop", item, item.Count, 1);
                         }
                     }
@@ -1455,7 +1455,7 @@ namespace Server.MirObjects
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
    
-                            ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
+                            ReceiveChat($"你死亡并且 {item.Info.FriendlyName} 已经归还给它的主人", ChatType.Hint);
                             Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
 
                             continue;
@@ -1467,7 +1467,7 @@ namespace Server.MirObjects
                         if (item.Info.GlobalDropNotify)
                             foreach (var player in Envir.Players)
                             {
-                                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                                player.ReceiveChat($"{Name} 掉落 {item.FriendlyName}.", ChatType.System2);
                             }
 
                         Info.Equipment[i] = null;
@@ -1525,7 +1525,7 @@ namespace Server.MirObjects
                         Info.Inventory[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                        ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to has been returned to it's owner.", ChatType.Hint);
+                        ReceiveChat($"你死亡并且 {item.Info.FriendlyName} 已经归还给它的主人.", ChatType.Hint);
                         Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
 
                         continue;
@@ -1537,7 +1537,7 @@ namespace Server.MirObjects
                     if (item.Info.GlobalDropNotify)
                         foreach (var player in Envir.Players)
                         {
-                            player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                            player.ReceiveChat($"{Name}掉落{item.FriendlyName}.", ChatType.System2);
                         }
 
                     Info.Inventory[i] = null;
@@ -1571,7 +1571,7 @@ namespace Server.MirObjects
                     {
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
+                        ReceiveChat($"你的 {item.FriendlyName} 已破碎.", ChatType.System2);
                         Report.ItemChanged("RedDeathDrop", item, item.Count, 1);
                     }
 
@@ -1604,7 +1604,7 @@ namespace Server.MirObjects
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
+                            ReceiveChat($"你死亡并且 {item.Info.FriendlyName} 已经归还给它的主人", ChatType.Hint);
                             Report.ItemMailed("Death Dropped Rental Item", item, 1, 1);
 
                             continue;
@@ -1616,7 +1616,7 @@ namespace Server.MirObjects
                         if (item.Info.GlobalDropNotify)
                             foreach (var player in Envir.Players)
                             {
-                                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                                player.ReceiveChat($"{Name} 掉落 {item.FriendlyName}.", ChatType.System2);
                             }
 
                         Info.Equipment[i] = null;
@@ -9713,12 +9713,12 @@ namespace Server.MirObjects
                 if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
                     return item;
             }
-            for (int i = 0; i < Info.Inventory.Length; i++)//不用装备护身符
-            {
-                UserItem item = Info.Inventory[i];
-                if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
-                    return item;
-            }
+            //for (int i = 0; i < Info.Inventory.Length; i++)//不用装备护身符
+            //{
+            //    UserItem item = Info.Inventory[i];
+            //    if (item != null && item.Info.Type == ItemType.Amulet && item.Info.Shape == shape && item.Count >= count)
+            //        return item;
+            //}
 
             return null;
         }

@@ -73,6 +73,9 @@ namespace Client.MirScenes
             };
             StartGameButton.Click += (o, e) => StartGame();
 
+
+
+
             NewCharacterButton = new MirButton
                 {
                     HoverIndex = 344,
@@ -261,6 +264,36 @@ namespace Client.MirScenes
 
         public void StartGame()
         {
+            if (StartGameButton.Enabled = true)
+            {
+                Random random = new Random();
+                MirImageControl loadingOverlay = new MirImageControl
+                {
+                     
+                    Library = Libraries.Prguse,
+                    Index = 930 + random.Next(0, 10),
+                    Visible = true,
+                   
+                    Parent = this
+                };
+                MirAnimatedControl loadProgress = new MirAnimatedControl
+                {
+                    Library = Libraries.Prguse,
+                    Index = 940,
+                    Visible = true,
+                    Parent = loadingOverlay,
+                    Location = new Point(400, 300),
+                    Animated = true,
+
+                    AnimationCount = 9,
+                    AnimationDelay = 10000,
+                    Loop = true,
+                };
+            }
+                
+
+
+
             if (!Libraries.Loaded)
             {
 
