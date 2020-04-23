@@ -163,7 +163,8 @@ namespace Server.MirEnvir
         public List<Rank_Character_Info>[] RankClass = new List<Rank_Character_Info>[10];
         public int[] RankBottomLevel = new int[11];
         static HttpServer http;
-
+        //最高等级
+        public int MaxLevel = 0;
         static Envir()
         {
             AccountIDReg =
@@ -368,7 +369,7 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.PoisonCloud)) MagicInfoList.Add(new MagicInfo { Name = "毒云", Spell = Spell.PoisonCloud, Icon = 54, Level1 = 43, Level2 = 45, Level3 = 48, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 5, MPowerBase = 40, PowerBase = 20, DelayBase = 18000, DelayReduction = 2000, Range = 9 });
             if (!MagicExists(Spell.EnergyShield)) MagicInfoList.Add(new MagicInfo { Name = "阴阳盾", Spell = Spell.EnergyShield, Icon = 57, Level1 = 48, Level2 = 51, Level3 = 54, Need1 = 5000, Need2 = 9000, Need3 = 13000, BaseCost = 50, LevelCost = 20, Range = 9 });
             if (!MagicExists(Spell.PetEnhancer)) MagicInfoList.Add(new MagicInfo { Name = "血龙水", Spell = Spell.PetEnhancer, Icon = 78, Level1 = 45, Level2 = 48, Level3 = 51, Need1 = 4000, Need2 = 8000, Need3 = 12000, BaseCost = 30, LevelCost = 40, Range = 0 });
-            if (!MagicExists(Spell.HealingCircle)) MagicInfoList.Add(new MagicInfo { Name = "阴阳五行阵 ", Spell = Spell.ImmortalSkin, Icon = 82, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 5000, Need2 = 6000, Need3 = 7000, LevelCost = 5, MPowerBase = 40, PowerBase = 20, DelayBase = 18000, DelayReduction = 2000, Range = 9 });
+            if (!MagicExists(Spell.HealingCircle)) MagicInfoList.Add(new MagicInfo { Name = "阴阳五行阵 ", Spell = Spell.HealingCircle, Icon = 82, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 5000, Need2 = 6000, Need3 = 7000, LevelCost = 5, MPowerBase = 40, PowerBase = 20, DelayBase = 18000, DelayReduction = 2000, Range = 9 });
 
             //刺客
             if (!MagicExists(Spell.FatalSword)) MagicInfoList.Add(new MagicInfo { Name = "绝命剑法", Spell = Spell.FatalSword, Icon = 58, Level1 = 7, Level2 = 9, Level3 = 12, Need1 = 500, Need2 = 1000, Need3 = 2300, Range = 0 });
@@ -633,11 +634,15 @@ namespace Server.MirEnvir
                         if (Time >= userTime)
                         {
                             userTime = Time + Settings.Minute * 5;
-                            Broadcast(new S.Chat
+
+                            if (Players.Count > 20)
+                            {
+                                Broadcast(new S.Chat
                                 {
                                     Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                     Type = ChatType.Hint
                                 });
+                            }
                         }
 
                         if (Time >= SpawnTime)

@@ -721,7 +721,7 @@ namespace Client.MirControls
                                 {
                                     if (CMain.Ctrl)
                                     {
-                                        MirMessageBox messageBox = new MirMessageBox("Do you want to try and combine these items?", MirMessageBoxButtons.YesNo);
+                                        MirMessageBox messageBox = new MirMessageBox("你想尝试合并这些物品吗?", MirMessageBoxButtons.YesNo);
                                         messageBox.YesButton.Click += (o, e) =>
                                         {
                                             //Combine

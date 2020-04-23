@@ -179,7 +179,7 @@ namespace Server.MirObjects.Monsters
                         Spell = Spell.MonRotateAxe,
                         Value = damage,
                         ExpireTime = Envir.Time + 1000 * RandomUtils.Next(20, 30),
-                        TickSpeed = 2000,
+                        TickSpeed = 500,
                         Caster = null,
                         MonCaster = this,
                         CurrentLocation = p,

@@ -568,9 +568,26 @@ namespace Server.MirObjects
         public uint HP, MaxHP;
         public ushort MoveSpeed;
 
+        //怪物的经验，经验这里太乱了，先根据血量,防御，攻击等计算经验
+        //血量在1-1.5倍之间，在100-1万之间
+        //
         public virtual uint Experience
         {
-            get { return Info.Experience; }
+            get
+            {
+                //根据怪物的血量，敏捷，防御，攻击等属性计算怪物的最终经验值
+                uint cc = (uint)(Math.Min(Math.Max(0, Info.Agility - 10), 20) * 10 + Math.Max(Info.MaxAC - 5, 0) * 5 + Math.Max(Info.MaxMAC - 5, 0) * 5 + Math.Max(Info.MaxDC, Info.MaxMC) * 5);
+                if (cc > Info.HP * 2)
+                {
+                    cc = Info.HP * 2;
+                }
+                cc = cc + Info.HP;
+                if (cc > 10000)
+                {
+                    return cc * 3 / 2;
+                }
+                return (uint)(cc / 10000.0 * 0.5 * cc) + cc;
+            }
         }
         public int DeadDelay
         {

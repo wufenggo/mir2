@@ -112,8 +112,8 @@ namespace Server
         public static long PetTimeOut = 5;
         public static bool PetSave = false;
 
-        public static int RestedPeriod = 60,
-                          RestedBuffLength = 10,
+        public static int RestedPeriod = 20,
+                          RestedBuffLength = 8,
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
 

@@ -4820,7 +4820,7 @@ namespace Client.MirScenes
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show("You cannot use the TrustMerchant when dead.");
+                    MirMessageBox.Show("你死后不能使用寄售商人.");
                     break;
                 case 1:
                     MirMessageBox.Show("You cannot buy from the TrustMerchant without using.");
@@ -5847,7 +5847,7 @@ namespace Client.MirScenes
             GuildBuffLabel = null;
         }
 
-        public MirControl NameInfoLabel(UserItem item, bool Inspect = false)
+        public MirControl NameInfoLabel(UserItem item, bool Inspect = false)//鼠标物品名字信息
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
@@ -7296,7 +7296,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("[{0}] 觉醒[{1}]",HoverItem.Awake.type.ToString(),HoverItem.Awake.getAwakeLevel())
+                    Text = string.Format("觉醒[{0}][{1}]", HoverItem.Awake.type.ToString(),HoverItem.Awake.getAwakeLevel())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKENAMELabel.DisplayRectangle.Right + 4),

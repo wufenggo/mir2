@@ -2312,15 +2312,33 @@ namespace Client.MirScenes.Dialogs
                         //stupple hum stop
                         int genderOffset = MapObject.User.Gender == MirGender.Male ? 0 : 1;
 
-                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);
+                        Libraries.Prguse2.DrawBlend(1200 + wingOffset + genderOffset, DisplayLocation, Color.White, true, 1F);// 衣服内观特效
                     }
 
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Armour].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
+                    //Libraries.StateItems.Draw(RealItem.Image, DisplayLocation, Color.White, true, 1F);
                     JobStaetItems.Draw(Grid[(int)EquipmentSlot.Armour].Item.Image, DisplayLocation, Color.White, true, 1F);
 
                 }
                 if (Grid[(int)EquipmentSlot.Weapon].Item != null)
                 {
+                    if (GameScene.User.WeaponEffect >0)
+                    {
+                        switch (GameScene.User.WeaponEffect)
+                        {
+                            case 1://麻花
+                                Libraries.Stateitem_Effect.DrawBlend(16, DisplayLocation, Color.White, true, 1F);
+                                break;
+                            case 20://屠龙
+                                Libraries.Stateitem_Effect.DrawBlend(12, DisplayLocation, Color.White, true, 1F);
+                                break;
+
+                        }
+                    }
+
+
+
+
                     RealItem = Functions.GetRealItem(Grid[(int)EquipmentSlot.Weapon].Item.Info, MapObject.User.Level, MapObject.User.Class, GameScene.ItemInfoList);
                     JobStaetItems.Draw(Grid[(int)EquipmentSlot.Weapon].Item.Image, DisplayLocation, Color.White, true, 1F);
                 }
@@ -2371,6 +2389,16 @@ namespace Client.MirScenes.Dialogs
             };
             StatePage.BeforeDraw += (o, e) =>
             {
+                //经验显示更改
+                string Expstr = "";
+                if (MapObject.User.MaxExperience > 10000)
+                {
+                    Expstr += MapObject.User.Experience / 10000 + "万/" + MapObject.User.MaxExperience / 10000 + "万";
+                }
+                else
+                {
+                    Expstr += MapObject.User.Experience + "/" + MapObject.User.MaxExperience + "";
+                }
                 ExpPLabel.Text = string.Format("{0:0.##%}", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
                 BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.MaxBagWeight);
                 WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight);
@@ -5057,9 +5085,9 @@ namespace Client.MirScenes.Dialogs
     public sealed class BigMapDialog : MirControl
     {
         private MirLabel pointlab;
-        List<MirLabel> ListLabelTown = new List<MirLabel>();
-        List<NameTown> ListTown = new List<NameTown>();
-
+        //List<MirLabel> ListLabelTown = new List<MirLabel>();
+        //List<NameTown> ListTown = new List<NameTown>();
+        private long LastTeleportTime = 0;
         public BigMapDialog()
         {
             //NotControl = true;
@@ -5068,7 +5096,7 @@ namespace Client.MirScenes.Dialogs
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
-            loadTonw();
+            //loadTonw();
             //加入坐标显示
             pointlab = new MirLabel
             {
@@ -5084,28 +5112,28 @@ namespace Client.MirScenes.Dialogs
             this.MouseDown += (o, e) => OnMouseDown(o, e);
         }
 
-        public void loadTonw()
-        {
-            string path = Path.Combine(Settings.MapPath, "Map.txt");
-            if (!File.Exists(path))
-            {
-                string[] contents = new[]
-                    {
-                        "",
-                    };
+        //public void loadTonw()
+        //{
+        //    string path = Path.Combine(Settings.MapPath, "Map.txt");
+        //    if (!File.Exists(path))
+        //    {
+        //        string[] contents = new[]
+        //            {
+        //                "",
+        //            };
 
 
-                File.WriteAllLines(path, contents);
-                return;
-            }
-            string[] lines = File.ReadAllLines(path);
+        //        File.WriteAllLines(path, contents);
+        //        return;
+        //    }
+        //    string[] lines = File.ReadAllLines(path);
 
 
-            foreach (var info in lines)
-            {
-                ListTown.Add(new NameTown(info));
-            }
-        }
+        //    foreach (var info in lines)
+        //    {
+        //        ListTown.Add(new NameTown(info));
+        //    }
+        //}
 
         private void OnBeforeDraw()
         {
@@ -5186,28 +5214,28 @@ namespace Client.MirScenes.Dialogs
 
                 DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
             }
-            for (int i = 0; i < ListTown.Count; i++)
-            {
+            //for (int i = 0; i < ListTown.Count; i++)
+            //{
 
-                if (ListTown[i].BigMap != map.BigMap) continue;
-                float xx = ((ListTown[i].Location.X - startPointX) * scaleX);
-                float yy = ((ListTown[i].Location.Y - startPointY) * scaleY);
+            //    if (ListTown[i].BigMap != map.BigMap) continue;
+            //    float xx = ((ListTown[i].Location.X - startPointX) * scaleX);
+            //    float yy = ((ListTown[i].Location.Y - startPointY) * scaleY);
 
 
-                ListLabelTown.Add(new MirLabel
-                {
-                    AutoSize = true,
-                    Parent = this,
-                    Font = new Font(Settings.FontName, 9f, FontStyle.Regular),
-                    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                    Text = ListTown[i].Name,
-                    ForeColour = ListTown[i].Color,
-                    Location = new Point((int)(xx), (int)(yy)),
-                    NotControl = true,
-                    Visible = true,
-                    Modal = true
-                });
-            }
+            //    ListLabelTown.Add(new MirLabel
+            //    {
+            //        AutoSize = true,
+            //        Parent = this,
+            //        Font = new Font(Settings.FontName, 9f, FontStyle.Regular),
+            //        DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+            //        Text = ListTown[i].Name,
+            //        ForeColour = ListTown[i].Color,
+            //        Location = new Point((int)(xx), (int)(yy)),
+            //        NotControl = true,
+            //        Visible = true,
+            //        Modal = true
+            //    });
+            //}
                 //这里画自动寻路的路径
                 for (int i = 0; i < map.RouteList.Count; i++)
             {
@@ -5272,46 +5300,61 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Scene.ChatDialog.ReceiveChat("自动寻路目标不可达", ChatType.System);
                 return;
             }
+            //这里判断下是否可以传送，如果可以传送，则直接传送即可哦
+
+            if (GameScene.User.HasTeleportRing && LastTeleportTime < CMain.Time)
+            {
+                LastTeleportTime = CMain.Time + 3000;//3秒之内只触发一次传送
+                GameScene.Scene.ChatDialog.ReceiveChat("3秒才能传送一次", ChatType.Hint);
+                Network.Enqueue(new C.Chat
+                {
+                    Message = "@move " + x + " " + y
+
+                });
+                return;
+            }
+            long startTime = CMain.Timer.ElapsedMilliseconds;
             //目标位置
             map.RouteTarget = new Point(x, y);
             if (map.StartRoute())
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("[自动寻路开启]", ChatType.Hint);
+                long endTime = CMain.Timer.ElapsedMilliseconds;
+                GameScene.Scene.ChatDialog.ReceiveChat("[自动寻路:开启]", ChatType.Hint);
             }
         }
-
-        public sealed class NameTown
-        {
-            public int BigMap;
-            public Point Location;
-            public string Name;
-            public Color Color;
-
-
-            public NameTown(string path)
-            {
-                int x;
-                int y;
+        //public sealed class NameTown
+        //{
+        //    public int BigMap;
+        //    public Point Location;
+        //    public string Name;
+        //    public Color Color;
 
 
-                string[] data = path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        //    public NameTown(string path)
+        //    {
+        //        int x;
+        //        int y;
 
 
-                if (data.Length < 4) return;
-
-                if (!int.TryParse(data[1], out x)) return;
-                if (!int.TryParse(data[2], out y)) return;
+        //        string[] data = path.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-                BigMap = Convert.ToInt32(data[0].ToString());
-                Name = data[3].ToString();
-                Location = new Point(x, y);
-                Color = Color.FromName(data[4].ToString());
+        //        if (data.Length < 4) return;
 
-            }
+        //        if (!int.TryParse(data[1], out x)) return;
+        //        if (!int.TryParse(data[2], out y)) return;
 
 
-        }
+        //        BigMap = Convert.ToInt32(data[0].ToString());
+        //        Name = data[3].ToString();
+        //        Location = new Point(x, y);
+        //        Color = Color.FromName(data[4].ToString());
+
+        //    }
+
+
+        //}
+
         public void Toggle()
         {
             Visible = !Visible;

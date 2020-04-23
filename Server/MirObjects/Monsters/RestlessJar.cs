@@ -56,7 +56,7 @@ namespace Server.MirObjects.Monsters
                     }
                     foreach (PlayerObject p in list)
                     {
-                        p.TeleportRandom(10, 10, map);
+                        p.TeleportRandom(65, 58, map);
                     }
                 }
             }

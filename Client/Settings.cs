@@ -112,7 +112,7 @@ namespace Client
 
         //Network
         public static bool UseConfig = false;
-        public static string IPAddress = "127.0.0.1";
+        public static string IPAddress = "127.0.0.1";//"175.24.54.202"
         public static int Port = 7162;
         public const int TimeOut = 5000;
 
@@ -168,7 +168,7 @@ namespace Client
             TransparentChat = false,
             DuraView = false,
             DisplayDamage = true,
-            TargetDead = false,
+            TargetDead = true,
             ExpandedBuffWindow = true,
             ItemFloorGlow = true;
 
@@ -201,7 +201,7 @@ namespace Client
 
         //AutoPatcher
         public static bool P_Patcher = true;
-        public static string P_Host = @"http://175.24.54.202/cmir/patch/2222"; //ftp://212.67.209.184
+        public static string P_Host = @"http://175.24.54.202/cmir/patch/111"; //ftp://212.67.209.184
         public static string P_PatchFileName = @"PList.gz";
         public static bool P_NeedLogin = false;
         public static string P_Login = string.Empty;
@@ -211,7 +211,7 @@ namespace Client
 
 
 
-        public static string P_BrowserAddress = "http://175.24.54.202/";
+        public static string P_BrowserAddress = "http://175.24.54.202/1.bmp";
 
 
         public static string P_Client = Application.StartupPath + "\\";

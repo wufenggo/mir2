@@ -1811,7 +1811,12 @@ namespace Server.MirObjects
             RefreshStats();
             SetHP(MaxHP);
             SetMP(MaxMP);
-
+            //
+            int Leveldis = Envir.MaxLevel - Level;
+            if (Leveldis > 5)
+            {
+                ReceiveChat(string.Format("你的等级低于最高等级{0}级，享受{1}%的等级经验补差", Leveldis, Leveldis * 5), ChatType.Hint);
+            }
             CallDefaultNPC(DefaultNPCType.LevelUp);
 
             Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
@@ -2102,7 +2107,11 @@ namespace Server.MirObjects
             }
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
             ReceiveChat(string.Format(GameLanguage.Welcome, GameLanguage.GameName), ChatType.Hint);
-
+            int Leveldis = Envir.MaxLevel - Level;
+            if (Leveldis > 5)
+            {
+                ReceiveChat(string.Format("你的等级低于最高等级{0}级，享受{1}%的等级经验补差", Leveldis, Leveldis * 5), ChatType.Hint);
+            }
             if (Settings.TestServer)
             {
                 ReceiveChat("游戏当前处于测试模式.", ChatType.Hint);
@@ -8528,7 +8537,14 @@ namespace Server.MirObjects
                                     DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, ob,magic.GetDamage(GetAttackPower(MinDC, MaxDC)), DefenceType.AC, true);
                                     ActionList.Add(action);
                                     success = true;
-                                    if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (Envir.Random.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (Envir.Random.Next(15) <= magic.Level + 1))
+                                    //1万血以上的，麻痹几率降2倍
+                                    int par = 15;
+                                    if (ob.MaxHealth >= 10000)
+                                    {
+                                        par = 70;
+                                    }
+
+                                    if ((((ob.Race != ObjectType.Player) || Settings.PvpCanResistPoison) && (RandomUtils.Next(Settings.PoisonAttackWeight) >= ob.PoisonResist)) && (RandomUtils.Next(par) <= magic.Level + 1))
                                     {
                                         DelayedAction pa = new DelayedAction(DelayedType.Poison, AttackTime, ob, PoisonType.Stun, SpellEffect.TwinDrakeBlade, magic.Level + 1, 1000);
                                         ActionList.Add(pa);
@@ -12174,7 +12190,7 @@ namespace Server.MirObjects
 
                     if (tempTo.CurrentDura == tempTo.MaxDura)
                     {
-                        ReceiveChat("Item does not need to be repaired.", ChatType.Hint);
+                        ReceiveChat("物品不需要修理.", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -12195,7 +12211,7 @@ namespace Server.MirObjects
 
                     if ((tempTo.GemCount >= tempFrom.Info.CriticalDamage) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.HpDrainRate))
                     {
-                        ReceiveChat("Item has already reached maximum added stats", ChatType.Hint);
+                        ReceiveChat("物品已升级到最大等级", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -12321,7 +12337,7 @@ namespace Server.MirObjects
 
                     if (!ValidGemForItem(tempFrom, itemType))
                     {
-                        ReceiveChat("Invalid combination", ChatType.Hint);
+                        ReceiveChat("无效组合", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -12396,7 +12412,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        ReceiveChat("Cannot combine these items.", ChatType.Hint);
+                        ReceiveChat("无法合并这些物品.", ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -12407,8 +12423,8 @@ namespace Server.MirObjects
                         if ((tempFrom.Info.Shape == 3) && (Envir.Random.Next(15) < 3))
                         {
                             //item destroyed
-                            ReceiveChat("Item has been destroyed.", ChatType.Hint);
-                            Report.ItemChanged("CombineItem (Item Destroyed)", Info.Inventory[indexTo], 1, 1);
+                            ReceiveChat("物品已销毁.", ChatType.Hint);
+                            Report.ItemChanged("组合物品（物品已销毁）", Info.Inventory[indexTo], 1, 1);
 
                             Info.Inventory[indexTo] = null;
                             p.Destroy = true;
@@ -12416,7 +12432,7 @@ namespace Server.MirObjects
                         else
                         {
                             //upgrade has no effect
-                            ReceiveChat("Upgrade has no effect.", ChatType.Hint);
+                            ReceiveChat("升级无效.", ChatType.Hint);
                         }
 
                         canUpgrade = false;
@@ -12447,21 +12463,21 @@ namespace Server.MirObjects
                 tempTo.CurrentDura = tempTo.MaxDura;
                 tempTo.DuraChanged = false;
 
-                ReceiveChat("Item has been repaired.", ChatType.Hint);
+                ReceiveChat("物品已修复", ChatType.Hint);
                 Enqueue(new S.ItemRepaired { UniqueID = tempTo.UniqueID, MaxDura = tempTo.MaxDura, CurrentDura = tempTo.CurrentDura });
             }
 
             if (canUpgrade && Info.Inventory[indexTo] != null)
             {
                 tempTo.GemCount++;
-                ReceiveChat("Item has been upgraded.", ChatType.Hint);
+                ReceiveChat("物品已升级.", ChatType.Hint);
                 Enqueue(new S.ItemUpgraded { Item = tempTo });
             }
 
             if (tempFrom.Count > 1) tempFrom.Count--;
             else Info.Inventory[indexFrom] = null;
 
-            Report.ItemCombined("CombineItem", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
+            Report.ItemCombined("组合物品", tempFrom, tempTo, indexFrom, indexTo, MirGridType.Inventory);
 
             //item merged ok
             TradeUnlock();
@@ -14784,7 +14800,7 @@ namespace Server.MirObjects
 
                 if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
                 {
-                    ReceiveChat("You cannot sell this item here.", ChatType.System);
+                    ReceiveChat("你不能在这里卖这个东西.", ChatType.System);
                     Enqueue(p);
                     return;
                 }
@@ -14846,13 +14862,13 @@ namespace Server.MirObjects
 
                 if ((temp.Info.Bind.HasFlag(BindMode.DontRepair)) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair) && special))
                 {
-                    ReceiveChat("You cannot Repair this item.", ChatType.System);
+                    ReceiveChat("您无法修复此物品.", ChatType.System);
                     return;
                 }
 
                 if (ob.Types.Count != 0 && !ob.Types.Contains(temp.Info.Type))
                 {
-                    ReceiveChat("You cannot Repair this item here.", ChatType.System);
+                    ReceiveChat("你不能在这里修理这个东西。", ChatType.System);
                     return;
                 }
 

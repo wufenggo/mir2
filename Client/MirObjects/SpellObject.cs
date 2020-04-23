@@ -258,6 +258,12 @@ namespace Client.MirObjects
 
             NextMotion = CMain.Time + FrameInterval;
             NextMotion -= NextMotion % 100;
+            if (EffectCount > 0)
+            {
+                NextMotion2 = CMain.Time + EffectInterval;
+                //这个是干嘛的？消除后面2位的小数？
+                NextMotion2 -= NextMotion2 % 100;
+            }
         }
         public override void Process()
         {
@@ -267,6 +273,14 @@ namespace Client.MirObjects
                     FrameIndex = 0;
                 NextMotion = CMain.Time + FrameInterval;
             }
+            //这个是画特效
+            if (CMain.Time >= NextMotion2 && EffectCount > 0)
+            {
+                if (++EffectIndex >= EffectCount && Repeat)
+                    EffectIndex = 0;
+                NextMotion2 = CMain.Time + EffectInterval;
+            }
+
 
             DrawLocation = new Point((CurrentLocation.X - User.Movement.X + MapControl.OffSetX) * MapControl.CellWidth, (CurrentLocation.Y - User.Movement.Y + MapControl.OffSetY) * MapControl.CellHeight);
             DrawLocation.Offset(GlobalDisplayLocationOffset);
@@ -282,6 +296,17 @@ namespace Client.MirObjects
                 BodyLibrary.DrawBlend(DrawFrame + FrameIndex, DrawLocation, DrawColour, true, 0.8F);
             else
                 BodyLibrary.Draw(DrawFrame + FrameIndex, DrawLocation, DrawColour, true);
+            //画特效
+            if (EffectCount <= 0)
+            {
+                return;
+            }
+            if (EffectIndex >= EffectCount && !Repeat)
+            {
+                return;
+            }
+            BodyLibrary.DrawBlend(EffectStart + EffectIndex, DrawLocation, Color.White, true, 0.8F);
+
         }
 
         public override bool MouseOver(Point p)
@@ -293,8 +318,16 @@ namespace Client.MirObjects
         {
         }
 
+        //画特效
         public override void DrawEffects(bool effectsEnabled)
-        { 
+        {
+            if (!effectsEnabled) return;
+
+            for (int i = 0; i < Effects.Count; i++)
+            {
+                if (Effects[i].DrawBehind) continue;
+                Effects[i].Draw();
+            }
         }
     }
 }

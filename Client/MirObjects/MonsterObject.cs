@@ -1359,7 +1359,7 @@ namespace Client.MirObjects
                 case Monster.Foxey:
                     BodyLibrary = Libraries.Pets[((ushort)BaseImage) - 10000];
                     break;
-                    break;
+                   
             }
 
             bool nextClear = false;
