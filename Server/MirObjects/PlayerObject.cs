@@ -8605,7 +8605,14 @@ namespace Server.MirObjects
             if ((Info.MentalState != 1) && !CanFly(target.CurrentLocation)) return false;
             int distance = Functions.MaxDistance(CurrentLocation, target.CurrentLocation);
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
-            damage = (int)(damage * Math.Max(1, (distance * 0.25)));//range boost
+            int damage2 = magic.GetDamage(GetAttackPower(MinDC, MaxDC));
+            if (damage2 > damage)
+            {
+                damage = damage2;
+            }
+            //damage = (int)(damage * Math.Max(1, (distance * 0.25)));//range boost
+            //稍微加强一点
+            damage = (int)(damage * Math.Max(1, (distance * 0.30)));//range boost
             damage = ApplyArcherState(damage);
             int delay = distance * 50 + 500; //50 MS per Step
 
@@ -8876,6 +8883,16 @@ namespace Server.MirObjects
             MonsterObject monster;
             switch (magic.Spell)
             {
+                #region DoubleShot 连珠箭法 ,物理攻击
+                case Spell.DoubleShot:
+                    value = (int)data[1];
+                    target = (MapObject)data[2];
+
+                    if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+                    if (target.Attacked(this, value, DefenceType.AC, false) > 0) LevelMagic(magic);
+                    break;
+                #endregion
+
                 #region FireBall, GreatFireBall, ThunderBolt, SoulFireBall, FlameDisruptor
 
                 case Spell.FireBall:
@@ -8884,7 +8901,7 @@ namespace Server.MirObjects
                 case Spell.SoulFireBall:
                 case Spell.FlameDisruptor:
                 case Spell.StraightShot:
-                case Spell.DoubleShot:
+                
                     value = (int)data[1];
                     target = (MapObject)data[2];
 
