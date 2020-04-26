@@ -9602,12 +9602,21 @@ namespace Server.MirObjects
                     monster.ActionTime = Envir.Time + 1000;
                     monster.Target = target;
 
+                    //默认大概10秒，每点魔法加1秒
+                    //基础30秒，每级15秒，每点魔法1秒,最多存活120秒
+                    int damage = GetAttackPower(MinMC, MaxMC);//根据魔法攻击计算存活时长
+                    long AliveTime = ((magic.Level * 10000) + 30000 + damage);
+                    if (AliveTime > Settings.Minute * 2)
+                    {
+                        AliveTime = Settings.Minute * 2;
+                    }
+                    //存活时间
                     if (SummonType == 1)
-                        ((Monsters.VampireSpider)monster).AliveTime = Envir.Time + ((magic.Level * 1500) + 15000);
+                        ((Monsters.VampireSpider)monster).AliveTime = Envir.Time + AliveTime * 8 / 10;
                     if (SummonType == 2)
-                        ((Monsters.SpittingToad)monster).AliveTime = Envir.Time + ((magic.Level * 2000) + 25000);
+                        ((Monsters.SpittingToad)monster).AliveTime = Envir.Time + AliveTime;
                     if (SummonType == 3)
-                        ((Monsters.SnakeTotem)monster).AliveTime = Envir.Time + ((magic.Level * 1500) + 20000);
+                        ((Monsters.SnakeTotem)monster).AliveTime = Envir.Time + AliveTime * 9 / 10;
 
                     //Pets.Add(monster);
 
@@ -9615,6 +9624,9 @@ namespace Server.MirObjects
                     CurrentMap.ActionList.Add(action);
                     break;
                 #endregion
+                //case Spell.FixedMove:
+                //    LevelMagic(magic);
+                //    break;
 
             }
 
@@ -11622,13 +11634,13 @@ namespace Server.MirObjects
                                 ReceiveChat(String.Format("{0}银币 已添加到您的帐户", item.Info.Price), ChatType.Hint);
                             }
                             break;
-                        case 8: //MapShoutScroll
+                        case 8: //MapShoutScroll(地图喊话卷轴)
                             HasMapShout = true;
-                            ReceiveChat("You have been given one free shout across your current map", ChatType.Hint);
+                            ReceiveChat("你已经在你的当前地图上得到一个免费的喊话，用!命令进行喊话", ChatType.Hint);
                             break;
-                        case 9://ServerShoutScroll
+                        case 9://ServerShoutScroll(全服喊话卷轴)
                             HasServerShout = true;
-                            ReceiveChat("You have been given one free shout across the server", ChatType.Hint);
+                            ReceiveChat("你在服务器上得到一个免费的喊话，用!命令进行喊话", ChatType.Hint);
                             break;
                         case 10://GuildSkillScroll
                             MyGuild.NewBuff(item.Info.Effect, false);
@@ -11640,40 +11652,40 @@ namespace Server.MirObjects
                                 return;
                             }
                             break;
-                        case 12://LotteryTicket                                                                                    
-                            if (Envir.Random.Next(item.Info.Effect * 32) == 1) // 1st prize : 1,000,000
+                        case 12://LotteryTicket(彩票)                                                                                    
+                            if (RandomUtils.Next(item.Info.Effect * 32) == 1) // 1st prize : 1,000,000
                             {
-                                ReceiveChat("You won 1st Prize! Received 1,000,000 gold", ChatType.Hint);
+                                ReceiveChat("你得了一等奖！获得1,000,000金币", ChatType.Hint);
                                 GainGold(1000000);
                             }
-                            else if (Envir.Random.Next(item.Info.Effect * 16) == 1)  // 2nd prize : 200,000
+                            else if (RandomUtils.Next(item.Info.Effect * 16) == 1)  // 2nd prize : 200,000
                             {
-                                ReceiveChat("You won 2nd Prize! Received 200,000 gold", ChatType.Hint);
+                                ReceiveChat("你得了二等奖! 获得 200,000 金币", ChatType.Hint);
                                 GainGold(200000);
                             }
-                            else if (Envir.Random.Next(item.Info.Effect * 8) == 1)  // 3rd prize : 100,000
+                            else if (RandomUtils.Next(item.Info.Effect * 8) == 1)  // 3rd prize : 100,000
                             {
-                                ReceiveChat("You won 3rd Prize! Received 100,000 gold", ChatType.Hint);
+                                ReceiveChat("你得了三等奖! 获得 100,000 金币", ChatType.Hint);
                                 GainGold(100000);
                             }
-                            else if (Envir.Random.Next(item.Info.Effect * 4) == 1) // 4th prize : 10,000
+                            else if (RandomUtils.Next(item.Info.Effect * 4) == 1) // 4th prize : 10,000
                             {
-                                ReceiveChat("You won 4th Prize! Received 10,000 gold", ChatType.Hint);
+                                ReceiveChat("你得了四等奖! 获得 10,000 金币", ChatType.Hint);
                                 GainGold(10000);
                             }
-                            else if (Envir.Random.Next(item.Info.Effect * 2) == 1)  // 5th prize : 1,000
+                            else if (RandomUtils.Next(item.Info.Effect * 2) == 1)  // 5th prize : 1,000
                             {
-                                ReceiveChat("You won 5th Prize! Received 1,000 gold", ChatType.Hint);
+                                ReceiveChat("你得了五等奖! 获得 1,000 金币", ChatType.Hint);
                                 GainGold(1000);
                             }
-                            else if (Envir.Random.Next(item.Info.Effect) == 1)  // 6th prize 500
+                            else if (RandomUtils.Next(item.Info.Effect) == 1)  // 6th prize 500
                             {
-                                ReceiveChat("You won 6th Prize! Received 500 gold", ChatType.Hint);
+                                ReceiveChat("你得了六等奖! 获得 500 金币", ChatType.Hint);
                                 GainGold(500);
                             }
                             else
                             {
-                                ReceiveChat("You haven't won anything.", ChatType.Hint);
+                                ReceiveChat("你没有中奖.", ChatType.Hint);
                             }
                             break;
                     }

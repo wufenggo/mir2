@@ -159,6 +159,8 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.but_clear = new System.Windows.Forms.Button();
+            this.Copyids = new System.Windows.Forms.Button();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -210,7 +212,7 @@ namespace Server
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(532, 226);
+            this.tabPage1.Size = new System.Drawing.Size(693, 346);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -770,6 +772,7 @@ namespace Server
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.Copyids);
             this.tabPage2.Controls.Add(this.RPasteButton);
             this.tabPage2.Controls.Add(this.RCopyButton);
             this.tabPage2.Controls.Add(this.RemoveRButton);
@@ -1501,11 +1504,32 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
+            // but_clear
+            // 
+            this.but_clear.Location = new System.Drawing.Point(775, 30);
+            this.but_clear.Name = "but_clear";
+            this.but_clear.Size = new System.Drawing.Size(75, 21);
+            this.but_clear.TabIndex = 31;
+            this.but_clear.Text = "clear.map";
+            this.but_clear.UseVisualStyleBackColor = true;
+            this.but_clear.Click += new System.EventHandler(this.but_clear_Click);
+            // 
+            // Copyids
+            // 
+            this.Copyids.Location = new System.Drawing.Point(353, 5);
+            this.Copyids.Name = "Copyids";
+            this.Copyids.Size = new System.Drawing.Size(75, 21);
+            this.Copyids.TabIndex = 26;
+            this.Copyids.Text = "Copyids";
+            this.Copyids.UseVisualStyleBackColor = true;
+            this.Copyids.Click += new System.EventHandler(this.Copyids_Click);
+            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(920, 430);
+            this.Controls.Add(this.but_clear);
             this.Controls.Add(this.VisualizerButton);
             this.Controls.Add(this.ExportMongenButton);
             this.Controls.Add(this.ImportMongenButton);
@@ -1668,5 +1692,7 @@ namespace Server
         private Label label25;
         private CheckBox NoTownTeleportCheckbox;
         private CheckBox NoReincarnation;
+        private Button but_clear;
+        private Button Copyids;
     }
 }
