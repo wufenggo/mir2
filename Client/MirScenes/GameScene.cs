@@ -7399,12 +7399,12 @@ namespace Client.MirScenes
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxAC:
-                        text = string.Format("Required AC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要防御 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMAC:
-                        text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要魔御 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MaxMAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
@@ -7424,37 +7424,37 @@ namespace Client.MirScenes
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxLevel:
-                        text = string.Format("Maximum Level : {0}", realItem.RequiredAmount);
+                        text = string.Format("最高等级 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.Level > realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinAC:
-                        text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要基础防御: {0}", realItem.RequiredAmount);
                         if (MapObject.User.MinAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMAC:
-                        text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要基础魔御 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MinMAC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinDC:
-                        text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要基础攻击 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MinDC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMC:
-                        text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要基础魔法 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MinMC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinSC:
-                        text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
+                        text = string.Format("需要基础道术 : {0}", realItem.RequiredAmount);
                         if (MapObject.User.MinSC < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     default:
-                        text = "Unknown Type Required";
+                        text = "";
                         break;
                 }
 
