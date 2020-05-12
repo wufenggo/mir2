@@ -2377,13 +2377,6 @@ namespace Server.MirObjects
                 BroadcastDamageIndicator(DamageType.Critical);
             }
 
-            if(attacker.DCDamage > 0)
-            {
-                damage += ((damage / 100) * Settings.MentorDamageBoost);
-
-
-            }
-
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
 

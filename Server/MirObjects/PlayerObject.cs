@@ -4305,7 +4305,7 @@ namespace Server.MirObjects
                         for (int i = 0; i < GroupMembers.Count; i++)
                         {
                             PlayerObject playerSend = GroupMembers[i];
-                            playerSend.ReceiveChat(string.Format("{0} has rolled a {1}", Name, diceNum), ChatType.Group);
+                            playerSend.ReceiveChat(string.Format("{0}掷了{1}点", Name, diceNum), ChatType.Group);
                         }
                         break;
 
@@ -4370,7 +4370,7 @@ namespace Server.MirObjects
 
                                         if(Envir.AccountList[i].Characters[j].Index != tt.Index)
                                         {
-                                            ReceiveChat("Player name was matched however IDs did not. Likely due to player being recreated. Player not restored", ChatType.System);
+                                            ReceiveChat("玩家名称匹配，但ID不匹配。可能是因为玩家被重新创建。玩家未恢复", ChatType.System);
                                             return;
                                         }
 
@@ -4387,12 +4387,12 @@ namespace Server.MirObjects
                         if (!IsGM && !HasTeleportRing && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)
                         {
-                            ReceiveChat(("You cannot position move on this map"), ChatType.System);
+                            ReceiveChat(("你不能在地图上移动"), ChatType.System);
                             return;
                         }
                         if (Envir.Time < LastTeleportTime)
                         {
-                            ReceiveChat(string.Format("You cannot teleport for another {0} seconds", (LastTeleportTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(string.Format("你不能再传送{0}秒", (LastTeleportTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
 
@@ -4422,7 +4422,7 @@ namespace Server.MirObjects
                         var map = Envir.GetMapByNameAndInstance(parts[1], instanceID);
                         if (map == null)
                         {
-                            ReceiveChat((string.Format("Map {0}:[{1}] could not be found", parts[1], instanceID)), ChatType.System);
+                            ReceiveChat((string.Format("{0}:[{1}] 找不到实例地图", parts[1], instanceID)), ChatType.System);
                             return;
                         }
 
@@ -4435,20 +4435,20 @@ namespace Server.MirObjects
                         switch (parts.Length)
                         {
                             case 2:
-                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("Moved to Map {0}", map.Info.FileName)) :
-                                    (string.Format("Failed movement to Map {0}", map.Info.FileName)), ChatType.System);
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("移动到地图 {0}", map.Info.FileName)) :
+                                    (string.Format("无法实例移动 {0}", map.Info.FileName)), ChatType.System);
                                 break;
                             case 3:
-                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("Moved to Map {0}:[{1}]", map.Info.FileName, instanceID)) :
-                                    (string.Format("Failed movement to Map {0}:[{1}]", map.Info.FileName, instanceID)), ChatType.System);
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (string.Format("移动到地图 {0}:[{1}]", map.Info.FileName, instanceID)) :
+                                    (string.Format("无法实例移动 {0}:[{1}]", map.Info.FileName, instanceID)), ChatType.System);
                                 break;
                             case 4:
-                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("Moved to Map {0} at {1}:{2}", map.Info.FileName, x, y)) :
-                                    (string.Format("Failed movement to Map {0} at {1}:{2}", map.Info.FileName, x, y)), ChatType.System);
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("移动到地图 {0} at {1}:{2}", map.Info.FileName, x, y)) :
+                                    (string.Format("无法实例移动 {0} at {1}:{2}", map.Info.FileName, x, y)), ChatType.System);
                                 break;
                             case 5:
-                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("Moved to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)) :
-                                    (string.Format("Failed movement to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)), ChatType.System);
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (string.Format("移动到地图 {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)) :
+                                    (string.Format("无法实例移动 {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)), ChatType.System);
                                 break;
                         }
                         break;
@@ -4468,7 +4468,7 @@ namespace Server.MirObjects
                         if (!IsGM && !Settings.TestServer) return;
                         if (parts.Length < 2)
                         {
-                            ReceiveChat("Not enough parameters to spawn monster", ChatType.System);
+                            ReceiveChat("没有足够的参数来产生怪物", ChatType.System);
                             return;
                         }
 
@@ -10490,12 +10490,7 @@ namespace Server.MirObjects
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
-            if (attacker.DCDamage > 0)
-            {
 
-                damage += ((damage / 100) * Settings.MentorDamageBoost);
-
-            }
             if (MagicShield)
             {
                 MagicShieldTime -= (damage - armour) * 60;
