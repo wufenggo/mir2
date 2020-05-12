@@ -1243,7 +1243,7 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
     {
-        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary" , "Uncommon", "Unique", "Set" };
+        private string[] GradeStrings = { "全部", "普通", "稀有", "传奇", "神话" , "Uncommon", "Unique", "Set" };
 
         public MirButton NextButton, PrevButton;
         public MirLabel GradeLabel;

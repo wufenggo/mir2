@@ -101,7 +101,7 @@ namespace Server.MirObjects
 
             if (Envir.Time < TickTime) return;
             TickTime = Envir.Time + TickSpeed;
-
+            Tick++;
             //范围伤害
             if (Spell == Spell.MonKITO || Spell == Spell.MonFireCircle || Spell == Spell.MonRotateAxe || Spell == Spell.MonGhostFlag1 || Spell == Spell.MonGhostHead)
             {

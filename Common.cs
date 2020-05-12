@@ -2750,7 +2750,7 @@ public class ItemInfo
 
     public byte Strong;
     public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate;
-    public byte CriticalRate, CriticalDamage;
+    public byte CriticalRate, CriticalDamage, DCDamage;
     public bool NeedIdentify, ShowGroupPickup, GlobalDropNotify;
     public bool ClassBased;
     public bool LevelBased;
@@ -2864,6 +2864,7 @@ public class ItemInfo
             MPrate = reader.ReadByte();
             CriticalRate = reader.ReadByte();
             CriticalDamage = reader.ReadByte();
+            DCDamage = reader.ReadByte();
             byte bools = reader.ReadByte();
             NeedIdentify = (bools & 0x01) == 0x01;
             ShowGroupPickup = (bools & 0x02) == 0x02;
@@ -2983,6 +2984,7 @@ public class ItemInfo
         writer.Write(MPrate);
         writer.Write(CriticalRate);
         writer.Write(CriticalDamage);
+        writer.Write(DCDamage);
         byte bools = 0;
         if (NeedIdentify) bools |= 0x01;
         if (ShowGroupPickup) bools |= 0x02;
@@ -3069,6 +3071,7 @@ public class ItemInfo
         if (!byte.TryParse(data[43], out info.MPrate)) return null;
         if (!byte.TryParse(data[44], out info.CriticalRate)) return null;
         if (!byte.TryParse(data[45], out info.CriticalDamage)) return null;
+        
         if (!bool.TryParse(data[46], out info.NeedIdentify)) return null;
         if (!bool.TryParse(data[47], out info.ShowGroupPickup)) return null;
         if (!byte.TryParse(data[48], out info.MaxAcRate)) return null;
@@ -3087,13 +3090,15 @@ public class ItemInfo
         if (!bool.TryParse(data[61], out info.CanFastRun)) return null;
 		if (!bool.TryParse(data[62], out info.CanAwakening)) return null;
         if (data[63] == "-")
-            info.ToolTip = "";
+            
+        info.ToolTip = "";
+        
         else
         {
             info.ToolTip = data[63];
             info.ToolTip = info.ToolTip.Replace("&^&", "\r\n");
         }
-            
+        if (!byte.TryParse(data[64], out info.DCDamage)) return null;
         return info;
 
     }
@@ -3114,12 +3119,12 @@ public class ItemInfo
 
         return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26}," +
                              "{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51}," +
-                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63}",
+                             "{52},{53},{54},{55},{56},{57},{58},{59},{60},{61},{62},{63},{64}",
             Name, (byte)Type, (byte)Grade, (byte)RequiredType, (ushort)RequiredClass, (byte)RequiredGender, (byte)Set, Shape, Weight, Light, RequiredAmount, MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC,
             MinMC, MaxMC, MinSC, MaxSC, Accuracy, Agility, HP, MP, AttackSpeed, Luck, BagWeight, HandWeight, WearWeight, StartItem, Image, Durability, Price,
             StackSize, Effect, Strong, MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, HPrate, MPrate, CriticalRate, CriticalDamage, NeedIdentify,
             ShowGroupPickup, MaxAcRate, MaxMacRate, Holy, Freezing, PoisonAttack, ClassBased, LevelBased, (short)Bind, Reflect, HpDrainRate, (short)Unique,
-            RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip);
+            RandomStatsId, CanMine, CanFastRun, CanAwakening, TransToolTip,DCDamage);
     }
 
     public override string ToString()
@@ -3137,7 +3142,7 @@ public class UserItem
     public ushort CurrentDura, MaxDura;
     public uint Count = 1, GemCount = 0;
 
-    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack;
+    public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, DCDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
 
     public RefinedValue RefinedValue = RefinedValue.None;
@@ -3163,7 +3168,7 @@ public class UserItem
         get
         {
             return AC != 0 || MAC != 0 || DC != 0 || MC != 0 || SC != 0 || Accuracy != 0 || Agility != 0 || HP != 0 || MP != 0 || AttackSpeed != 0 || Luck != 0 || Strong != 0 || MagicResist != 0 || PoisonResist != 0 ||
-                HealthRecovery != 0 || ManaRecovery != 0 || PoisonRecovery != 0 || CriticalRate != 0 || CriticalDamage != 0 || Freezing != 0 || PoisonAttack != 0;
+                HealthRecovery != 0 || ManaRecovery != 0 || PoisonRecovery != 0 || CriticalRate != 0 || CriticalDamage != 0 ||DCDamage != 0 || Freezing != 0 || PoisonAttack != 0;
         }
     }
 
@@ -3227,6 +3232,7 @@ public class UserItem
         PoisonRecovery = reader.ReadByte();
         CriticalRate = reader.ReadByte();
         CriticalDamage = reader.ReadByte();
+        DCDamage = reader.ReadByte();
         Freezing = reader.ReadByte();
         PoisonAttack = reader.ReadByte();
         
@@ -3304,6 +3310,7 @@ public class UserItem
         writer.Write(PoisonRecovery);
         writer.Write(CriticalRate);
         writer.Write(CriticalDamage);
+        writer.Write(DCDamage);
         writer.Write(Freezing);
         writer.Write(PoisonAttack);
 
@@ -5393,7 +5400,7 @@ public abstract class Packet
 public class BaseStats
 {
     public float HpGain, HpGainRate, MpGainRate, BagWeightGain, WearWeightGain, HandWeightGain;
-    public byte MinAc, MaxAc, MinMac, MaxMac, MinDc, MaxDc, MinMc, MaxMc, MinSc, MaxSc, StartAgility, StartAccuracy, StartCriticalRate, StartCriticalDamage, CritialRateGain, CriticalDamageGain;
+    public byte MinAc, MaxAc, MinMac, MaxMac, MinDc, MaxDc, MinMc, MaxMc, MinSc, MaxSc, StartAgility, StartAccuracy, StartCriticalRate, StartCriticalDamage, CritialRateGain, CriticalDamageGain, DCDamage;
 
     public BaseStats(MirClass Job)
     {

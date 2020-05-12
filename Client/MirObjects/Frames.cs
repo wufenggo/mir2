@@ -3557,13 +3557,13 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Attack2, new Frame(160, 9, 0, 100) { EffectStartTime = 300 });//放火
             frame.Frames.Add(MirAction.AttackRange1, new Frame(232, 8, 0, 100) { EffectStartTime = 200 });//远程攻击
             frame.Frames.Add(MirAction.Struck, new Frame(296, 3, 0, 200));
-            frame.Frames.Add(MirAction.Attack5, new Frame(320, 19, 0, 100, 975, 15, 4, 100) { EffectStartTime = 200 });//变身，升级
+            frame.Frames.Add(MirAction.Attack5, new Frame(320, 19, 0, 100, 975, 15, -4, 100) { EffectStartTime = 200 });//变身，升级
             //形态2的攻击
             frame.Frames.Add(MirAction.Standing2, new Frame(472, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking2, new Frame(520, 6, 0, 100));
-            frame.Frames.Add(MirAction.AttackRange2, new Frame(568, 10, 0, 100, 1128, 6, 0, 100) { EffectStartTime = 200 });//大火球，OK
-            frame.Frames.Add(MirAction.Attack3, new Frame(648, 9, 0, 100, 1190, 9, 0, 100, 1262, 16, -16, 100) { EffectStartTime = 100 });//举刀，OK
-            frame.Frames.Add(MirAction.Attack4, new Frame(720, 9, 0, 100, 1300, 9, 0, 100, 1278, 10, -10, 100) { EffectStartTime = 100, ETime2 = 600 });//砸地板
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(568, 10, 0, 100, 1118, 6, 0, 100) { EffectStartTime = 200 });//大火球，OK
+            frame.Frames.Add(MirAction.Attack3, new Frame(648, 9, 0, 100, 1180, 9, 0, 100, 1252, 16, -16, 100) { EffectStartTime = 100 });//举刀，OK
+            frame.Frames.Add(MirAction.Attack4, new Frame(720, 9, 0, 100, 1289, 9, 0, 100, 1268, 16, -16, 100) { EffectStartTime = 100, ETime2 = 600 });//砸地板
             frame.Frames.Add(MirAction.Struck2, new Frame(792, 3, 0, 200));
             frame.Frames.Add(MirAction.Die, new Frame(816, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(825, 1, 9, 1000));
@@ -3582,9 +3582,9 @@ namespace Client.MirObjects
             //形态2的攻击
             frame.Frames.Add(MirAction.Standing2, new Frame(472, 6, 0, 500));
             frame.Frames.Add(MirAction.Walking2, new Frame(520, 6, 0, 100));
-            frame.Frames.Add(MirAction.AttackRange2, new Frame(568, 10, 0, 100, 1128, 6, 0, 100) { EffectStartTime = 200 });//大火球，OK
-            frame.Frames.Add(MirAction.Attack3, new Frame(648, 9, 0, 100, 1190, 9, 0, 100, 1262, 16, -16, 100) { EffectStartTime = 100 });//举刀，OK
-            frame.Frames.Add(MirAction.Attack4, new Frame(720, 9, 0, 100, 1300, 9, 0, 100, 1278, 10, -10, 100) { EffectStartTime = 100, ETime2 = 600 });//砸地板
+            frame.Frames.Add(MirAction.AttackRange2, new Frame(568, 10, 0, 100, 1118, 6, 0, 100) { EffectStartTime = 200 });//大火球，OK
+            frame.Frames.Add(MirAction.Attack3, new Frame(648, 9, 0, 100, 1180, 9, 0, 100, 1252, 16, -16, 100) { EffectStartTime = 100 });//举刀，OK
+            frame.Frames.Add(MirAction.Attack4, new Frame(720, 9, 0, 100, 1289, 9, 0, 100, 1268, 16, 0, 100) { EffectStartTime = 100, ETime2 = 600 });//砸地板
             frame.Frames.Add(MirAction.Die, new Frame(816, 10, 0, 100));
             frame.Frames.Add(MirAction.Dead, new Frame(825, 1, 9, 1000));
             frame.Frames.Add(MirAction.Revive, new Frame(816, 10, 0, 100) { Reverse = true });

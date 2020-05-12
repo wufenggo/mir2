@@ -34,9 +34,21 @@ namespace Client.MirObjects
 
         public bool Blend = true;
 
-        
 
-        public byte PercentHealth;
+
+        public uint HP;
+        public uint MaxHP;
+        public byte PercentHealth
+        {
+            get
+            {
+                if (MaxHP == 0)
+                {
+                    return 100;
+                }
+                return (byte)(HP / (float)MaxHP * 100);
+            }
+        }
         public long HealthTime;
 
         public List<QueuedAction> ActionFeed = new List<QueuedAction>();
@@ -50,7 +62,7 @@ namespace Client.MirObjects
 
         public MLibrary BodyLibrary;
         public Color DrawColour = Color.White, NameColour = Color.White, LightColour = Color.White;
-        public MirLabel NameLabel, ChatLabel, GuildLabel;
+        public MirLabel NameLabel, ChatLabel, GuildLabel, HealthLabel;
         public long ChatTime;
         public int DrawFrame, DrawWingFrame;
         public Point DrawLocation, Movement, FinalDrawLocation, OffSetMove;
@@ -313,19 +325,23 @@ namespace Client.MirObjects
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
 
             if (Dead) return;
-            if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
+            if (MaxHP <= 0)
+            {
+                return;
+            }
+
+            //if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
             if (CMain.Time >= HealthTime)
             {
-                if (Race == ObjectType.Monster && !Name.EndsWith(string.Format("({0})", User.Name)) && !GroupDialog.GroupList.Contains(name)) return;
-                if (Race == ObjectType.Player && this != User && !GroupDialog.GroupList.Contains(Name)) return;
-                if (this == User && GroupDialog.GroupList.Count == 0) return;
+                //if (Race == ObjectType.Monster && !Name.EndsWith(string.Format("({0})", User.Name)) && !GroupDialog.GroupList.Contains(name)) return;
+                // if (Race == ObjectType.Player && this != User && !GroupDialog.GroupList.Contains(Name)) return;
+                //if (this == User && GroupDialog.GroupList.Count == 0) return;
             }
 
 
             Libraries.Prguse2.Draw(0, DisplayRectangle.X + 8, DisplayRectangle.Y - 64);
             int index = 1;
-
             switch (Race)
             {
                 case ObjectType.Player:
@@ -337,8 +353,27 @@ namespace Client.MirObjects
             }
 
             Libraries.Prguse2.Draw(index, new Rectangle(0, 0, (int)(32 * PercentHealth / 100F), 4), new Point(DisplayRectangle.X + 8, DisplayRectangle.Y - 64), Color.White, false);
-        }
 
+            DrawHealthLabel();
+
+        }
+        //画血条上的数字
+        public virtual void DrawHealthLabel()
+        {
+            //血条上面
+            if (HealthLabel == null || HealthLabel.IsDisposed)
+            {
+                HealthLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    BackColour = Color.Transparent,
+                    ForeColour = Color.White,
+                };
+            }
+            HealthLabel.Text = HP + "/" + MaxHP;
+            HealthLabel.Location = new Point(DisplayRectangle.X + (50 - HealthLabel.Size.Width) / 2, DisplayRectangle.Y - 80); //was 48 -
+            HealthLabel.Draw();
+        }
         public void DrawPoison()
         {
             byte poisoncount = 0;

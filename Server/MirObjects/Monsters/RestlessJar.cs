@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
             if (Dead && Envir.Time > dieTime+2*Settings.Minute)
             {
                 dieTime = dieTime + 10 * Settings.Minute;
-                Map map = MessageQueue.Envir.GetMapByNameAndInstance("SP001");
+                Map map = Envir.GetMapByNameAndInstance("SP001");
                 if (map != null)
                 {
                     List<PlayerObject> list = new List<PlayerObject>();

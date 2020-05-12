@@ -66,7 +66,8 @@ namespace Client.MirGraphics
             StateItemsWarW = new MLibrary(Settings.DataPath + "StateItem_Warrior_Woman"),
             StateItemsWizM = new MLibrary(Settings.DataPath + "StateItem_Wizard_Man"),
             StateItemsWizW = new MLibrary(Settings.DataPath + "StateItem_Wizard_Woman"),
-            FloorItems = new MLibrary(Settings.DataPath + "DNItems");
+            FloorItems = new MLibrary(Settings.DataPath + "DNItems"),
+            StateEffect = new MLibrary(Settings.DataPath + "StateEffect");
 
         //Deco
         public static readonly MLibrary
@@ -135,7 +136,7 @@ namespace Client.MirGraphics
                                           UpFishingF = new MLibrary[2],
 
 
-                                          Transform = new MLibrary[28],
+                                          Transform = new MLibrary[30],
                                           TransformMounts = new MLibrary[28],
                                           TransformEffect = new MLibrary[2],
                                           TransformWeaponEffect = new MLibrary[1];
@@ -464,6 +465,8 @@ namespace Client.MirGraphics
             StateItems.Initialize();
             Progress++;
             FloorItems.Initialize();
+            Progress++;
+            StateEffect.Initialize();
             Progress++;
 
             for (int i = 0; i < MapLibs.Length; i++)

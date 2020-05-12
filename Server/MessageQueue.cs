@@ -13,8 +13,8 @@ namespace Server
         {
             get { return instance; }
         }
-        public static readonly Envir Envir = new Envir();
-        public static readonly Envir EditEnvir = Envir;
+        public static readonly Envir Envir = new Envir(), EditEnvir = new Envir();
+        
         public readonly ConcurrentQueue<string> MessageLog = new ConcurrentQueue<string>();
         public readonly ConcurrentQueue<string> DebugLog = new ConcurrentQueue<string>();
         public readonly ConcurrentQueue<string> ChatLog = new ConcurrentQueue<string>();

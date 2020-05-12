@@ -1242,37 +1242,37 @@ namespace Client.MirObjects
 
 
 
-            if ((byte)Class > 4)
+            if ((byte)Class > 4)//飞升特效
             {
                 switch ((byte)Class)
                 {
                     case 5: //Oma King Robe effect
-                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 260, 14, 2200, this, true, true, 1) { Repeat = true });
-                        SpecialEffect effect = new SpecialEffect(Libraries.BuffEffect, 865, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
                         effect.SetStart(CMain.Time + delay);
                         Effects.Add(effect);
                         break;
                     case 6: //Oma King Robe effect
-                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 190, 10, 1500, this, true, true, 1) { Repeat = true });
-                        SpecialEffect effect1 = new SpecialEffect(Libraries.BuffEffect, 850, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect1 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
                         effect1.SetStart(CMain.Time + delay);
                         Effects.Add(effect1);
                         break;
                     case 7: //Oma King Robe effect
-                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 180, 10, 1800, this, true, true, 1) { Repeat = true });
-                        SpecialEffect effect2 = new SpecialEffect(Libraries.BuffEffect, 910, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect2 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
                         effect2.SetStart(CMain.Time + delay);
                         Effects.Add(effect2);
                         break;
                     case 8: //Oma King Robe effect
-                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 210, 10, 1600, this, true, true, 1) { Repeat = true });
-                        SpecialEffect effect3 = new SpecialEffect(Libraries.BuffEffect, 835, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect3 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
                         effect3.SetStart(CMain.Time + delay);
                         Effects.Add(effect3);
                         break;
                     case 9: //Oma King Robe effect
-                        Effects.Add(new SpecialEffect(Libraries.BuffEffect, 200, 10, 1600, this, true, true, 1) { Repeat = true });
-                        SpecialEffect effect4 = new SpecialEffect(Libraries.BuffEffect, 925, 15, 2200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect4 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
                         effect4.SetStart(CMain.Time + delay);
                         Effects.Add(effect4);
                         break;
@@ -2695,6 +2695,7 @@ namespace Client.MirObjects
                             #endregion
 
                             #region CounterAttack
+
 
                             case Spell.CounterAttack:
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10 + 5);
@@ -5848,7 +5849,7 @@ namespace Client.MirObjects
             if (GuildName != "")
             {
                 GuildLabel.Text = GuildName;
-                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2) + (Dead ? 35 : 8)); //was 48 -
+                GuildLabel.Location = new Point(DisplayRectangle.X + (50 - GuildLabel.Size.Width) / 2, DisplayRectangle.Y - (42 - GuildLabel.Size.Height / 2)-2 + (Dead ? 35 : 8)); //was 48 -
                 GuildLabel.Draw();
             }
 
@@ -5857,7 +5858,51 @@ namespace Client.MirObjects
             NameLabel.Draw();
         }
 
+
+        public override void DrawHealthLabel()
+        {
+            //血条上面
+            if (HealthLabel == null || HealthLabel.IsDisposed)
+            {
+                HealthLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    BackColour = Color.Transparent,
+                    ForeColour = Color.White,
+                };
+            }
+            //玩家显示职业等级
+            string cls = "Z";
+            switch (this.Class)
+            {
+                case MirClass.战士:
+                    cls = "Z";
+                    break;
+                case MirClass.法师:
+                    cls = "F";
+                    break;
+                case MirClass.道士:
+                    cls = "D";
+                    break;
+                case MirClass.刺客:
+                    cls = "C";
+                    break;
+                case MirClass.弓箭手:
+                    cls = "G";
+                    break;
+
+                default:
+                    cls = "Z";
+                    break;
+            }
+
+            HealthLabel.Text = HP + "/" + MaxHP + "/" + cls + this.Level;
+           
+            HealthLabel.Location = new Point(DisplayRectangle.X + (50 - HealthLabel.Size.Width) / 2, DisplayRectangle.Y - 80); //was 48 -
+            HealthLabel.Draw();
+        }
     }
+    
 
 
     public class QueuedAction

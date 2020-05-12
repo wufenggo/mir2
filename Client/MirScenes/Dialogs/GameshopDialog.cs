@@ -266,7 +266,7 @@ namespace Client.MirScenes.Dialogs
             };
             ALL.Click += (o, e) =>
             {
-                ClassFilter = "显示所有";
+                ClassFilter = "全部";
                 TypeFilter = "显示所有";
                 GetCategories();
                 ResetClass();
@@ -364,7 +364,7 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(83, 17),
                 Location = new Point(597, 446),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                Font = new Font(Settings.FontName, 7F),
+                Font = new Font(Settings.FontName, 9F),
             };
 
             PreviousButton = new MirButton
@@ -413,7 +413,7 @@ namespace Client.MirScenes.Dialogs
                     Location = new Point(15, 103 + (15 * i)),
                     Text = "Testing - " + i.ToString(),
                     ForeColour = Color.Gray,
-                    Font = new Font(Settings.FontName, 7F),
+                    Font = new Font(Settings.FontName, 9F),
                 };
                 Filters[i].Click += (o, e) =>
                 {

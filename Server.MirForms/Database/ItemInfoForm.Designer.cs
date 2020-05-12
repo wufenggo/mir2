@@ -195,6 +195,8 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
+            this.label59 = new System.Windows.Forms.Label();
+            this.DCDamagetextBox = new System.Windows.Forms.TextBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -783,8 +785,10 @@
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.MinACTextBox);
             this.tabPage2.Controls.Add(this.MPratetextbox);
+            this.tabPage2.Controls.Add(this.DCDamagetextBox);
             this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.label48);
+            this.tabPage2.Controls.Add(this.label59);
             this.tabPage2.Controls.Add(this.MaxACTextBox);
             this.tabPage2.Controls.Add(this.label17);
             this.tabPage2.Controls.Add(this.MinMACTextBox);
@@ -1986,6 +1990,24 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(348, 279);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(59, 12);
+            this.label59.TabIndex = 120;
+            this.label59.Text = "攻击伤害:";
+            // 
+            // DCDamagetextBox
+            // 
+            this.DCDamagetextBox.Location = new System.Drawing.Point(439, 276);
+            this.DCDamagetextBox.MaxLength = 3;
+            this.DCDamagetextBox.Name = "DCDamagetextBox";
+            this.DCDamagetextBox.Size = new System.Drawing.Size(30, 21);
+            this.DCDamagetextBox.TabIndex = 118;
+            this.DCDamagetextBox.TextChanged += new System.EventHandler(this.DCDamagetextBox_TextChanged);
+            // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2191,5 +2213,7 @@
         private System.Windows.Forms.CheckBox noMailBox;
         private System.Windows.Forms.Label label58;
         private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.TextBox DCDamagetextBox;
+        private System.Windows.Forms.Label label59;
     }
 }

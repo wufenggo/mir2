@@ -34,7 +34,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton GameShopButton, MenuButton, InventoryButton, CharacterButton, SkillButton, QuestButton, OptionButton;
         public MirControl HealthOrb;
         public MirLabel HealthLabel, ManaLabel, TopLabel, BottomLabel, LevelLabel, CharacterName, ExperienceLabel, GoldLabel, WeightLabel, SpaceLabel, AModeLabel, PModeLabel, SModeLabel, PingLabel;
-
+        
         public bool HPOnly
         {
             get { return User != null && User.Class == MirClass.战士 && User.Level < 26; }
@@ -2190,11 +2190,11 @@ namespace Client.MirScenes.Dialogs
 
         public MirLabel NameLabel, GuildLabel, LoverLabel;
         public MirLabel ACLabel, MACLabel, DCLabel, MCLabel, SCLabel, HealthLabel, ManaLabel;
-        public MirLabel CritRLabel, CritDLabel, LuckLabel, AttkSpdLabel, AccLabel, AgilLabel;
+        public MirLabel CritRLabel, CritDLabel, DCDLabel, LuckLabel, AttkSpdLabel, AccLabel, AgilLabel;
         public MirLabel ExpPLabel, BagWLabel, WearWLabel, HandWLabel, MagicRLabel, PoisonRecLabel, HealthRLabel, ManaRLabel, PoisonResLabel, HolyTLabel, FreezeLabel, PoisonAtkLabel;
         public MirLabel HeadingLabel, StatLabel;
         public MirButton NextButton, BackButton;
-
+        public MirAnimatedControl _effect;
         public MirItemCell[] Grid;
         public MagicButton[] Magics;
 
@@ -2202,6 +2202,16 @@ namespace Client.MirScenes.Dialogs
 
         public CharacterDialog()
         {
+            _effect = new MirAnimatedControl()
+            {
+                Animated = true,
+                //AnimationCount = 25,
+                //AnimationDelay = 100,
+                Index = 3160,
+                Library = Libraries.StateEffect,
+                Loop = true,
+                Blending = true,
+            };
             Index = 504;
             Library = Libraries.Title;
             Location = new Point(Settings.ScreenWidth - 264, 0);
@@ -2322,15 +2332,22 @@ namespace Client.MirScenes.Dialogs
                 }
                 if (Grid[(int)EquipmentSlot.Weapon].Item != null)
                 {
+                    _effect.Index = 0;
                     if (GameScene.User.WeaponEffect >0)
                     {
                         switch (GameScene.User.WeaponEffect)
                         {
-                            case 1://麻花
-                                Libraries.Stateitem_Effect.DrawBlend(16, DisplayLocation, Color.White, true, 1F);
-                                break;
+                            //case 1://麻花
+                            //    _effect.Index = 840;
+                            //    _effect.AnimationCount = 9;
+                            //    _effect.AnimationDelay = 150;
+                            //    Libraries.Stateitem_Effect.DrawBlend(0 + _effect.Index, DisplayLocation, _effect.BackColour, true, 1F);
+                            //    break;
                             case 20://屠龙
-                                Libraries.Stateitem_Effect.DrawBlend(12, DisplayLocation, Color.White, true, 1F);
+                                _effect.Index = 3160;
+                                _effect.AnimationCount = 14;
+                                _effect.AnimationDelay = 100;
+                                Libraries.StateEffect.DrawBlend(0 + _effect.Index, DisplayLocation, _effect.BackColour, true, 1F);
                                 break;
 
                         }
@@ -2373,10 +2390,12 @@ namespace Client.MirScenes.Dialogs
                 ManaLabel.Text = string.Format("{0}/{1}", MapObject.User.MP, MapObject.User.MaxMP);
                 CritRLabel.Text = string.Format("{0}%", MapObject.User.CriticalRate);
                 CritDLabel.Text = string.Format("{0}", MapObject.User.CriticalDamage);
+                
                 AttkSpdLabel.Text = string.Format("{0}", MapObject.User.ASpeed);
                 AccLabel.Text = string.Format("+{0}", MapObject.User.Accuracy);
                 AgilLabel.Text = string.Format("+{0}", MapObject.User.Agility);
                 LuckLabel.Text = string.Format("{0}", MapObject.User.Luck);
+                DCDLabel.Text = string.Format("攻击伤害 +   {0}", MapObject.User.DCDamage);
             };
 
             StatePage = new MirImageControl
@@ -2399,7 +2418,8 @@ namespace Client.MirScenes.Dialogs
                 {
                     Expstr += MapObject.User.Experience + "/" + MapObject.User.MaxExperience + "";
                 }
-                ExpPLabel.Text = string.Format("{0:0.##%}", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
+                Expstr += string.Format("({0:0.##%})", MapObject.User.Experience / (double)MapObject.User.MaxExperience);
+                ExpPLabel.Text = Expstr;
                 BagWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentBagWeight, MapObject.User.MaxBagWeight);
                 WearWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentWearWeight, MapObject.User.MaxWearWeight);
                 HandWLabel.Text = string.Format("{0}/{1}", MapObject.User.CurrentHandWeight, MapObject.User.MaxHandWeight);
@@ -2710,6 +2730,8 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(126, 164),
                 NotControl = true
             };
+
+
             AttkSpdLabel = new MirLabel
             {
                 AutoSize = true,
@@ -2736,6 +2758,13 @@ namespace Client.MirScenes.Dialogs
                 AutoSize = true,
                 Parent = StatusPage,
                 Location = new Point(126, 236),
+                NotControl = true
+            };
+            DCDLabel = new MirLabel
+            {
+                AutoSize = true,
+                Parent = StatusPage,
+                Location = new Point(126, 254),
                 NotControl = true
             };
             // STATS II 

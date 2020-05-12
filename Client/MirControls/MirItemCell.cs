@@ -185,7 +185,7 @@ namespace Client.MirControls
                 AnimationDelay = 100,
                 Index = 10,
                 Library = Libraries.ItemEffects,
-                Location = new Point(1, -1),
+                Location = new Point(2, -2),
                 NotControl = true,
                 Visible = false,
                 Parent = this
@@ -2152,18 +2152,23 @@ namespace Client.MirControls
                         GradeEffect.Visible = true;
                         GradeEffect.BackColour = Color.DeepSkyBlue;
                         GradeEffect.ForeColour = Color.DeepSkyBlue;
+                        
+                        GradeEffect.Index = 10;
+                        GradeEffect.Visible = true;
                         break;
                     case ItemGrade.Legendary:
                         GradeEffect.Animated = true;
                         GradeEffect.Visible = true;
-                        GradeEffect.BackColour = Color.DarkOrange;
-                        GradeEffect.ForeColour = Color.DarkOrange;
+                        
+                        GradeEffect.Index = 20;
+                        GradeEffect.Visible = true;
                         break;
                     case ItemGrade.Mythical:
                         GradeEffect.Animated = true;
                         GradeEffect.Visible = true;
-                        GradeEffect.BackColour = Color.Purple;
-                        GradeEffect.ForeColour = Color.Purple;
+                       
+                        GradeEffect.Index = 30;
+                        GradeEffect.Visible = true;
                         break;
                     case ItemGrade.Uncommon:
                         GradeEffect.Animated = true;

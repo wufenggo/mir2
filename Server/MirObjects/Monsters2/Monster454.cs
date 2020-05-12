@@ -51,7 +51,7 @@ namespace Server.MirObjects.Monsters
             {
                 _checkMoveTime = Envir.Time + 5000;
                 bool has = false;
-                foreach(MapObject ob in MessageQueue.Envir.Objects)
+                foreach(MapObject ob in Envir.Objects)
                 {
                     if (ob == null || ob.Dead || ob.CurrentMap != CurrentMap || ob.Race != ObjectType.Monster)
                     {

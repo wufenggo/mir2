@@ -678,7 +678,7 @@ namespace Client.MirScenes
 
             if(!User.HasClassWeapon && User.Weapon >= 0)
             {
-                ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
+                ChatDialog.ReceiveChat("你必须佩戴合适的武器来完成这项技能", ChatType.System);
                 return;
             }
 
@@ -703,7 +703,7 @@ namespace Client.MirScenes
                         if (CMain.Time >= OutputDelay)
                         {
                             OutputDelay = CMain.Time + 1000;
-                            GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                            GameScene.Scene.OutputMessage(string.Format("您不能使用 {0} 在 {1} 秒内.", magic.Name, ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
 
                         return;
@@ -727,7 +727,7 @@ namespace Client.MirScenes
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
                     Thrusting = !Thrusting;
-                    ChatDialog.ReceiveChat(Thrusting ? "U使用 刺杀剑术." : "不使用 刺杀剑术.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(Thrusting ? "使用 刺杀剑术." : "不使用 刺杀剑术.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = Thrusting });
                     break;
@@ -748,7 +748,7 @@ namespace Client.MirScenes
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
                     DoubleSlash = !DoubleSlash;
-                    ChatDialog.ReceiveChat(DoubleSlash ? "使用 Double Slash." : "不使用 Double Slash.", ChatType.Hint);
+                    ChatDialog.ReceiveChat(DoubleSlash ? "使用 风剑术." : "不使用 风剑术.", ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     Network.Enqueue(new C.SpellToggle { Spell = magic.Spell, CanUse = DoubleSlash });
                     break;
@@ -3165,7 +3165,7 @@ namespace Client.MirScenes
             User.HP = p.HP;
             User.MP = p.MP;
 
-            User.PercentHealth = (byte)(User.HP / (float)User.MaxHP * 100);
+            //User.PercentHealth = (byte)(User.HP / (float)User.MaxHP * 100);
         }
 
         private void DeleteQuestItem(S.DeleteQuestItem p)
@@ -4250,7 +4250,8 @@ namespace Client.MirScenes
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID) continue;
-                ob.PercentHealth = p.Percent;
+                ob.HP = p.HP;
+                ob.MaxHP = p.MaxHP;
                 ob.HealthTime = CMain.Time + p.Expire * 1000;
                 return;
             }
@@ -5889,7 +5890,7 @@ namespace Client.MirScenes
                 OutLine = true,
                 Parent = ItemLabel,
                 Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) :
-                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "WonderDrug" : HoverItem.Info.FriendlyName,
+                (HoverItem.Info.Type == ItemType.Pets && HoverItem.Info.Shape == 26 && HoverItem.Info.Effect != 7) ? "神奇的药物" : HoverItem.Info.FriendlyName,
             };
 
             if (HoverItem.RefineAdded > 0)
@@ -6522,6 +6523,33 @@ namespace Client.MirScenes
             }
 
             #endregion
+
+            #region DCDamage
+
+            minValue = 0;
+            maxValue = realItem.DCDamage;
+            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.DCDamage : 0;
+
+            if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
+            {
+                count++;
+                MirLabel DCDAMAGELabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    //Text = string.Format("Critical Damage + {0}", minValue + addValue)
+                    Text = string.Format(addValue > 0 ? "攻击伤害: + {0} (+{1})" : "攻击伤害: + {0}", minValue + maxValue, addValue)
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DCDAMAGELabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DCDAMAGELabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+
 
             #region Reflect
 
@@ -8111,7 +8139,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingSeconds > 0 ? string.Format("Expires in {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : "Expired"
+                    Text = remainingSeconds > 0 ? string.Format("过期时间 {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : "过期"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, EXPIRELabel.DisplayRectangle.Right + 4),
@@ -8131,7 +8159,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "Item rented from: " + HoverItem.RentalInformation.OwnerName
+                    Text = "租用: " + HoverItem.RentalInformation.OwnerName
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
@@ -8147,7 +8175,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingTime > 0 ? string.Format("Rental expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental expired"
+                    Text = remainingTime > 0 ? string.Format("租期到: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental expired"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
@@ -8164,7 +8192,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingTime > 0 ? string.Format("Rental lock expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental lock expired"
+                    Text = remainingTime > 0 ? string.Format("出租锁到期: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental lock expired"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RentalLockLabel.DisplayRectangle.Right + 4),
@@ -10324,7 +10352,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage(string.Format("{0} 在 {1} 秒内不能被使用.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                    GameScene.Scene.OutputMessage(string.Format("{0} 在 {1} 秒内不能被使用.", magic.Name, ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                 }
 
                 User.ClearMagic();

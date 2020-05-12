@@ -2639,6 +2639,7 @@ namespace Server.MirObjects
             Agility = Settings.ClassBaseStats[(byte)Class].StartAgility;
             CriticalRate = Settings.ClassBaseStats[(byte)Class].StartCriticalRate;
             CriticalDamage = Settings.ClassBaseStats[(byte)Class].StartCriticalDamage;
+            DCDamage = 0;
             //Other Stats;
             MaxBagWeight = 0;
             MaxWearWeight = 0;
@@ -10489,7 +10490,12 @@ namespace Server.MirObjects
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.CriticalDamage / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
+            if (attacker.DCDamage > 0)
+            {
 
+                damage += ((damage / 100) * Settings.MentorDamageBoost);
+
+            }
             if (MagicShield)
             {
                 MagicShieldTime -= (damage - armour) * 60;
@@ -14481,7 +14487,7 @@ namespace Server.MirObjects
         {
             if (!player.IsMember(this) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, HP = this.HP, MaxHP = this.MaxHP, Expire = time });
         }
 
         public override void ReceiveChat(string text, ChatType type)
@@ -15755,13 +15761,13 @@ namespace Server.MirObjects
             NextGroupInviteTime = Envir.Time + Settings.GroupInviteDelay;
             if (GroupMembers != null && GroupMembers[0] != this)
             {
-                ReceiveChat("You are not the group leader.", ChatType.System);
+                ReceiveChat("你不是组长.", ChatType.System);
                 return;
             }
 
             if (GroupMembers != null && GroupMembers.Count >= Globals.MaxGroup)
             {
-                ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                ReceiveChat("您的组已经拥有成员的最大数量.", ChatType.System);
                 return;
             }
 
@@ -15769,30 +15775,30 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(name + " could not be found.", ChatType.System);
+                ReceiveChat(name + " 找不到.", ChatType.System);
                 return;
             }
             if (player == this)
             {
-                ReceiveChat("You cannot group yourself.", ChatType.System);
+                ReceiveChat("无法添加自己.", ChatType.System);
                 return;
             }
 
             if (!player.AllowGroup)
             {
-                ReceiveChat(name + " is not allowing group.", ChatType.System);
+                ReceiveChat(name + " 不允许组队.可输入@允许组队 命令开启", ChatType.System);
                 return;
             }
 
             if (player.GroupMembers != null)
             {
-                ReceiveChat(name + " is already in another group.", ChatType.System);
+                ReceiveChat(name + " 已经在另一组队.", ChatType.System);
                 return;
             }
 
             if (player.GroupInvitation != null)
             {
-                ReceiveChat(name + " is already receiving an invite from another player.", ChatType.System);
+                ReceiveChat(name + " 已经接收到来自另一个玩家的邀请.", ChatType.System);
                 return;
             }
 
@@ -15805,15 +15811,14 @@ namespace Server.MirObjects
         {
             if (GroupMembers == null)
             {
-                ReceiveChat("You are not in a group.", ChatType.System);
+                ReceiveChat("你在组队里.", ChatType.System);
                 return;
             }
             if (GroupMembers[0] != this)
             {
-                ReceiveChat("You are not the group leader.", ChatType.System);
+                ReceiveChat("你不是组长.", ChatType.System);
                 return;
             }
-
             PlayerObject player = null;
 
             for (int i = 0; i < GroupMembers.Count; i++)
@@ -15826,7 +15831,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(name + " is not in your group.", ChatType.System);
+                ReceiveChat(name + " 不在你的小组里.", ChatType.System);
                 return;
             }
 
@@ -15853,46 +15858,46 @@ namespace Server.MirObjects
         {
             if (GroupInvitation == null)
             {
-                ReceiveChat("You have not been invited to a group.", ChatType.System);
+                ReceiveChat("你没有被邀请到一个组队.", ChatType.System);
                 return;
             }
 
             if (!accept)
             {
-                GroupInvitation.ReceiveChat(Name + " has declined your group invite.", ChatType.System);
+                GroupInvitation.ReceiveChat(Name + " 谢绝组队邀请.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupMembers != null)
             {
-                ReceiveChat(string.Format("You can no longer join {0}'s group", GroupInvitation.Name), ChatType.System);
+                ReceiveChat(string.Format("不能再加入{0} 分组", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers[0] != GroupInvitation)
             {
-                ReceiveChat(GroupInvitation.Name + " is no longer the group leader.", ChatType.System);
+                ReceiveChat(GroupInvitation.Name + " 不再是组长.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers.Count >= Globals.MaxGroup)
             {
-                ReceiveChat(GroupInvitation.Name + "'s group already has the maximum number of members.", ChatType.System);
+                ReceiveChat(GroupInvitation.Name + " 组队已经拥有成员的最大数目.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
             if (!GroupInvitation.AllowGroup)
             {
-                ReceiveChat(GroupInvitation.Name + " is not on allow group.", ChatType.System);
+                ReceiveChat(GroupInvitation.Name + " 不允许组队.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
             if (GroupInvitation.Node == null)
             {
-                ReceiveChat(GroupInvitation.Name + " no longer online.", ChatType.System);
+                ReceiveChat(GroupInvitation.Name + " 不再在线.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
@@ -15918,14 +15923,14 @@ namespace Server.MirObjects
 
                 byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
 
-                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
-                Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
+                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, HP = this.HP, MaxHP = this.MaxHP, Expire = time });
+                Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, HP = this.HP, MaxHP = this.MaxHP, Expire = time });
 
                 for (int j = 0; j < member.Pets.Count; j++)
                 {
                     MonsterObject pet = member.Pets[j];
 
-                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, HP = this.HP, MaxHP = this.MaxHP, Expire = time });
                 }
             }
 
@@ -19696,19 +19701,19 @@ namespace Server.MirObjects
 
             if (Info.Mentor != 0)
             {
-                ReceiveChat("You already have a Mentor.", ChatType.System);
+                ReceiveChat("你已经有导师了.", ChatType.System);
                 return;
             }
 
             if (Info.Name == Name)
             {
-                ReceiveChat("You can't Mentor yourself.", ChatType.System);
+                ReceiveChat("你不能指导自己.", ChatType.System);
                 return;
             }
 
             if (Info.MentorDate > DateTime.Now)
             {
-                ReceiveChat("You can't start a new Mentorship yet.", ChatType.System);
+                ReceiveChat("你还不能开始一个新的导师制.", ChatType.System);
                 return;
             }
 
@@ -19716,7 +19721,7 @@ namespace Server.MirObjects
 
             if (Mentor == null)
             {
-                ReceiveChat(String.Format("Can't find anybody by the name {0}.", Name), ChatType.System);
+                ReceiveChat(String.Format("找不到名字的人 {0}.", Name), ChatType.System);
             }
             else
             {
@@ -19724,36 +19729,36 @@ namespace Server.MirObjects
 
                 if (!Mentor.AllowMentor)
                 {
-                    ReceiveChat(String.Format("{0} is not allowing Mentor requests.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0} 不允许导师请求.", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Mentor.Info.MentorDate > DateTime.Now)
                 {
-                    ReceiveChat(String.Format("{0} can't start another Mentorship yet.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0} 还不能开始另一个辅导.", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Mentor.Info.Mentor != 0)
                 {
-                    ReceiveChat(String.Format("{0} is already a Mentor.", Mentor.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0} 已经是导师了.", Mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Info.Class != Mentor.Info.Class)
                 {
-                    ReceiveChat("You can only be mentored by someone of the same Class.", ChatType.System);
+                    ReceiveChat("你只能由同职业的人指导.", ChatType.System);
                     return;
                 }
                 if ((Info.Level + Settings.MentorLevelGap) > Mentor.Level)
                 {
-                    ReceiveChat(String.Format("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(String.Format("你只能由至少比你高{0}级的人指导.", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
                 Mentor.MentorRequest = this;
                 Mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
-                ReceiveChat(String.Format("Request Sent."), ChatType.System);
+                ReceiveChat(String.Format("请求已发送."), ChatType.System);
             }
 
         }
@@ -19768,14 +19773,14 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MentorRequest.ReceiveChat(string.Format("{0} has refused to Mentor you.", Info.Name), ChatType.System);
+                MentorRequest.ReceiveChat(string.Format("{0} 拒绝指导你.", Info.Name), ChatType.System);
                 MentorRequest = null;
                 return;
             }
 
             if (Info.Mentor != 0)
             {
-                ReceiveChat("You already have a Student.", ChatType.System);
+                ReceiveChat("你已经有一个徒弟了.", ChatType.System);
                 return;
             }
 
@@ -19784,24 +19789,24 @@ namespace Server.MirObjects
 
             if (Student == null)
             {
-                ReceiveChat(String.Format("{0} is no longer online.", Student.Name), ChatType.System);
+                ReceiveChat(String.Format("{0} 离线", Student.Name), ChatType.System);
                 return;
             }
             else
             {
                 if (Student.Info.Mentor != 0)
                 {
-                    ReceiveChat(String.Format("{0} already has a Mentor.", Student.Info.Name), ChatType.System);
+                    ReceiveChat(String.Format("{0} 已经有导师了.", Student.Info.Name), ChatType.System);
                     return;
                 }
                 if (Info.Class != Student.Info.Class)
                 {
-                    ReceiveChat("You can only mentor someone of the same Class.", ChatType.System);
+                    ReceiveChat("你只能辅导同一职业的人.", ChatType.System);
                     return;
                 }
                 if ((Info.Level - Settings.MentorLevelGap) < Student.Level)
                 {
-                    ReceiveChat(String.Format("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(String.Format("您只能指导至少低于{0}级别的人.", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
@@ -19812,8 +19817,8 @@ namespace Server.MirObjects
                 Student.Info.MentorDate = DateTime.Now;
                 Info.MentorDate = DateTime.Now;
 
-                ReceiveChat(String.Format("You're now the Mentor of {0}.", Student.Info.Name), ChatType.System);
-                Student.ReceiveChat(String.Format("You're now being Mentored by {0}.", Info.Name), ChatType.System);
+                ReceiveChat(String.Format("你现在是 {0}.", Student.Info.Name), ChatType.System);
+                Student.ReceiveChat(String.Format("你现在的导师是 {0}.", Info.Name), ChatType.System);
                 GetMentor(false);
                 Student.GetMentor(false);
             }
@@ -19839,7 +19844,7 @@ namespace Server.MirObjects
                     if (CheckOnline)
                     {
                         player.GetMentor(false);
-                        player.ReceiveChat(String.Format("{0} has come online.", Info.Name), ChatType.System);
+                        player.ReceiveChat(String.Format("{0} 已经上线.", Info.Name), ChatType.System);
                     }
                 }
             }
@@ -19853,7 +19858,7 @@ namespace Server.MirObjects
 
             if (Mentor == null)
             {
-                MessageQueue.EnqueueDebugging(Name + " is mentored but couldn't find mentor ID " + Info.Mentor);
+                MessageQueue.EnqueueDebugging(Name + " 是导师，但找不到导师ID " + Info.Mentor);
                 return;
             }
 
@@ -19867,7 +19872,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = Mentor.MentorExp });
-                player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
+                player.ReceiveChat(String.Format("{0} 已脱机.", Info.Name), ChatType.System);
             }
         }
 

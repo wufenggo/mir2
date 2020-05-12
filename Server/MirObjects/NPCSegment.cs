@@ -1365,7 +1365,7 @@ namespace Server.MirObjects
                     else
                         newValue = player.MyGuild.Name + " Guild";
                     break;
-
+        
                 default:
                     newValue = string.Empty;
                     break;

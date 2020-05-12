@@ -721,9 +721,9 @@ namespace Server.MirObjects
         {
             base.Spawned();
             ActionTime = Envir.Time + 2000;
-            if (Info.HasSpawnScript && (MessageQueue.Envir.MonsterNPC != null))
+            if (Info.HasSpawnScript && (Envir.MonsterNPC != null))
             {
-                MessageQueue.Envir.MonsterNPC.Call(this, string.Format("[@_SPAWN({0})]", Info.Index));
+                Envir.MonsterNPC.Call(this, string.Format("[@_SPAWN({0})]", Info.Index));
             }
         }
 
@@ -938,9 +938,9 @@ namespace Server.MirObjects
 
             Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (Info.HasDieScript && (MessageQueue.Envir.MonsterNPC != null))
+            if (Info.HasDieScript && (Envir.MonsterNPC != null))
             {
-                MessageQueue.Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
+                Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player)
@@ -961,7 +961,10 @@ namespace Server.MirObjects
 
             PoisonList.Clear();
             Envir.MonsterCount--;
-            CurrentMap.MonsterCount--;
+            if (CurrentMap != null)
+            {
+                CurrentMap.MonsterCount--;
+            }
         }
 
         public void Revive(uint hp, bool effect)
@@ -2374,6 +2377,13 @@ namespace Server.MirObjects
                 BroadcastDamageIndicator(DamageType.Critical);
             }
 
+            if(attacker.DCDamage > 0)
+            {
+                damage += ((damage / 100) * Settings.MentorDamageBoost);
+
+
+            }
+
             if (attacker.LifeOnHit > 0)
                 attacker.ChangeHP(attacker.LifeOnHit);
 
@@ -3294,7 +3304,7 @@ namespace Server.MirObjects
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, HP = this.HP, MaxHP = this.MaxHP, Expire = time });
         }
 
         public void PetExp(uint amount)

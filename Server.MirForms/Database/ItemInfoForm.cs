@@ -170,7 +170,7 @@ namespace Server
                 CriticalDamagetextBox.Text = string.Empty;
                 CriticalRatetextBox.Text = string.Empty;
                 ReflecttextBox.Text = string.Empty;
-
+                DCDamagetextBox.Text = string.Empty;
                 LevelBasedcheckbox.Checked = false;
                 ClassBasedcheckbox.Checked = false;
 
@@ -271,7 +271,7 @@ namespace Server
             CriticalRatetextBox.Text = info.CriticalRate.ToString();
             CriticalDamagetextBox.Text = info.CriticalDamage.ToString();
             ReflecttextBox.Text = info.Reflect.ToString();
-
+            DCDamagetextBox.Text = info.DCDamage.ToString();
             LevelBasedcheckbox.Checked = info.LevelBased;
             ClassBasedcheckbox.Checked = info.ClassBased;
 
@@ -378,6 +378,7 @@ namespace Server
                 if (HpDrainRatetextBox.Text != info.HpDrainRate.ToString()) HpDrainRatetextBox.Text = string.Empty;
                 if (CriticalRatetextBox.Text != info.CriticalRate.ToString()) CriticalRatetextBox.Text = string.Empty;
                 if (CriticalDamagetextBox.Text != info.CriticalDamage.ToString()) CriticalDamagetextBox.Text = string.Empty;
+                if (DCDamagetextBox.Text != info.DCDamage.ToString()) DCDamagetextBox.Text = string.Empty;
                 if (ReflecttextBox.Text != info.Reflect.ToString()) ReflecttextBox.Text = string.Empty;
                 if (LevelBasedcheckbox.Checked != info.LevelBased) LevelBasedcheckbox.CheckState = CheckState.Indeterminate;
                 if (ClassBasedcheckbox.Checked != info.ClassBased) ClassBasedcheckbox.CheckState = CheckState.Indeterminate;
@@ -1795,6 +1796,24 @@ namespace Server
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].Bind =
                     (noMailBox.Checked ? _selectedItemInfos[i].Bind |= BindMode.NoMail : _selectedItemInfos[i].Bind ^= BindMode.NoMail);
+        }
+
+        private void DCDamagetextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedItemInfos.Count; i++)
+                _selectedItemInfos[i].DCDamage = temp;
         }
     }
 }

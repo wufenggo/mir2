@@ -32,10 +32,10 @@ namespace Client.MirObjects
             _effect = new MirAnimatedControl()
             {
                 Animated = true,
-                AnimationCount = 10,
+                AnimationCount = 25,
                 AnimationDelay = 100,
-                Index = 0,
-                Library = Libraries.ItemEffects,
+                Index = 680,
+                Library = Libraries.StateEffect,
                 Loop = true,
                 Blending = true,
             };
@@ -150,7 +150,19 @@ namespace Client.MirObjects
                         _effect.ForeColour = Color.Lime;
                         break;
                 }
-                Libraries.ItemEffects.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X, DrawLocation.Y), _effect.BackColour, true, 10F);
+                if (Size.Width > 30)
+                {
+                    _effect.Index = 840;
+                    _effect.AnimationCount = 9;
+                    _effect.AnimationDelay = 150;
+                    Libraries.StateEffect.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X - (Size.Width / 2) + 10, DrawLocation.Y + (Size.Height / 2) + 20), _effect.BackColour, true, 10F);
+                }
+                else
+                {
+                    _effect.Index = 680;
+                    _effect.AnimationCount = 25;
+                    Libraries.StateEffect.DrawBlend(0 + _effect.Index, new Point(DrawLocation.X + (Size.Width / 2), DrawLocation.Y + (Size.Height / 2)), _effect.BackColour, true, 10F);
+                }
             }
         }
 

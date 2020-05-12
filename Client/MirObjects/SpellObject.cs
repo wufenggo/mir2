@@ -177,7 +177,7 @@ namespace Client.MirObjects
                         DrawFrame = 965;
                         FrameInterval = 100;
                         FrameCount = 8;
-                        Repeat = false;
+                        Repeat = true;
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace Client.MirObjects
                     //Light = 1;
                     Blend = true;
                     break;
-                case Spell.MonFireCircle://鬼头
+                case Spell.MonFireCircle://鬼圈
                     BodyLibrary = Libraries.Monsters[(ushort)Monster.Monster446];
                     DrawFrame = 1366;
                     FrameInterval = 100;
@@ -197,7 +197,7 @@ namespace Client.MirObjects
                     Repeat = true;
                     if (info.Param)
                     {
-                        MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1380, 4, 400, CurrentLocation) { Blend = true });
+                        MapControl.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1370, 4, 400, CurrentLocation) { Blend = true });
                     }
                     //Light = 1;
                     Blend = true;

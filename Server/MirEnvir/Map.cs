@@ -1527,7 +1527,7 @@ namespace Server.MirEnvir
                                         {
                                             if (target.Undead)
                                             {
-                                                target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
+                                                target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = magic.Level + 2, TickSpeed = 1000 }, player);
                                             }
                                             break;
                                         }

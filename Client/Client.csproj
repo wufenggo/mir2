@@ -42,7 +42,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\韩服传2\Client\</OutputPath>
+    <OutputPath>D:\韩服传2\Client\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>1</WarningLevel>
@@ -230,6 +230,7 @@
     <Compile Include="Utils\BrowserHelper.cs" />
     <EmbeddedResource Include="AMain.resx">
       <DependentUpon>AMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CMain.resx">
       <DependentUpon>CMain.cs</DependentUpon>

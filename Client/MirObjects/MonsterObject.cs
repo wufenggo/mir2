@@ -3442,12 +3442,12 @@ namespace Client.MirObjects
 
                                                 break;
                                             case Monster.Monster446://昆仑终极BOSS
-                                                missile = CreateProjectile(1176, Libraries.Monsters[(ushort)Monster.Monster446], true, 6, 20, -6);
+                                                missile = CreateProjectile(1118, Libraries.Monsters[(ushort)Monster.Monster446], true, 6, 20, 0);
                                                 if (missile.Target != null)
                                                 {
                                                     missile.Complete += (o, e) =>
                                                     {
-                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1178, 8, 800, missile.Target));
+                                                        missile.Target.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.Monster446], 1172, 8, 800, missile.Target));
                                                     };
                                                 }
                                                 break;

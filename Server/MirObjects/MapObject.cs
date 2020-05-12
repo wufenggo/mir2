@@ -75,7 +75,7 @@ namespace Server.MirObjects
         public ushort CurrentBagWeight,
                       MaxBagWeight;
 
-        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack;
+        public byte MagicResist, PoisonResist, HealthRecovery, SpellRecovery, PoisonRecovery, CriticalRate, CriticalDamage, Holy, Freezing, PoisonAttack, DCDamage;
 
         public long CellTime, BrownTime, PKPointTime, LastHitTime, EXPOwnerTime;
         public Color NameColour = Color.White;
@@ -648,7 +648,7 @@ namespace Server.MirObjects
             if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            Packet p = new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
+            Packet p = new S.ObjectHealth { ObjectID = ObjectID, HP = this.Health, MaxHP = this.MaxHealth, Expire = time };
 
             if (Envir.Time < RevTime)
             {

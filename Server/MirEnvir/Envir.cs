@@ -55,7 +55,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
 
-        public const int Version = 99;
+        public const int Version = 100;
 
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
@@ -2717,6 +2717,7 @@ namespace Server.MirEnvir
             if (stat.PoisonRecovChance > 0 && Random.Next(stat.PoisonRecovChance) == 0) item.PoisonRecovery = (byte)(RandomomRange(stat.PoisonRecovMaxStat-1, stat.PoisonRecovStatChance)+1);
             if (stat.CriticalRateChance > 0 && Random.Next(stat.CriticalRateChance) == 0) item.CriticalRate = (byte)(RandomomRange(stat.CriticalRateMaxStat-1, stat.CriticalRateStatChance)+1);
             if (stat.CriticalDamageChance > 0 && Random.Next(stat.CriticalDamageChance) == 0) item.CriticalDamage = (byte)(RandomomRange(stat.CriticalDamageMaxStat-1, stat.CriticalDamageStatChance)+1);
+
             if (stat.FreezeChance > 0 && Random.Next(stat.FreezeChance) == 0) item.Freezing = (byte)(RandomomRange(stat.FreezeMaxStat-1, stat.FreezeStatChance)+1);
             if (stat.PoisonAttackChance > 0 && Random.Next(stat.PoisonAttackChance) == 0) item.PoisonAttack = (byte)(RandomomRange(stat.PoisonAttackMaxStat-1, stat.PoisonAttackStatChance)+1);
             if (stat.AttackSpeedChance > 0 && Random.Next(stat.AttackSpeedChance) == 0) item.AttackSpeed = (sbyte)(RandomomRange(stat.AttackSpeedMaxStat-1, stat.AttackSpeedStatChance)+1);
@@ -2791,9 +2792,21 @@ namespace Server.MirEnvir
         {
             if (instanceValue < 0) instanceValue = 0;
             if (instanceValue > 0) instanceValue--;
+            List<Map> list = new List<Map>();
+            foreach (Map m in MapList)
+            {
+                if (String.Equals(m.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    list.Add(m);
+                }
+            }
 
-            var instanceMapList = MapList.Where(t => string.Equals(t.Info.FileName, name, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            return instanceValue < instanceMapList.Count() ? instanceMapList[instanceValue] : null;
+            if (instanceValue < list.Count)
+            {
+                return list[instanceValue];
+            }
+
+            return null;
         }
 
         public MapObject GetObject(uint objectID)
