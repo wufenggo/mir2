@@ -113,7 +113,8 @@ namespace Server.MirObjects
             if (!Directory.Exists(Settings.NPCPath)) return;
 
             string fileName = Path.Combine(Settings.NPCPath, Info.FileName + ".txt");
-
+            if (Info.FileName.Contains("-Event-"))
+                fileName = Path.Combine(Settings.EventsPath, Info.FileName);
             if (File.Exists(fileName))
             {
                 List<string> lines = File.ReadAllLines(fileName).ToList();

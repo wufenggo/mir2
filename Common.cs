@@ -8,7 +8,14 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
-
+public enum EventType : sbyte
+{
+    None = 0,
+    MonsterSlay = 1,
+    Invasion = 2,
+    DailyBoss = 3,
+    WeeklyBoss = 4
+}
 public enum PanelType : byte
 {
     Buy = 0,
@@ -170,7 +177,8 @@ public enum DefaultNPCType : byte
     OnAcceptQuest,
     OnFinishQuest,
     Daily,
-    TalkMonster
+    TalkMonster,
+     EventReward
 }
 
 public enum IntelligentCreatureType : byte
@@ -1630,6 +1638,10 @@ public enum ServerPacketIds : short
     OpenBrowser,
     ObjectMonsterChange,
         BlizzardStopTime,
+    LeavePublicEvent,
+    ActivateEvent,
+    DeactivateEvent,
+    EnterPublicEvent
 }
 
 public enum ClientPacketIds : short
@@ -5391,6 +5403,14 @@ public abstract class Packet
                 return new S.NewRecipeInfo();
             case (short)ServerPacketIds.OpenBrowser:
                 return new S.OpenBrowser();
+            case (short)ServerPacketIds.LeavePublicEvent:
+                return new S.LeavePublicEvent();
+            case (short)ServerPacketIds.ActivateEvent:
+                return new S.ActivateEvent();
+            case (short)ServerPacketIds.DeactivateEvent:
+                return new S.DeactivateEvent();
+            case (short)ServerPacketIds.EnterPublicEvent:
+                return new S.EnterOrUpdatePublicEvent();
             default:
                 return null;
         }
@@ -6502,6 +6522,68 @@ public class ItemRentalInformation
     }
 }
 
+
+public class MonsterEventObjective
+{
+    public string MonsterName;
+    public int MonsterTotalCount;
+    public int MonsterAliveCount;
+    public MonsterEventObjective()
+    {
+
+    }
+    public MonsterEventObjective(BinaryReader reader)
+    {
+        MonsterName = reader.ReadString();
+        MonsterTotalCount = reader.ReadInt32();
+        MonsterAliveCount = reader.ReadInt32();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MonsterName);
+        writer.Write(MonsterTotalCount);
+        writer.Write(MonsterAliveCount);
+    }
+
+
+}
+public class MapEventClientSide
+{
+    public int Index;
+    public Point Location;
+    public int Size;
+    public bool IsActive;
+    public string EventName;
+    public EventType EventType = EventType.MonsterSlay;
+    public MapEventClientSide()
+    {
+
+    }
+    public MapEventClientSide(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Size = reader.ReadInt32();
+        IsActive = reader.ReadBoolean();
+        EventName = reader.ReadString();
+
+        int x = reader.ReadInt32();
+        int y = reader.ReadInt32();
+        Location = new Point(x, y);
+
+        EventType = (EventType)reader.ReadSByte();
+    }
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Size);
+        writer.Write(IsActive);
+        writer.Write(EventName);
+
+        writer.Write(Location.X);
+        writer.Write(Location.Y);
+        writer.Write((sbyte)EventType);
+    }
+}
 public class ClientRecipeInfo
 {
     public UserItem Item;
@@ -6511,6 +6593,7 @@ public class ClientRecipeInfo
     {
 
     }
+
 
     public ClientRecipeInfo(BinaryReader reader)
     {
@@ -7355,7 +7438,7 @@ public class GameLanguage
         reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
     }
-
+    
 
     //增加一个安全区，用于客户端在安全区进行穿人
     //安全区域

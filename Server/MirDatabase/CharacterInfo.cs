@@ -85,7 +85,8 @@ namespace Server.MirDatabase
         public List<Poison> Poisons = new List<Poison>();
         public List<MailInfo> Mail = new List<MailInfo>();
         public List<FriendInfo> Friends = new List<FriendInfo>();
-
+        public List<int> DailyEventsCompleted = new List<int>();
+        public List<int> WeeklyEventsCompleted = new List<int>();
         //IntelligentCreature
         public List<UserIntelligentCreature> IntelligentCreatures = new List<UserIntelligentCreature>();
         public int PearlCount;
@@ -367,6 +368,22 @@ namespace Server.MirDatabase
                     GSpurchases.Add(reader.ReadInt32(), reader.ReadInt32());
                 }
             }
+            if (Envir.LoadCustomVersion >= 1)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    int dailyEvent = reader.ReadInt32();
+                    DailyEventsCompleted.Add(dailyEvent);
+                }
+
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    int weeklyEvent = reader.ReadInt32();
+                    WeeklyEventsCompleted.Add(weeklyEvent);
+                }
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -517,6 +534,13 @@ namespace Server.MirDatabase
                 writer.Write(item.Key);
                 writer.Write(item.Value);
             }
+            writer.Write(DailyEventsCompleted.Count);
+            for (int i = 0; i < DailyEventsCompleted.Count; i++)
+                writer.Write(DailyEventsCompleted[i]);
+
+            writer.Write(WeeklyEventsCompleted.Count);
+            for (int i = 0; i < WeeklyEventsCompleted.Count; i++)
+                writer.Write(WeeklyEventsCompleted[i]);
         }
 
         public SelectInfo ToSelectInfo()

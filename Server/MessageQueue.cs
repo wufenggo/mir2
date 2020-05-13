@@ -15,9 +15,9 @@ namespace Server
         }
         public static readonly Envir Envir = new Envir(), EditEnvir = new Envir();
         
-        public readonly ConcurrentQueue<string> MessageLog = new ConcurrentQueue<string>();
-        public readonly ConcurrentQueue<string> DebugLog = new ConcurrentQueue<string>();
-        public readonly ConcurrentQueue<string> ChatLog = new ConcurrentQueue<string>();
+        public static readonly ConcurrentQueue<string> MessageLog = new ConcurrentQueue<string>();
+        public static readonly ConcurrentQueue<string> DebugLog = new ConcurrentQueue<string>();
+        public static readonly ConcurrentQueue<string> ChatLog = new ConcurrentQueue<string>();
 
         public MessageQueue()
         {
@@ -32,7 +32,7 @@ namespace Server
                                String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
         }
 
-        public void EnqueueDebugging(string msg)
+        public static void EnqueueDebugging(string msg)
         {
             if (DebugLog.Count < 100)
                 DebugLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));

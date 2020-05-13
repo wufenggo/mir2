@@ -54,6 +54,7 @@ namespace Server.MirDatabase
             }
             else
             {
+                
                 RespawnIndex = ++Envir.RespawnIndex;
             }
         }

@@ -414,6 +414,7 @@ namespace ServerPackets
         public LightSetting Lights;
         public bool Lightning, Fire;
         public byte MapDarkLight;
+        public List<MapEventClientSide> MapEvents = new List<MapEventClientSide>();
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -427,6 +428,9 @@ namespace ServerPackets
             if ((bools & 0x02) == 0x02) Fire = true;
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                MapEvents.Add(new MapEventClientSide(reader));
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -442,6 +446,9 @@ namespace ServerPackets
             writer.Write(bools);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+            writer.Write(MapEvents.Count);
+            foreach (var mapEvent in MapEvents)
+                mapEvent.Save(writer);
         }
     }
     public sealed class UserInformation : Packet
@@ -2586,9 +2593,10 @@ namespace ServerPackets
         public Point Location;
         public MirDirection Direction;
         public byte MapDarkLight;
+        public List<MapEventClientSide> MapEvents = new List<MapEventClientSide>();
         //地图信息增加安全区,用于客户端判断是否在安全区，在安全区则可以穿人，穿怪
         //安全区域
-       
+
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -2601,6 +2609,9 @@ namespace ServerPackets
             Direction = (MirDirection)reader.ReadByte();
             MapDarkLight = reader.ReadByte();
             Music = reader.ReadUInt16();
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+                MapEvents.Add(new MapEventClientSide(reader));
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -2614,6 +2625,9 @@ namespace ServerPackets
             writer.Write((byte)Direction);
             writer.Write(MapDarkLight);
             writer.Write(Music);
+            writer.Write(MapEvents.Count);
+            foreach (var mapEvent in MapEvents)
+                mapEvent.Save(writer);
         }
     }
     public sealed class ObjectTeleportOut : Packet
@@ -5778,6 +5792,98 @@ namespace ServerPackets
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Url);
+        }
+    }
+    public sealed class EnterOrUpdatePublicEvent : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.EnterPublicEvent; } }
+
+        public string EventName = string.Empty;
+        public string ObjectiveMessage = string.Empty;
+        public List<MonsterEventObjective> Objectives = new List<MonsterEventObjective>();
+        public int Stage = 0;
+        public EventType Type = EventType.None;
+        public EnterOrUpdatePublicEvent()
+        {
+
+        }
+        public EnterOrUpdatePublicEvent(string eventName, EventType type, string objective, int stage, List<MonsterEventObjective> monsters)
+        {
+            EventName = eventName;
+            ObjectiveMessage = objective;
+            Stage = stage;
+            Type = type;
+            Objectives = monsters;
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            EventName = reader.ReadString();
+            ObjectiveMessage = reader.ReadString();
+            Stage = reader.ReadInt32();
+
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                Objectives.Add(new MonsterEventObjective(reader));
+            }
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(EventName);
+            writer.Write(ObjectiveMessage);
+            writer.Write(Stage);
+            writer.Write(Objectives.Count);
+
+            foreach (var obj in Objectives)
+                obj.Save(writer);
+        }
+    }
+    public sealed class LeavePublicEvent : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.LeavePublicEvent; } }
+
+        public string EventName;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            EventName = reader.ReadString();
+
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(EventName);
+        }
+    }
+    public sealed class ActivateEvent : Packet
+    {
+        public MapEventClientSide Event;
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ActivateEvent; }
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Event = new MapEventClientSide(reader);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Event.Save(writer);
+        }
+    }
+    public sealed class DeactivateEvent : Packet
+    {
+        public MapEventClientSide Event;
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.DeactivateEvent; }
+        }
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Event = new MapEventClientSide(reader);
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Event.Save(writer);
         }
     }
 }
