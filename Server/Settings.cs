@@ -260,6 +260,7 @@ namespace Server
                     ManaRegenWeight = 10,
                     MaxPoisonRecovery = 6,
                     MaxLuck = 10;
+        
 
         public static Boolean PvpCanResistMagic = false,
                               PvpCanResistPoison = false,
@@ -431,7 +432,7 @@ namespace Server
             ManaRegenWeight = Reader.ReadByte("Items", "ManaRegenWeight", ManaRegenWeight);
             MaxPoisonRecovery = Reader.ReadByte("Items", "MaxPoisonRecovery", MaxPoisonRecovery);
             MaxLuck = Reader.ReadByte("Items", "MaxLuck", MaxLuck);
-
+            
             PvpCanResistMagic = Reader.ReadBoolean("Items","PvpCanResistMagic",PvpCanResistMagic);
             PvpCanResistPoison = Reader.ReadBoolean("Items", "PvpCanResistPoison", PvpCanResistPoison);
             PvpCanFreeze = Reader.ReadBoolean("Items", "PvpCanFreeze", PvpCanFreeze);

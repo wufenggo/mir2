@@ -235,12 +235,12 @@ namespace Server.MirObjects
         }
 
         public abstract void SetOperateTime();
-
+        
         public int GetAttackPower(int min, int max)
         {
             if (min < 0) min = 0;
             if (min > max) max = min;
-
+            
             if (Luck > 0)
             {
                 if (Luck > Envir.Random.Next(Settings.MaxLuck))

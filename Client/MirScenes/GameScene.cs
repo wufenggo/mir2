@@ -6543,8 +6543,8 @@ namespace Client.MirScenes
 
             #region DCDamage
 
-            minValue = 0;
-            maxValue = realItem.DCDamage;
+            minValue = realItem.DCDamage;
+            maxValue = 0;
             addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.DCDamage : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))

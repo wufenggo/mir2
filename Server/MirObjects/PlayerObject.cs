@@ -7391,7 +7391,14 @@ namespace Server.MirObjects
 
             MonsterInfo info = Envir.GetMonsterInfo(Settings.CloneName);
             if (info == null) return;
+            //if (info.Effect == 1)
+            //{
 
+            //    info.MaxAC = (ushort)(info.MaxAC * 2);
+            //    info.MaxMAC = (ushort)(info.MaxMAC * 2);
+            //    info.MaxDC = (ushort)(info.MaxDC * 2);
+            //    info.MaxMC = (ushort)(info.MaxMC * 20);
+            //}
 
             LevelMagic(magic);
 
@@ -7489,6 +7496,7 @@ namespace Server.MirObjects
 
             int damage = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
 
+
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target);
@@ -7557,11 +7565,28 @@ namespace Server.MirObjects
             if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
 
             UserItem item = GetAmulet(5);
+            
             if (item == null) return;
 
             MonsterInfo info = Envir.GetMonsterInfo(Settings.ShinsuName);
             if (info == null) return;
+            //else
+            //{
+            //    MonsterInfo info1 = Envir.GetMonsterInfo(Settings.ShinsuName);
+            //    UserItem item1 = GetSkllItem(1);
+            //    if (item1 == null) return;
+            //    if (item1.Info.DCDamage == 1)
 
+            //    {
+
+            //        info.MaxMAC = (ushort)(info.MaxMAC * 20);
+            //        info.MaxAC = (ushort)(info.MaxAC * 20);
+            //        info.MaxDC = (ushort)(info.MaxDC * 20);
+            //        info.MaxMC = (ushort)(info.MaxMC * 20);
+            //        info.MaxSC = (ushort)(info.MaxSC * 20);
+
+            //    }
+            //}
 
             LevelMagic(magic);
             ConsumeItem(item, 5);
@@ -7740,7 +7765,7 @@ namespace Server.MirObjects
                     Show = true,
                     CurrentMap = CurrentMap,
                 };
-                Packet p = new S.Chat { Message = string.Format("{0} is attempting to revive {1}", Name, target.Name), Type = ChatType.Shout };
+                Packet p = new S.Chat { Message = string.Format("{0} 正在试图复活 {1}", Name, target.Name), Type = ChatType.Shout };
 
                 for (int i = 0; i < CurrentMap.Players.Count; i++)
                 {
@@ -9813,6 +9838,17 @@ namespace Server.MirObjects
             return bait;
         }
 
+        private UserItem GetSkllItem(byte dcdamage=0)
+        {
+            UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
+            if (item != null && item.Info.Type == ItemType.Weapon && item.Info.DCDamage == dcdamage)
+            {
+                return item;
+            }
+            return null;
+        }
+
+
         private UserItem GetFishingItem(FishingSlot type)
         {
             UserItem item = Info.Equipment[(int)EquipmentSlot.Weapon];
@@ -10380,14 +10416,17 @@ namespace Server.MirObjects
             #region Weapon Effects Pete107 26/1/2016//武器效果
             UserItem _item = attacker.Info.Equipment[(int)EquipmentSlot.Weapon];
             Random randy = new Random();
-            if (_item != null && Target != null && randy.Next(0, 100) >= 90)
+
+        
+            if (_item != null && Target != null && randy.Next(0, 100) >= 10)
             {
                 switch (_item.Info.Effect)
                 {
                     case 0:
                         break;
                     case 1:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, CurrentLocation);
+                       CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.FatalSword }, CurrentLocation);
+                       
                         break;
                     case 2:
                         CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
@@ -17740,7 +17779,7 @@ namespace Server.MirObjects
                     GainQuestItem(item);
                     quest.ProcessItem(Info.QuestInventory);
 
-                    Enqueue(new S.SendOutputMessage { Message = string.Format("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
+                    Enqueue(new S.SendOutputMessage { Message = string.Format("你发现了 {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
 
                     SendUpdateQuest(quest, QuestState.Update);
 
@@ -17775,7 +17814,7 @@ namespace Server.MirObjects
             {
                 quest.ProcessKill(mInfo);
 
-                Enqueue(new S.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
+                Enqueue(new S.SendOutputMessage { Message = string.Format("你杀死了 {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
             }

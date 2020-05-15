@@ -8,6 +8,18 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+
+[Flags]
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public enum ItemSkill : byte
+{
+    None = 0,
+    sk1=1
+
+
+}
+
+
 public enum EventType : sbyte
 {
     None = 0,
