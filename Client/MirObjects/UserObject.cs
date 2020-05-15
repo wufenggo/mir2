@@ -69,7 +69,30 @@ namespace Client.MirObjects
         public MapObject NextMagicObject;
         public MirDirection NextMagicDirection;
         public QueuedAction QueuedAction;
+        //增加4个武器自带技能(其实只用到3个吧)
+        public ItemSkill sk1, sk2, sk3, sk4;
 
+        //是否具有某个技能
+        public bool hasItemSk(ItemSkill sk)
+        {
+            if (sk1 == sk)
+            {
+                return true;
+            }
+            if (sk2 == sk)
+            {
+                return true;
+            }
+            if (sk3 == sk)
+            {
+                return true;
+            }
+            if (sk4 == sk)
+            {
+                return true;
+            }
+            return false;
+        }
         public UserObject(uint objectID, MirClass Class)
              : base(objectID, Class)
         {
@@ -347,6 +370,10 @@ namespace Client.MirObjects
             FastRun = false;
             short Macrate = 0, Acrate = 0, HPrate = 0, MPrate = 0;
 
+            sk1 = 0;
+            sk2 = 0;
+            sk3 = 0;
+            sk4 = 0;
             ItemSets.Clear();
             MirSet.Clear();
 
@@ -405,9 +432,25 @@ namespace Client.MirObjects
                 Freezing = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, Freezing + temp.Freezing + RealItem.Freezing)));
                 PoisonAttack = (byte)Math.Max(byte.MinValue, (Math.Min(byte.MaxValue, PoisonAttack + temp.PoisonAttack + RealItem.PoisonAttack)));
                 HpDrainRate = (byte)Math.Max(100, Math.Min(byte.MaxValue, HpDrainRate + RealItem.HpDrainRate));
+                if (temp.sk1 != 0)
+                {
+                    sk1 = temp.sk1;
+                    
+                }
+                if (temp.sk2 != 0)
+                {
+                    sk2 = temp.sk2;
+                }
+                if (temp.sk3 != 0)
+                {
+                    sk3 = temp.sk3;
+                }
+                if (temp.sk4 != 0)
+                {
+                    sk4 = temp.sk4;
+                }
 
 
-                
                 if (RealItem.Light > Light) Light = RealItem.Light;
                 if (RealItem.Unique != SpecialItemMode.None)
                 {

@@ -1656,6 +1656,7 @@ namespace Server.MirObjects
         ClearGuildNameList,
         OpenBrowser,
         GetRandomText,
+        RefreshWeaponSkill,//Ë¢ÎäÆ÷¼¼ÄÜ£¬Õó·¨
 
     }
     public enum CheckType

@@ -8,13 +8,351 @@ using System.Text.RegularExpressions;
 using C = ClientPackets;
 using S = ServerPackets;
 using System.Linq;
+using System.Threading;
 
-[Flags]
+public class RandomUtils
+{
+    private static int seed = Environment.TickCount;
+    private static ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+    //private static Random random = new Random();
+
+
+    public static int Next()
+    {
+        return RandomWrapper.Value.Next();
+    }
+    public static int Next(int maxValue)
+    {
+        return RandomWrapper.Value.Next(maxValue);
+    }
+    public static int Next(int minValue, int maxValue)
+    {
+        return RandomWrapper.Value.Next(minValue, maxValue);
+    }
+    public static double NextDouble()
+    {
+        return RandomWrapper.Value.NextDouble();
+    }
+
+    //最大增加数，增加几率1/x
+    //装备极品是用这个做的做的，所以加1点属性是
+    public static int RandomomRange(int count, int rate)
+    {
+        int x = 0;
+        for (int i = 0; i < count; i++) if (Next(rate) == 0) x++;
+        return x;
+    }
+}
+    //装备自带技能
+    [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
 public enum ItemSkill : byte
 {
     None = 0,
-    sk1=1
+    Warrior1 = 11,//战
+    Warrior2 = 12,//战
+    Warrior3 = 13,//战
+    Warrior4 = 14,//战
+    Warrior5 = 15,//战
+    Warrior6 = 16,//战
+    Warrior7 = 17,//战
+    Wizard1 = 21,//法
+    Wizard2 = 22,//法
+    Wizard3 = 23,//法
+    Wizard4 = 24,//法
+    Wizard5 = 25,//法
+    Wizard6 = 26,//法
+    Wizard7 = 27,//法
+    Taoist1 = 31,//道
+    Taoist2 = 32,//道
+    Taoist3 = 33,//道
+    Taoist4 = 34,//道
+    Taoist5 = 35,//道
+    Taoist6 = 36,//道
+    Taoist7 = 37,//道
+    Assassin1 = 41,//刺
+    Assassin2 = 42,//刺
+    Assassin3 = 43,//刺
+    Assassin4 = 44,//刺
+    Assassin5 = 45,//刺
+    Assassin6 = 46,//刺
+    Assassin7 = 47,//刺
+    Archer1 = 51,//弓
+    Archer2 = 52,//弓
+    Archer3 = 53,//弓
+    Archer4 = 54,//弓
+    Archer5 = 55,//弓
+    Archer6 = 56,//弓
+    Archer7 = 57,//弓
+    Comm1 = 1,//通用
+    Comm2 = 2,//通用
+    Comm3 = 3,//通用
+    Comm4 = 4,//通用
+    Comm5 = 5,//通用
+    Comm6 = 6,//通用
+    Comm7 = 7,//通用
+}
+
+//装备自带技能
+public class ItemSkillBean
+{
+    public ItemSkill skid;//技能ID
+    public string skname;//技能名称
+    public string skmemo;//技能描述
+    public RequiredClass reqcls;//职业
+    public byte change;//几率
+    public ItemGrade Grade;//品级，只有大于或等于当前品级的才可以刷出来
+    public static List<ItemSkillBean> list = new List<ItemSkillBean>();
+
+    public ItemSkillBean(ItemSkill skid, string skname, string skmemo, RequiredClass reqcls, byte change,ItemGrade Grade)
+    {
+        this.skid = skid;
+        this.skname = skname;
+        this.skmemo = skmemo;
+        this.reqcls = reqcls;
+        this.change = change;
+        this.Grade = Grade;
+    }
+
+    public static void init()
+    {
+        if (list == null || list.Count == 0)
+        {
+            list.Add(new ItemSkillBean(ItemSkill.Warrior1, "破山阵", "普通攻击几率破防", RequiredClass.战士, 30,ItemGrade.None));
+            //list.Add(new ItemSkillBean(ItemSkill.Warrior2, "半月阵", "提升半月弯刀,狂风斩的伤害", RequiredClass.Warrior, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Warrior4, "雷霆阵", "雷霆攻击几率增加伤害", RequiredClass.Warrior, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Warrior5, "金刚阵", "护身气幕防御，魔域提升", RequiredClass.Warrior, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Warrior7, "天神阵", "几率免疫攻击，日闪几率增加伤害", RequiredClass.Warrior, 5));
+
+            list.Add(new ItemSkillBean(ItemSkill.Wizard1, "迷惑阵", "强化诱惑之光，诱惑宝宝成功率提升", RequiredClass.法师, 30, ItemGrade.None));
+            //list.Add(new ItemSkillBean(ItemSkill.Wizard2, "天罚阵", "雷电术可同时攻击3个目标", RequiredClass.Wizard, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Wizard4, "统治阵", "诱惑宝宝不叛变，下线不死亡", RequiredClass.Wizard, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Wizard5, "分身阵", "强化分身，分身攻击等于本体攻击的", RequiredClass.Wizard, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Wizard7, "法神阵", "强化火雨/火墙技能", RequiredClass.Wizard, 5));
+
+            list.Add(new ItemSkillBean(ItemSkill.Taoist1, "符咒阵", "感悟火符真谛使得火符威力增加", RequiredClass.道士, 30, ItemGrade.Common));
+            //list.Add(new ItemSkillBean(ItemSkill.Taoist2, "骷髅阵", "强化骷髅，召唤出强化骷髅为你做战", RequiredClass.Taoist, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Taoist4, "圣兽阵", "强化神兽，召唤出强化神兽为你做战", RequiredClass.Taoist, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Taoist5, "厚土阵", "魔，防技能魔防提升", RequiredClass.Taoist, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Taoist7, "道尊阵", "施毒术伤害增加，毒云伤害，瘟疫伤害无上限", RequiredClass.Taoist, 5));
+
+            list.Add(new ItemSkillBean(ItemSkill.Assassin1, "月隐阵", "几率增加隐身时间", RequiredClass.刺客, 30, ItemGrade.None));
+            //list.Add(new ItemSkillBean(ItemSkill.Assassin2, "鬼灵阵", "鬼灵步CD减少", RequiredClass.Assassin, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Assassin4, "真气阵", "真气调息-吸蓝效率提升", RequiredClass.Assassin, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Assassin5, "幻像阵", "烈火身，几率增加烈火身伤害量", RequiredClass.Assassin, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Assassin7, "刺皇阵", "血风触发几率提升，火镰狂舞几率增加伤害", RequiredClass.Assassin, 5));
+
+            list.Add(new ItemSkillBean(ItemSkill.Archer1, "气流阵", "气流术恢复气速度增加", RequiredClass.弓箭手, 30, ItemGrade.None));
+            //list.Add(new ItemSkillBean(ItemSkill.Archer2, "爆裂阵", "爆裂箭伤害提升", RequiredClass.Archer, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Archer4, "痹魔阵", "召唤蛤蟆攻防提升", RequiredClass.Archer, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Archer5, "烈火阵", "烈火陷阱伤害提升", RequiredClass.Archer, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Archer7, "箭神阵", "连珠箭法/火龙箭法/白龙箭法几率增加伤害", RequiredClass.Archer, 5));
+
+            //list.Add(new ItemSkillBean(ItemSkill.Comm1, "聚灵阵", "回蓝效率提升", RequiredClass.None, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Comm2, "龙血阵", "回血效率提升", RequiredClass.None, 30));
+            //list.Add(new ItemSkillBean(ItemSkill.Comm4, "噬血阵", "几率吸收周围怪物的血量，回复自身", RequiredClass.None, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Comm5, "迷幻阵", "几率使得周围怪物进入迷幻状态", RequiredClass.None, 15));
+            //list.Add(new ItemSkillBean(ItemSkill.Comm7, "天雷阵", "几率触发雷阵，对身边怪物进行雷阵攻击", RequiredClass.None, 5));
+        }
+    }
+
+    public static ItemSkillBean get(ItemSkill skid)
+    {
+        init();
+        foreach (ItemSkillBean k in list)
+        {
+            if (k.skid == skid)
+            {
+                return k;
+            }
+        }
+        return null;
+    }
+
+
+    //刷武器的阵法
+    //刷前2阵法
+    public static bool RefreshWeaponSkill(UserItem item, MirClass pclass, byte rtype = 0)
+    {
+        init();
+        int change = item.spiritual * 10;
+        if (change <= 5)
+        {
+            change = 40;
+        }
+        //失败几率
+        if (RandomUtils.Next(90) >= change && rtype == 0)
+        {
+            return false;
+        }
+
+        //先擦除原装备阵法,不擦除
+        if (rtype == 0)
+        {
+            //item.sk1 = 0;
+            //item.sk2 = 0;
+        }
+        if (rtype == 1)
+        {
+            //item.sk1 = 0;
+        }
+        if (rtype == 2)
+        {
+            //item.sk2 = 0;
+        }
+        if (rtype == 3)
+        {
+            //item.sk3 = 0;
+        }
+        if (rtype == 4)
+        {
+            //item.sk4 = 0;
+        }
+
+        List<ItemSkillBean> listc = new List<ItemSkillBean>();
+        foreach (ItemSkillBean sk in list)
+        {
+            //级别限制
+            if (sk.Grade > item.Info.Grade)
+            {
+                continue;
+            }
+
+            //已有的阵法不刷
+            if (item.hasItemSk(sk.skid))
+            {
+                continue;
+            }
+
+            //通用阵法
+            if (sk.reqcls == RequiredClass.通用)
+            {
+                listc.Add(sk);
+                continue;
+            }
+            //职业阵法
+            switch (pclass)
+            {
+                case MirClass.战士:
+                    if (sk.reqcls.HasFlag(RequiredClass.战士))
+                    {
+                        listc.Add(sk);
+                    }
+                    break;
+                case MirClass.法师:
+                    if (sk.reqcls.HasFlag(RequiredClass.法师))
+                    {
+                        listc.Add(sk);
+                    }
+                    break;
+                case MirClass.道士:
+                    if (sk.reqcls.HasFlag(RequiredClass.道士))
+                    {
+                        listc.Add(sk);
+                    }
+                    break;
+                case MirClass.刺客:
+                    if (sk.reqcls.HasFlag(RequiredClass.刺客))
+                    {
+                        listc.Add(sk);
+                    }
+                    break;
+                case MirClass.弓箭手:
+                    if (sk.reqcls.HasFlag(RequiredClass.弓箭手))
+                    {
+                        listc.Add(sk);
+                    }
+
+                    break;
+            }
+        }
+
+        //最终的阵法放这里存储
+        List<ItemSkillBean> listr2 = new List<ItemSkillBean>();
+        //随机取一次
+        int count = 0;
+        foreach (ItemSkillBean sk in listc)
+        {
+            count += sk.change;
+        }
+        if (RandomUtils.Next(100) < change)
+        {
+            int rd = RandomUtils.Next(count);
+            count = 0;
+            foreach (ItemSkillBean sk in listc)
+            {
+                count += sk.change;
+                if (rd < count)
+                {
+                    listr2.Add(sk);
+                    listc.Remove(sk);
+                    break;
+                }
+            }
+        }
+        if (rtype == 0)
+        {
+            //随机取第2次
+            count = 0;
+            foreach (ItemSkillBean sk in listc)
+            {
+                count += sk.change;
+            }
+            if (RandomUtils.Next(100) < change)
+            {
+                int rd = RandomUtils.Next(count);
+                count = 0;
+                foreach (ItemSkillBean sk in listc)
+                {
+                    count += sk.change;
+                    if (rd < count)
+                    {
+                        listr2.Add(sk);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (listr2.Count > 0)
+        {
+            if (rtype == 0)
+            {
+                for (int i = 0; i < listr2.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        item.sk1 = listr2[i].skid;
+                    }
+                    if (i == 1)
+                    {
+                        item.sk2 = listr2[i].skid;
+                    }
+                }
+            }
+            if (rtype == 1)
+            {
+                item.sk1 = listr2[0].skid;
+            }
+            if (rtype == 2)
+            {
+                item.sk2 = listr2[0].skid;
+            }
+            if (rtype == 3)
+            {
+                item.sk3 = listr2[0].skid;
+            }
+            if (rtype == 4)
+            {
+                item.sk4 = listr2[0].skid;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
 }
@@ -3187,6 +3525,34 @@ public class UserItem
     public RentalInformation RentalInformation;
 
 	public Awake Awake = new Awake();
+
+    //装备增加几个属性，quality品质（最多加5），spiritual灵性（最多加5），轮回samsaracount（最多5）,samsaratype轮回类型，和AwakeType一致
+    public byte quality, spiritual, samsaracount, samsaratype;
+
+    //增加4个武器自带技能(其实只用到3个吧)
+    public ItemSkill sk1, sk2, sk3, sk4;
+
+    //是否具有某个技能
+    public bool hasItemSk(ItemSkill sk)
+    {
+        if (sk1 == sk)
+        {
+            return true;
+        }
+        if (sk2 == sk)
+        {
+            return true;
+        }
+        if (sk3 == sk)
+        {
+            return true;
+        }
+        if (sk4 == sk)
+        {
+            return true;
+        }
+        return false;
+    }
     public bool IsAdded
     {
         get
@@ -3296,6 +3662,17 @@ public class UserItem
 
         if (reader.ReadBoolean())
             RentalInformation = new RentalInformation(reader, version, Customversion);
+
+        //4个武器自带技能
+        sk1 = (ItemSkill)reader.ReadByte();
+        sk2 = (ItemSkill)reader.ReadByte();
+        sk3 = (ItemSkill)reader.ReadByte();
+        sk4 = (ItemSkill)reader.ReadByte();
+
+        //增加3个属性
+        quality = reader.ReadByte();
+        spiritual = reader.ReadByte();
+        samsaracount = reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3362,6 +3739,17 @@ public class UserItem
 
         writer.Write(RentalInformation != null);
         RentalInformation?.Save(writer);
+
+        //4个武器自带技能
+        writer.Write((byte)sk1);
+        writer.Write((byte)sk2);
+        writer.Write((byte)sk3);
+        writer.Write((byte)sk4);
+
+        //增加几个属性
+        writer.Write(quality);
+        writer.Write(spiritual);
+        writer.Write(samsaracount);
     }
 
 
@@ -7484,4 +7872,5 @@ public class GameLanguage
             writer.Write(Size);
         }
     }
+  
 }

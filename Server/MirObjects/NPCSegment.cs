@@ -699,6 +699,16 @@ namespace Server.MirObjects
                         acts.Add(new NPCActions(ActionType.ChangeHair, parts[1]));
                     }
                     break;
+                case "REFRESHWEAPONSKILL":
+                    if (parts.Length < 2)
+                    {
+                        acts.Add(new NPCActions(ActionType.RefreshWeaponSkill));
+                    }
+                    else
+                    {
+                        acts.Add(new NPCActions(ActionType.RefreshWeaponSkill, parts[1]));
+                    }
+                    break;
 
                 case "LOCALMESSAGE":
                     var match = regexQuote.Match(line);
@@ -2883,6 +2893,34 @@ namespace Server.MirObjects
                                 player.Info.Gender = MirGender.Male;
                                 break;
                         }
+                        break;
+
+                    case ActionType.RefreshWeaponSkill://刷武器技能
+                        //查找武器
+                        if (player.Info.Equipment[(int)EquipmentSlot.Weapon] == null)
+                        {
+                            player.ReceiveChat($"没有武器，无法封印阵法", ChatType.System);
+                            return;
+                        }
+                        byte rtype = 0;
+
+                        if (param.Count >= 1)
+                        {
+                            byte.TryParse(param[0], out rtype);
+                        }
+
+
+                        if (ItemSkillBean.RefreshWeaponSkill(player.Info.Equipment[(int)EquipmentSlot.Weapon], player.Class, rtype))
+                        {
+                            player.ReceiveChat($"武器已成功封印阵法", ChatType.Hint);
+                        }
+                        else
+                        {
+                            player.ReceiveChat($"武器封印阵法失败", ChatType.Hint);
+                        }
+                        player.Enqueue(new S.RefreshItem { Item = player.Info.Equipment[(int)EquipmentSlot.Weapon] });
+                        player.RefreshStats();
+
                         break;
 
                     case ActionType.ChangeHair:

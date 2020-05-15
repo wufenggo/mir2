@@ -3799,7 +3799,17 @@ namespace Client.MirScenes
             item.PoisonResist = p.Item.PoisonResist;
             item.RefinedValue = p.Item.RefinedValue;
             item.RefineAdded = p.Item.RefineAdded;
-            
+
+            item.quality = p.Item.quality;
+            item.spiritual = p.Item.spiritual;
+            item.samsaracount = p.Item.samsaracount;
+     
+
+
+            item.sk1 = p.Item.sk1;
+            item.sk2 = p.Item.sk2;
+            item.sk3 = p.Item.sk3;
+            item.sk4 = p.Item.sk4;
 
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
 
@@ -8488,7 +8498,11 @@ namespace Client.MirScenes
             outlines[6] = BindInfoLabel(item, Inspect);
             //Overlap Info Label
             outlines[7] = OverlapInfoLabel(item, Inspect);
+
+            //物品阵法
+            outlines[8] = ItemSkillLabel(item);
             //Story Label
+
             outlines[8] = StoryInfoLabel(item, Inspect);
 
             foreach (var outline in outlines)
@@ -8621,6 +8635,172 @@ namespace Client.MirScenes
                 return info;
             }
 
+            return null;
+        }
+        //物品的自带技能，阵法
+        private MirControl ItemSkillLabel(UserItem item)
+        {
+            HoverItem = item;
+            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+            int count = 0;
+
+            #region skill
+            if (item.sk1 > 0)
+            {
+                count++;
+                ItemSkillBean skb1 = ItemSkillBean.get(item.sk1);
+              
+
+                MirLabel sk1 = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.Violet,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "" + skb1.skname
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk1.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, sk1.DisplayRectangle.Bottom));
+
+                MirLabel sk1m = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.DarkKhaki,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "" + skb1.skmemo
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk1m.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, sk1m.DisplayRectangle.Bottom));
+
+                if (item.sk2 > 0)
+                {
+
+                    ItemSkillBean skb2 = ItemSkillBean.get(item.sk2);
+                    MirLabel sk2 = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.Violet,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb2.skname
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk2.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk2.DisplayRectangle.Bottom));
+
+                    MirLabel sk2m = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.DarkKhaki,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb2.skmemo
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk2m.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk2m.DisplayRectangle.Bottom));
+                }
+
+                if (item.sk3 > 0)
+                {
+                    ItemSkillBean skb3 = ItemSkillBean.get(item.sk3);
+
+                    MirLabel sk3 = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.Violet,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb3.skname
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk3.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk3.DisplayRectangle.Bottom));
+
+                    MirLabel sk3m = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.DarkKhaki,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb3.skmemo
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk3m.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk3m.DisplayRectangle.Bottom));
+                }
+
+
+                if (item.sk4 > 0)
+                {
+                    ItemSkillBean skb4 = ItemSkillBean.get(item.sk4);
+
+                    MirLabel sk4 = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.Violet,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb4.skname
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk4.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk4.DisplayRectangle.Bottom));
+
+                    MirLabel sk4m = new MirLabel
+                    {
+                        AutoSize = true,
+                        ForeColour = Color.DarkKhaki,
+                        Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                        OutLine = true,
+                        Parent = ItemLabel,
+                        Text = "" + skb4.skmemo
+                    };
+
+                    ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, sk4m.DisplayRectangle.Right + 4),
+                        Math.Max(ItemLabel.Size.Height, sk4m.DisplayRectangle.Bottom));
+                }
+
+            }
+
+
+            #endregion
+
+            if (count > 0)
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+                #region OUTLINE
+                MirControl outLine = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Gray,
+                    NotControl = true,
+                    Parent = ItemLabel,
+                    Opacity = 0.4F,
+                    Location = new Point(0, 0)
+                };
+                outLine.Size = ItemLabel.Size;
+                #endregion
+
+                return outLine;
+            }
+            else
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
+            }
             return null;
         }
 

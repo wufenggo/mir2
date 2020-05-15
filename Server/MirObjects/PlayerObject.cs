@@ -346,6 +346,32 @@ namespace Server.MirObjects
 
         public byte AttackBonus, MineRate, GemRate, FishRate, CraftRate, SkillNeckBoost;
 
+        //增加4个武器自带技能(其实只用到3个吧)
+        public ItemSkill sk1, sk2, sk3, sk4;
+
+        //是否具有某个技能
+        public bool hasItemSk(ItemSkill sk)
+        {
+            if (sk1 == sk)
+            {
+                return true;
+            }
+            if (sk2 == sk)
+            {
+                return true;
+            }
+            if (sk3 == sk)
+            {
+                return true;
+            }
+            if (sk4 == sk)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         public PlayerObject(CharacterInfo info, MirConnection connection)
         {
             if (info.Player != null)
@@ -2848,6 +2874,10 @@ namespace Server.MirObjects
             NoDuraLoss = false;
             FastRun = false;
 
+            sk1 = 0;
+            sk2 = 0;
+            sk3 = 0;
+            sk4 = 0;
             var skillsToAdd = new List<string>();
             var skillsToRemove = new List<string> { Settings.HealRing, Settings.FireRing, Settings.BlinkSkill };
             short Macrate = 0, Acrate = 0, HPrate = 0, MPrate = 0;
@@ -2957,6 +2987,23 @@ namespace Server.MirObjects
                 {
                     MountType = RealItem.Shape;
                     //RealItem.Effect;
+                }
+                if (temp.sk1 != 0)
+                {
+                    sk1 = temp.sk1;
+                    
+                }
+                if (temp.sk2 != 0)
+                {
+                    sk2 = temp.sk2;
+                }
+                if (temp.sk3 != 0)
+                {
+                    sk3 = temp.sk3;
+                }
+                if (temp.sk4 != 0)
+                {
+                    sk4 = temp.sk4;
                 }
 
                 if (RealItem.Set == ItemSet.None) continue;
@@ -6351,6 +6398,10 @@ namespace Server.MirObjects
                     case Spell.Slaying:
                         magic = GetMagic(Spell.Slaying);
                         damageFinal = magic.GetDamage(damageBase);
+                        if (hasItemSk(ItemSkill.Warrior1) && RandomUtils.Next(100) < 50)
+                        {
+                            defence = DefenceType.Agility;
+                        }
                         LevelMagic(magic);
                         break;
                     case Spell.DoubleSlash:
@@ -7495,6 +7546,10 @@ namespace Server.MirObjects
             if (target == null || !target.IsAttackTarget(this) || !CanFly(target.CurrentLocation)) return false;
 
             int damage = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            if (hasItemSk(ItemSkill.Taoist1))
+            {
+                damage = damage * 1000 / 10;
+            }
 
 
             int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
