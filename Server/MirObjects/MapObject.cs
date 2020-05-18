@@ -185,6 +185,7 @@ namespace Server.MirObjects
         public LinkedListNode<MapObject> Node;
         public LinkedListNode<MapObject> NodeThreaded;
         public long RevTime;
+        public virtual PetType PType { get; set; }
 
         public virtual bool Blocking
         {

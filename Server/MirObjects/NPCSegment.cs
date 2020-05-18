@@ -2902,6 +2902,7 @@ namespace Server.MirObjects
                             player.ReceiveChat($"没有武器，无法封印阵法", ChatType.System);
                             return;
                         }
+ 
                         byte rtype = 0;
 
                         if (param.Count >= 1)
@@ -2912,11 +2913,11 @@ namespace Server.MirObjects
 
                         if (ItemSkillBean.RefreshWeaponSkill(player.Info.Equipment[(int)EquipmentSlot.Weapon], player.Class, rtype))
                         {
-                            player.ReceiveChat($"武器已成功封印阵法", ChatType.Hint);
+                            player.ReceiveChat(player.Name + $"武器已成功打造隐藏属性", ChatType.System);
                         }
                         else
                         {
-                            player.ReceiveChat($"武器封印阵法失败", ChatType.Hint);
+                            player.ReceiveChat(player.Name+$"{0}武器打造隐藏属性失败", ChatType.System);
                         }
                         player.Enqueue(new S.RefreshItem { Item = player.Info.Equipment[(int)EquipmentSlot.Weapon] });
                         player.RefreshStats();

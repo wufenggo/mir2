@@ -8650,8 +8650,18 @@ namespace Client.MirScenes
             {
                 count++;
                 ItemSkillBean skb1 = ItemSkillBean.get(item.sk1);
-              
 
+                MirLabel IDLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = "[封印阵法] - 第" + item.skCount + "层封印"
+                };
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
+                Math.Max(ItemLabel.Size.Height, IDLabel.DisplayRectangle.Bottom));
                 MirLabel sk1 = new MirLabel
                 {
                     AutoSize = true,

@@ -118,6 +118,7 @@ namespace Server
                           RestedMaxBonus = 24;
 
         public static string SkeletonName = "变异骷髅",
+                            SkeletonName1 = "强化骷髅卫士",
                             ShinsuName = "神兽",
                             BugBatName = "蝙蝠",
                             Zuma1 = "祖玛雕像",
@@ -353,7 +354,8 @@ namespace Server
             PetTimeOut = Reader.ReadInt64("Game", "PetTimeOut", PetTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
-            SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
+            SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName); 
+            SkeletonName1 = Reader.ReadString("Game", "SkeletonName1", SkeletonName1);
             BugBatName = Reader.ReadString("Game", "BugBatName", BugBatName);
             ShinsuName = Reader.ReadString("Game", "ShinsuName", ShinsuName);
             Zuma1 = Reader.ReadString("Game", "Zuma1", Zuma1);
@@ -568,6 +570,8 @@ namespace Server
             Reader.Write("Game", "PetSave", PetSave);
             Reader.Write("Game", "PKDelay", PKDelay);
             Reader.Write("Game", "SkeletonName", SkeletonName);
+
+           Reader.ReadString("Game", "SkeletonName1", SkeletonName1);
             Reader.Write("Game", "BugBatName", BugBatName);
             Reader.Write("Game", "ShinsuName", ShinsuName);
 

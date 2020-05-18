@@ -37,6 +37,8 @@ namespace Client.MirObjects
         public int DieSound, FlinchSound, AttackSound;
 
 
+
+
         public FrameSet Frames;
         public Frame Frame, WingFrame;
         public int FrameIndex, FrameInterval, EffectFrameIndex, EffectFrameInterval, SlowFrameIndex;
@@ -127,6 +129,34 @@ namespace Client.MirObjects
             else
                 Frames = FrameSet.HighPlayers[0];
         }
+
+
+        //增加4个武器自带技能(其实只用到3个吧)
+        public ItemSkill sk1, sk2, sk3, sk4;
+        public ushort skCount;
+
+        //是否具有某个技能
+        public bool hasItemSk(ItemSkill sk)
+        {
+            if (sk1 == sk)
+            {
+                return true;
+            }
+            if (sk2 == sk)
+            {
+                return true;
+            }
+            if (sk3 == sk)
+            {
+                return true;
+            }
+            if (sk4 == sk)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         public void Load(S.ObjectPlayer info)
         {
@@ -5569,8 +5599,10 @@ namespace Client.MirObjects
                         case Spell.Thrusting:
                             Libraries.Magic.DrawBlend(2190 + ((int)Direction * 10) + SpellLevel * 90 + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
-                        case Spell.HalfMoon:
+                        case Spell.HalfMoon://半月
+
                             Libraries.Magic.DrawBlend(2560 + ((int)Direction * 10) + SpellLevel * 90 + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+
                             break;
                         case Spell.TwinDrakeBlade:
                             Libraries.Magic2.DrawBlend(220 + ((int)Direction * 20) + FrameIndex, DrawLocation, Color.White, true, 0.7F);

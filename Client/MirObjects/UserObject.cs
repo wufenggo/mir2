@@ -71,6 +71,7 @@ namespace Client.MirObjects
         public QueuedAction QueuedAction;
         //增加4个武器自带技能(其实只用到3个吧)
         public ItemSkill sk1, sk2, sk3, sk4;
+        public ushort skCount;
 
         //是否具有某个技能
         public bool hasItemSk(ItemSkill sk)
@@ -374,6 +375,7 @@ namespace Client.MirObjects
             sk2 = 0;
             sk3 = 0;
             sk4 = 0;
+            skCount = 0;
             ItemSets.Clear();
             MirSet.Clear();
 
@@ -435,7 +437,7 @@ namespace Client.MirObjects
                 if (temp.sk1 != 0)
                 {
                     sk1 = temp.sk1;
-                    
+                    skCount = temp.skCount;
                 }
                 if (temp.sk2 != 0)
                 {

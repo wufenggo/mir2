@@ -32,7 +32,7 @@ namespace Client.MirGraphics
             BuffEffect = new MLibrary(Settings.DataPath + "BuffEffect"),
             Stateitem_Effect = new MLibrary(Settings.DataPath + "Stateitem_Effect"),
             MagicC = new MLibrary(Settings.DataPath + "MagicC"),
-
+            Magic101 = new MLibrary(Settings.DataPath + "Magic101"),
 
 
 
@@ -439,6 +439,8 @@ namespace Client.MirGraphics
             Magic3.Initialize();
             Progress++;
             MagicC.Initialize();
+            Progress++;
+            Magic101.Initialize();
             Progress++;
             BuffEffect.Initialize();
             Progress++;

@@ -348,6 +348,7 @@ namespace Server.MirObjects
 
         //增加4个武器自带技能(其实只用到3个吧)
         public ItemSkill sk1, sk2, sk3, sk4;
+        public ushort skCount;//阵法的层数
 
         //是否具有某个技能
         public bool hasItemSk(ItemSkill sk)
@@ -2991,7 +2992,8 @@ namespace Server.MirObjects
                 if (temp.sk1 != 0)
                 {
                     sk1 = temp.sk1;
-                    
+                    skCount = temp.skCount;
+
                 }
                 if (temp.sk2 != 0)
                 {
@@ -4401,7 +4403,23 @@ namespace Server.MirObjects
                         }
 
                         break;
-
+                    case "GIVEITEMSKILL":
+                        if (!IsGM)
+                        {
+                            return;
+                        }
+                        byte _sk1 = 0;
+                        byte.TryParse(parts[1], out _sk1);
+                        foreach (UserItem titem in Info.Equipment)
+                        {
+                            if (titem == null || titem.Info.Type != ItemType.Weapon)
+                            {
+                                continue;
+                            }
+                            titem.sk1 = (ItemSkill)_sk1;
+                            Enqueue(new S.RefreshItem { Item = titem });
+                        }
+                         break;
                     case "LOADPLAYER":
                         if (!IsGM) return;
 
@@ -6420,10 +6438,21 @@ namespace Server.MirObjects
                         break;
                     case Spell.HalfMoon:
                         magic = GetMagic(Spell.HalfMoon);
-                        LevelMagic(magic);
+                        damageFinal = magic.GetDamage(damageBase);
+                        if (hasItemSk(ItemSkill.Warrior2))
+                        {
+                            damageFinal = damageFinal * 120 / 10;
+                        }
+                        
+                            LevelMagic(magic);
                         break;
                     case Spell.CrossHalfMoon:
                         magic = GetMagic(Spell.CrossHalfMoon);
+                        damageFinal = magic.GetDamage(damageBase);
+                        if (hasItemSk(ItemSkill.Warrior2))
+                        {
+                            damageFinal = damageFinal * 1200 / 100;
+                        }
                         LevelMagic(magic);
                         break;
                     case Spell.TwinDrakeBlade:
@@ -6489,6 +6518,7 @@ namespace Server.MirObjects
 
                 magic = GetMagic(spell);
                 damageFinal = magic.GetDamage(damageBase);
+                
                 for (int i = 0; i < 4; i++)
                 {
                     target = Functions.PointMove(CurrentLocation, dir, 1);
@@ -6519,7 +6549,8 @@ namespace Server.MirObjects
                 magic = GetMagic(spell);
                 damageFinal = magic.GetDamage(damageBase);
                 for (int i = 0; i < 8; i++)
-                {
+                
+                    {
                     target = Functions.PointMove(CurrentLocation, dir, 1);
                     dir = Functions.NextDir(dir);
                     if (target == Front) continue;
@@ -7326,6 +7357,30 @@ namespace Server.MirObjects
 
             target.Broadcast(new S.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
         }
+
+
+        //计算当前拥有的宠物数量
+        public byte getPetCount(PetType ptype)
+        {
+            byte count = 0;
+            if (Pets == null)
+            {
+                return 0;
+            }
+            foreach (MonsterObject p in Pets)
+            {
+                if (p.Dead)
+                {
+                    continue;
+                }
+                if (ptype != PetType.All )
+                {
+                    continue;
+                }
+                count++;
+            }
+            return count;
+        }
         private void HellFire(UserMagic magic)
         {
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
@@ -7351,9 +7406,38 @@ namespace Server.MirObjects
 
             if (target.Undead) damage = (int)(damage * 1.5F);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
-
-            ActionList.Add(action);
+            if (hasItemSk(ItemSkill.Wizard2))
+            {
+                byte count = 0;
+                List<MapObject> list = this.CurrentMap.getMapObjects(target.CurrentLocation.X, target.CurrentLocation.Y, 1);
+                foreach (MapObject ob in list)
+                {
+                    if (ob == null)
+                    {
+                        continue;
+                    }
+                    if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player)
+                    {
+                        continue;
+                    }
+                    if (!ob.IsAttackTarget(this))
+                    {
+                        continue;
+                    }
+                    DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, ob);
+                    ActionList.Add(action);
+                    count++;
+                    if (count > 3)
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, damage, target);
+                ActionList.Add(action);
+            }
         }
         private void Vampirism(MapObject target, UserMagic magic)
         {
@@ -7573,14 +7657,34 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (Pets.Where(x => x.Race == ObjectType.Monster).Count() > 1) return;
+            if (getPetCount(PetType.Common) > 1)
+            {
+                return;
+            }
 
             UserItem item = GetAmulet(1);
             if (item == null) return;
 
             MonsterInfo info = Envir.GetMonsterInfo(Settings.SkeletonName);
             if (info == null) return;
+            if (hasItemSk(ItemSkill.Taoist2))
+            {
+                MonsterInfo _info = Envir.GetMonsterInfo(Settings.SkeletonName + "2");
 
+                if (_info == null)
+                {
+                    info = _info.Clone();
+                }
+                ushort _skCount = this.skCount;
+                if (_skCount > 50)
+                {
+                    _skCount = 50;
+                }
+                _skCount = (ushort)(_skCount / 2);
+                info.MaxMAC += _skCount;
+                info.MaxAC += _skCount;
+                info.MaxDC += _skCount;
+            }
 
             LevelMagic(magic);
             ConsumeItem(item, 1);
@@ -7589,6 +7693,10 @@ namespace Server.MirObjects
             monster.PetLevel = magic.Level;
             monster.Master = this;
             monster.MaxPetLevel = (byte)(4 + magic.Level);
+            if (hasItemSk(ItemSkill.Taoist2))
+            {
+                monster.PetLevel = monster.MaxPetLevel;
+            }
             monster.ActionTime = Envir.Time + 1000;
             monster.RefreshNameColour(false);
 
@@ -12583,14 +12691,159 @@ namespace Server.MirObjects
                         canUpgrade = false;
                     }
                     break;
+                case 11://混沌石升级系统
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if ((tempTo.quality >= 5 && tempTo.Info.Type != ItemType.Weapon) || (tempTo.quality >= 10 && tempTo.Info.Type == ItemType.Weapon))
+                    {
+                        ReceiveChat("物品已达到最大强化", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    byte type2 = (byte)tempTo.Info.Type;
+                    if (!ValidGemForItem(tempFrom, type2))
+                    {
+                        this.ReceiveChat("当前装备无法使用", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    //升级成功率75
+                    int change = 75;
+                    if (tempTo.Info.Type == ItemType.Weapon)
+                    {
+                        change -= (int)(tempTo.quality * 7);
+                    }
+                    else
+                    {
+                        change -= (int)(tempTo.quality * 15);
+                    }
+                    if (change < 5)
+                    {
+                        change = 5;
+                    }
+                    if (change > 70)
+                    {
+                        change = 70;
+                    }
+                    bool suss2 = RandomUtils.Next(100) < change;
+                    if (suss2)
+                    {
+                        tempTo.quality += 1;
+                        if (RandomUtils.Next(100) < 70)
+                        {
+                            tempTo.spiritual += 1;
+                        }
+                        canUpgrade = true;
+                    }
+                    else
+                    {
+                        this.ReceiveChat("升级没有效果.", ChatType.Hint);
+                        canUpgrade = false;
+                    }
+                    break;
+                case 12://品质，灵性清洗石
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.quality <= 0)
+                    {
+                        ReceiveChat("当前装备无需清洗", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.Count > 1)
+                    {
+                        ReceiveChat("当前装备无法清洗", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+
+                    tempTo.quality = 0;
+                    tempTo.spiritual = 0;
+                    tempTo.samsaracount = 0;
+                    tempTo.samsaratype = 0;
+
+                    canUpgrade = true;
+                    ReceiveChat("装备已清洗.", ChatType.Hint);
+                    Enqueue(new S.ItemUpgraded { Item = tempTo });
+                    if (tempFrom.Count > 1)
+                    {
+                        tempFrom.Count--;
+                        Enqueue(new S.RefreshItem { Item = tempFrom });
+                    }
+                    else
+                    {
+                        Info.Inventory[indexFrom] = null;
+                    }
+                    TradeUnlock();
+                    p.Success = true;
+                    Enqueue(p);
+                    return;
+                case 13://所有属性全部清洗
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.Count > 1)
+                    {
+                        ReceiveChat("当前装备无法清洗", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+
+                    tempTo.quality = 0;
+                    tempTo.spiritual = 0;
+                    tempTo.samsaracount = 0;
+                    tempTo.samsaratype = 0;
+
+                    tempTo.AC = tempTo.MAC = tempTo.DC = tempTo.MC = tempTo.SC = tempTo.Accuracy = tempTo.Agility = tempTo.HP = tempTo.MP = tempTo.Strong = tempTo.MagicResist = tempTo.PoisonResist = tempTo.HealthRecovery = tempTo.ManaRecovery = tempTo.PoisonRecovery = tempTo.CriticalRate = tempTo.CriticalDamage = tempTo.Freezing = tempTo.PoisonAttack = 0;
+                    tempTo.AttackSpeed = 0;
+                    tempTo.GemCount = 0;
+                    
+                    canUpgrade = true;
+                    ReceiveChat("装备已清洗.", ChatType.Hint);
+                    Enqueue(new S.ItemUpgraded { Item = tempTo });
+                    if (tempFrom.Count > 1)
+                    {
+                        tempFrom.Count--;
+                        Enqueue(new S.RefreshItem { Item = tempFrom });
+                    }
+                    else
+                    {
+                        Info.Inventory[indexFrom] = null;
+                    }
+                    TradeUnlock();
+                    p.Success = true;
+                    Enqueue(p);
+                    return;
                 default:
                     Enqueue(p);
                     return;
             }
 
 
-
-            RefreshBagWeight();
+            //刷新包裹
 
             if (canRepair && Info.Inventory[indexTo] != null)
             {

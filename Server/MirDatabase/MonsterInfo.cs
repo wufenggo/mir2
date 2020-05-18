@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Server.MirEnvir;
-
+using Newtonsoft.Json;
 namespace Server.MirDatabase
 {
     public class MonsterInfo
@@ -289,6 +289,19 @@ namespace Server.MirDatabase
             //return string.Format("{0}", Name);
         }
 
+        //创建副本,采用序列化进行克隆
+        //注意，静态属性，私有属性不被克隆
+        public MonsterInfo Clone()
+        {
+            MonsterInfo mInfo = JsonConvert.DeserializeObject<MonsterInfo>(JsonConvert.SerializeObject(this));
+            //物品还是要采用引用的方式，不能用克隆的方式，否则物品会有问题
+            for (int i = 0; i < Drops.Count; i++)
+            {
+                mInfo.Drops[i].ItemList = Drops[i].ItemList;
+            }
+            return mInfo;
+        }
+
     }
 
     public class DropInfo
@@ -304,6 +317,10 @@ namespace Server.MirDatabase
 
         public byte Type;
         public bool QuestRequired;
+        //物品列表
+        public List<ItemInfo> ItemList = new List<ItemInfo>();
+
+
 
         public static DropInfo FromLine(string s)
         {

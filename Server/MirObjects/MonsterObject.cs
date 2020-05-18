@@ -557,6 +557,18 @@ namespace Server.MirObjects
             }
         }
 
+        public override sealed PetType PType
+        {
+            get
+            {
+                return base.PType;
+            }
+            set
+            {
+                base.PType = value;
+            }
+        }
+
         public override uint Health
         {
             get { return HP; }
@@ -761,7 +773,7 @@ namespace Server.MirObjects
             MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + PetLevel);
             MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + PetLevel);
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
+            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName || Info.Name == Settings.SkeletonName1)
             {
                 MoveSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, MoveSpeed - MaxPetLevel * 130)));
                 AttackSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, AttackSpeed - MaxPetLevel * 70)));
@@ -3416,7 +3428,7 @@ namespace Server.MirObjects
         {
             if (PetLevel >= MaxPetLevel) return;
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
+            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName || Info.Name == Settings.SkeletonName1)
                 amount *= 3;
 
             PetExperience += amount;

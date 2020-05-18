@@ -425,6 +425,7 @@ namespace Server.MirEnvir
                 if (StartPoints.Count == 0) return "Cannot start server without start points";
 
                 if (GetMonsterInfo(Settings.SkeletonName, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName;
+                if (GetMonsterInfo(Settings.SkeletonName1, true) == null) return "Cannot start server without mob: " + Settings.SkeletonName1;
                 if (GetMonsterInfo(Settings.ShinsuName, true) == null) return "Cannot start server without mob: " + Settings.ShinsuName;
                 if (GetMonsterInfo(Settings.BugBatName, true) == null) return "Cannot start server without mob: " + Settings.BugBatName;
                 if (GetMonsterInfo(Settings.Zuma1, true) == null) return "Cannot start server without mob: " + Settings.Zuma1;

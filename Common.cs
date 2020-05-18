@@ -10,6 +10,24 @@ using S = ServerPackets;
 using System.Linq;
 using System.Threading;
 
+//宠物类型
+[Obfuscation(Feature = "renaming", Exclude = true)]
+public enum PetType : byte
+{
+    Common = 0,//普通，法师召唤的，道士召唤的宝宝
+    CreaturePet = 1,//非战斗宠物
+    MyMonster = 2,//契约兽
+    ChildTempMonster = 3,//契约兽的子兽，零时的
+
+    //通用技能，契约兽带的技能，虚空之门，
+    //虚空之门，每3秒召唤一个怪物，召唤30秒，30秒内如果被打死，则不能停止召唤
+    //随机召唤10个怪物为其战斗5分钟，5分钟后，怪物重返虚空,超过叛变时间，直接死亡
+    TempMonster = 4,
+
+
+
+    All = 11,//包括所有
+}
 public class RandomUtils
 {
     private static int seed = Environment.TickCount;
@@ -101,10 +119,12 @@ public class ItemSkillBean
     public string skmemo;//技能描述
     public RequiredClass reqcls;//职业
     public byte change;//几率
+    public byte level;//级别，阵法的级别 1:初级 2：中级 3：高级 
+
     public ItemGrade Grade;//品级，只有大于或等于当前品级的才可以刷出来
     public static List<ItemSkillBean> list = new List<ItemSkillBean>();
 
-    public ItemSkillBean(ItemSkill skid, string skname, string skmemo, RequiredClass reqcls, byte change,ItemGrade Grade)
+    public ItemSkillBean(ItemSkill skid, string skname, string skmemo, RequiredClass reqcls, byte change,ItemGrade Grade,byte level)
     {
         this.skid = skid;
         this.skname = skname;
@@ -112,37 +132,38 @@ public class ItemSkillBean
         this.reqcls = reqcls;
         this.change = change;
         this.Grade = Grade;
+        this.level = level;
     }
 
     public static void init()
     {
         if (list == null || list.Count == 0)
         {
-            list.Add(new ItemSkillBean(ItemSkill.Warrior1, "破山阵", "普通攻击几率破防", RequiredClass.战士, 30,ItemGrade.None));
-            //list.Add(new ItemSkillBean(ItemSkill.Warrior2, "半月阵", "提升半月弯刀,狂风斩的伤害", RequiredClass.Warrior, 30));
+            list.Add(new ItemSkillBean(ItemSkill.Warrior1, "隐藏属性-破山", "普通攻击几率破防", RequiredClass.战士, 30,ItemGrade.None,1));
+            list.Add(new ItemSkillBean(ItemSkill.Warrior2, "隐藏属性-满月", "提升半月弯刀,狂风斩的伤害", RequiredClass.战士, 30,ItemGrade.Rare,1));
             //list.Add(new ItemSkillBean(ItemSkill.Warrior4, "雷霆阵", "雷霆攻击几率增加伤害", RequiredClass.Warrior, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Warrior5, "金刚阵", "护身气幕防御，魔域提升", RequiredClass.Warrior, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Warrior7, "天神阵", "几率免疫攻击，日闪几率增加伤害", RequiredClass.Warrior, 5));
 
-            list.Add(new ItemSkillBean(ItemSkill.Wizard1, "迷惑阵", "强化诱惑之光，诱惑宝宝成功率提升", RequiredClass.法师, 30, ItemGrade.None));
-            //list.Add(new ItemSkillBean(ItemSkill.Wizard2, "天罚阵", "雷电术可同时攻击3个目标", RequiredClass.Wizard, 30));
+            list.Add(new ItemSkillBean(ItemSkill.Wizard1, "隐藏属性-迷惑", "强化诱惑之光，诱惑宝宝成功率提升", RequiredClass.法师, 30, ItemGrade.None,1));
+            list.Add(new ItemSkillBean(ItemSkill.Wizard2, "隐藏属性-天罚", "雷电术可同时攻击3个目标", RequiredClass.法师, 30,ItemGrade.None,1));
             //list.Add(new ItemSkillBean(ItemSkill.Wizard4, "统治阵", "诱惑宝宝不叛变，下线不死亡", RequiredClass.Wizard, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Wizard5, "分身阵", "强化分身，分身攻击等于本体攻击的", RequiredClass.Wizard, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Wizard7, "法神阵", "强化火雨/火墙技能", RequiredClass.Wizard, 5));
 
-            list.Add(new ItemSkillBean(ItemSkill.Taoist1, "符咒阵", "感悟火符真谛使得火符威力增加", RequiredClass.道士, 30, ItemGrade.Common));
-            //list.Add(new ItemSkillBean(ItemSkill.Taoist2, "骷髅阵", "强化骷髅，召唤出强化骷髅为你做战", RequiredClass.Taoist, 30));
+            list.Add(new ItemSkillBean(ItemSkill.Taoist1, "隐藏属性-符咒", "\n感悟火符真谛使得火符威力增加", RequiredClass.道士, 30, ItemGrade.None,2));
+            list.Add(new ItemSkillBean(ItemSkill.Taoist2, "隐藏属性-骷髅", "强化骷髅，召唤出强化骷髅为你做战", RequiredClass.道士, 30,ItemGrade.None, 3));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist4, "圣兽阵", "强化神兽，召唤出强化神兽为你做战", RequiredClass.Taoist, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist5, "厚土阵", "魔，防技能魔防提升", RequiredClass.Taoist, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist7, "道尊阵", "施毒术伤害增加，毒云伤害，瘟疫伤害无上限", RequiredClass.Taoist, 5));
 
-            list.Add(new ItemSkillBean(ItemSkill.Assassin1, "月隐阵", "几率增加隐身时间", RequiredClass.刺客, 30, ItemGrade.None));
+            list.Add(new ItemSkillBean(ItemSkill.Assassin1, "隐藏属性-月隐", "几率增加隐身时间", RequiredClass.刺客, 30, ItemGrade.None,1));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin2, "鬼灵阵", "鬼灵步CD减少", RequiredClass.Assassin, 30));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin4, "真气阵", "真气调息-吸蓝效率提升", RequiredClass.Assassin, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin5, "幻像阵", "烈火身，几率增加烈火身伤害量", RequiredClass.Assassin, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin7, "刺皇阵", "血风触发几率提升，火镰狂舞几率增加伤害", RequiredClass.Assassin, 5));
 
-            list.Add(new ItemSkillBean(ItemSkill.Archer1, "气流阵", "气流术恢复气速度增加", RequiredClass.弓箭手, 30, ItemGrade.None));
+            list.Add(new ItemSkillBean(ItemSkill.Archer1, "隐藏属性-气流", "气流术恢复气速度增加", RequiredClass.弓箭手, 30, ItemGrade.None,1));
             //list.Add(new ItemSkillBean(ItemSkill.Archer2, "爆裂阵", "爆裂箭伤害提升", RequiredClass.Archer, 30));
             //list.Add(new ItemSkillBean(ItemSkill.Archer4, "痹魔阵", "召唤蛤蟆攻防提升", RequiredClass.Archer, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Archer5, "烈火阵", "烈火陷阱伤害提升", RequiredClass.Archer, 15));
@@ -3532,6 +3553,7 @@ public class UserItem
     //增加4个武器自带技能(其实只用到3个吧)
     public ItemSkill sk1, sk2, sk3, sk4;
 
+    public ushort skCount;//阵法的层数
     //是否具有某个技能
     public bool hasItemSk(ItemSkill sk)
     {
@@ -3668,7 +3690,7 @@ public class UserItem
         sk2 = (ItemSkill)reader.ReadByte();
         sk3 = (ItemSkill)reader.ReadByte();
         sk4 = (ItemSkill)reader.ReadByte();
-
+        skCount = reader.ReadUInt16();
         //增加3个属性
         quality = reader.ReadByte();
         spiritual = reader.ReadByte();
@@ -3745,6 +3767,7 @@ public class UserItem
         writer.Write((byte)sk2);
         writer.Write((byte)sk3);
         writer.Write((byte)sk4);
+        writer.Write(skCount);
 
         //增加几个属性
         writer.Write(quality);
