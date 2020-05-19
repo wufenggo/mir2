@@ -6339,6 +6339,79 @@ namespace Client.MirScenes
 
             #endregion
 
+            #region 混沌神石
+
+            if (realItem.Shape == 11 && realItem.Type == ItemType.Gem)
+            {
+                count++;
+                text = string.Format("增加 {0} 品质", 1);
+                MirLabel DuraLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DuraLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, DuraLabel.DisplayRectangle.Bottom));
+            }
+
+            #endregion
+            #region quality 品质
+
+            minValue = HoverItem.quality;
+            maxValue = 0;
+            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.quality : 0;
+
+            if (minValue > 0 || maxValue > 0)
+            {
+                count++;
+                text = string.Format("品质 + {0}", minValue);
+
+                MirLabel SCLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = minValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    //Text = string.Format("SC + {0}~{1}", minValue, maxValue + addValue)
+                    Text = text
+                };
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SCLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, SCLabel.DisplayRectangle.Bottom));
+            }
+            #endregion
+
+            #region spiritual 灵性
+
+            minValue = HoverItem.spiritual;
+            //minValue = 1;
+            maxValue = 0;
+            addValue = (!HoverItem.Info.NeedIdentify || HoverItem.Identified) ? HoverItem.spiritual : 0;
+
+            if (minValue > 0 || maxValue > 0)
+            {
+                count++;
+                text = string.Format("灵性 {0}/{1}", HoverItem.samsaracount, minValue);
+
+                MirLabel SCLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = minValue > 0 ? Color.Cyan : Color.White,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    //Text = string.Format("SC + {0}~{1}", minValue, maxValue + addValue)
+                    Text = text
+                };
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SCLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, SCLabel.DisplayRectangle.Bottom));
+            }
+            #endregion
 
 
             #region ACC
@@ -8654,11 +8727,11 @@ namespace Client.MirScenes
                 MirLabel IDLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = Color.White,
+                    ForeColour = Color.DarkRed,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "[封印阵法] - 第" + item.skCount + "层封印"
+                    Text = "[封印属性] - 第" + item.skCount + "层封印"
                 };
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, IDLabel.DisplayRectangle.Bottom));

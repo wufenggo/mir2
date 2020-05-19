@@ -194,8 +194,16 @@ namespace Client.MirObjects
             SetEffects();
             
             if (this == User && Light < 3) Light = 3;
-            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            AttackSpeed = 1400 - ((ASpeed >= 20) ? 600 : ASpeed * 30) - Math.Min(400, Level * 8);
+            //这里提升一点攻速
+            if (hasItemSk(ItemSkill.Assassin6))
+            {
+                if (AttackSpeed < 330) AttackSpeed = 330;
+            }
+            else
+            {
+                if (AttackSpeed < 550) AttackSpeed = 550;
+            }
 
             //PercentHealth = (byte)(HP / (float)MaxHP * 100);
 

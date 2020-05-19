@@ -2173,8 +2173,8 @@ namespace Client.MirControls
                     case ItemGrade.Uncommon:
                         GradeEffect.Animated = true;
                         GradeEffect.Visible = true;
-                        GradeEffect.BackColour = Color.LimeGreen;
-                        GradeEffect.ForeColour = Color.LimeGreen;
+                        GradeEffect.Index = 100;
+                        GradeEffect.Visible = true;
                         break;
                     case ItemGrade.Unique:
                         GradeEffect.Animated = true;

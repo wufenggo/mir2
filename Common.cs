@@ -159,9 +159,11 @@ public class ItemSkillBean
 
             list.Add(new ItemSkillBean(ItemSkill.Assassin1, "隐藏属性-月隐", "几率增加隐身时间", RequiredClass.刺客, 30, ItemGrade.None,1));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin2, "鬼灵阵", "鬼灵步CD减少", RequiredClass.Assassin, 30));
+
             //list.Add(new ItemSkillBean(ItemSkill.Assassin4, "真气阵", "真气调息-吸蓝效率提升", RequiredClass.Assassin, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin5, "幻像阵", "烈火身，几率增加烈火身伤害量", RequiredClass.Assassin, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Assassin7, "刺皇阵", "血风触发几率提升，火镰狂舞几率增加伤害", RequiredClass.Assassin, 5));
+            list.Add(new ItemSkillBean(ItemSkill.Assassin6, "狂风阵", "增加攻速，同时攻速上限提升", RequiredClass.刺客, 50, ItemGrade.Mythical, 2));
 
             list.Add(new ItemSkillBean(ItemSkill.Archer1, "隐藏属性-气流", "气流术恢复气速度增加", RequiredClass.弓箭手, 30, ItemGrade.None,1));
             //list.Add(new ItemSkillBean(ItemSkill.Archer2, "爆裂阵", "爆裂箭伤害提升", RequiredClass.Archer, 30));
@@ -199,7 +201,7 @@ public class ItemSkillBean
         int change = item.spiritual * 10;
         if (change <= 5)
         {
-            change = 40;
+            change = 100;
         }
         //失败几率
         if (RandomUtils.Next(90) >= change && rtype == 0)
@@ -210,7 +212,7 @@ public class ItemSkillBean
         //先擦除原装备阵法,不擦除
         if (rtype == 0)
         {
-            //item.sk1 = 0;
+            item.sk1 = 0;
             //item.sk2 = 0;
         }
         if (rtype == 1)

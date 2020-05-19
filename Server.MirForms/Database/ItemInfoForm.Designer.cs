@@ -95,8 +95,10 @@
             this.label14 = new System.Windows.Forms.Label();
             this.MinACTextBox = new System.Windows.Forms.TextBox();
             this.MPratetextbox = new System.Windows.Forms.TextBox();
+            this.DCDamagetextBox = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
+            this.label59 = new System.Windows.Forms.Label();
             this.MaxACTextBox = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.MinMACTextBox = new System.Windows.Forms.TextBox();
@@ -195,8 +197,12 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.label59 = new System.Windows.Forms.Label();
-            this.DCDamagetextBox = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label62 = new System.Windows.Forms.Label();
+            this.label63 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -232,6 +238,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label63);
+            this.tabPage1.Controls.Add(this.label61);
             this.tabPage1.Controls.Add(this.label58);
             this.tabPage1.Controls.Add(this.label57);
             this.tabPage1.Controls.Add(this.globalDropNotify_CheckBox);
@@ -279,7 +287,11 @@
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.label13);
             this.tabPage1.Controls.Add(this.label33);
+            this.tabPage1.Controls.Add(this.label62);
             this.tabPage1.Controls.Add(this.RGenderComboBox);
+            this.tabPage1.Controls.Add(this.comboBox2);
+            this.tabPage1.Controls.Add(this.comboBox1);
+            this.tabPage1.Controls.Add(this.label60);
             this.tabPage1.Controls.Add(this.ISetComboBox);
             this.tabPage1.Controls.Add(this.label35);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -336,7 +348,7 @@
             // 
             this.label56.AutoSize = true;
             this.label56.ForeColor = System.Drawing.Color.Blue;
-            this.label56.Location = new System.Drawing.Point(33, 215);
+            this.label56.Location = new System.Drawing.Point(33, 253);
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(59, 12);
             this.label56.TabIndex = 123;
@@ -344,10 +356,10 @@
             // 
             // TooltipTextBox
             // 
-            this.TooltipTextBox.Location = new System.Drawing.Point(98, 212);
+            this.TooltipTextBox.Location = new System.Drawing.Point(98, 249);
             this.TooltipTextBox.Multiline = true;
             this.TooltipTextBox.Name = "TooltipTextBox";
-            this.TooltipTextBox.Size = new System.Drawing.Size(226, 140);
+            this.TooltipTextBox.Size = new System.Drawing.Size(226, 106);
             this.TooltipTextBox.TabIndex = 122;
             this.TooltipTextBox.TextChanged += new System.EventHandler(this.TooltipTextBox_TextChanged);
             // 
@@ -980,6 +992,15 @@
             this.MPratetextbox.TabIndex = 114;
             this.MPratetextbox.TextChanged += new System.EventHandler(this.MPratetextBox_TextChanged);
             // 
+            // DCDamagetextBox
+            // 
+            this.DCDamagetextBox.Location = new System.Drawing.Point(439, 276);
+            this.DCDamagetextBox.MaxLength = 3;
+            this.DCDamagetextBox.Name = "DCDamagetextBox";
+            this.DCDamagetextBox.Size = new System.Drawing.Size(30, 21);
+            this.DCDamagetextBox.TabIndex = 118;
+            this.DCDamagetextBox.TextChanged += new System.EventHandler(this.DCDamagetextBox_TextChanged);
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -997,6 +1018,15 @@
             this.label48.Size = new System.Drawing.Size(35, 12);
             this.label48.TabIndex = 113;
             this.label48.Text = "Mp +%";
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(348, 279);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(59, 12);
+            this.label59.TabIndex = 120;
+            this.label59.Text = "攻击伤害:";
             // 
             // MaxACTextBox
             // 
@@ -1990,23 +2020,65 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // label59
+            // label60
             // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(348, 279);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(59, 12);
-            this.label59.TabIndex = 120;
-            this.label59.Text = "攻击伤害:";
+            this.label60.AutoSize = true;
+            this.label60.ForeColor = System.Drawing.Color.Blue;
+            this.label60.Location = new System.Drawing.Point(33, 220);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(35, 12);
+            this.label60.TabIndex = 75;
+            this.label60.Text = "套装:";
             // 
-            // DCDamagetextBox
+            // label61
             // 
-            this.DCDamagetextBox.Location = new System.Drawing.Point(439, 276);
-            this.DCDamagetextBox.MaxLength = 3;
-            this.DCDamagetextBox.Name = "DCDamagetextBox";
-            this.DCDamagetextBox.Size = new System.Drawing.Size(30, 21);
-            this.DCDamagetextBox.TabIndex = 118;
-            this.DCDamagetextBox.TextChanged += new System.EventHandler(this.DCDamagetextBox_TextChanged);
+            this.label61.AutoSize = true;
+            this.label61.ForeColor = System.Drawing.Color.Red;
+            this.label61.Location = new System.Drawing.Point(401, 169);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(65, 12);
+            this.label61.TabIndex = 125;
+            this.label61.Text = "【小于29】";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(98, 186);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(92, 20);
+            this.comboBox1.TabIndex = 74;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ISetComboBox_SelectedIndexChanged);
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.ForeColor = System.Drawing.Color.Blue;
+            this.label62.Location = new System.Drawing.Point(33, 220);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(59, 12);
+            this.label62.TabIndex = 75;
+            this.label62.Text = "隐藏属性:";
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.ForeColor = System.Drawing.Color.Red;
+            this.label63.Location = new System.Drawing.Point(401, 169);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(65, 12);
+            this.label63.TabIndex = 125;
+            this.label63.Text = "【小于29】";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(98, 220);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(92, 20);
+            this.comboBox2.TabIndex = 74;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.ISetComboBox_SelectedIndexChanged);
             // 
             // ItemInfoForm
             // 
@@ -2215,5 +2287,11 @@
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.TextBox DCDamagetextBox;
         private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label60;
     }
 }

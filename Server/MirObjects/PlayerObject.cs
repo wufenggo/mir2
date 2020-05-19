@@ -2657,9 +2657,17 @@ namespace Server.MirObjects
             if (HP > MaxHP) SetHP(MaxHP);
             if (MP > MaxMP) SetMP(MaxMP);
 
-            AttackSpeed = 1400 - ((ASpeed * 60) + Math.Min(370, (Level * 14)));
-
-            if (AttackSpeed < 550) AttackSpeed = 550;
+            AttackSpeed = 1400 - ((ASpeed >= 20) ? 600 : ASpeed * 30) - Math.Min(400, Level * 8);
+            
+            //这里提升一点攻速
+            if (hasItemSk(ItemSkill.Assassin6))
+            {
+                if (AttackSpeed < 330) AttackSpeed = 330;
+            }
+            else
+            {
+                if (AttackSpeed < 550) AttackSpeed = 550;
+            }
         }
 
         private void RefreshLevelStats()
@@ -3007,6 +3015,11 @@ namespace Server.MirObjects
                 {
                     sk4 = temp.sk4;
                 }
+                if (temp.hasItemSk(ItemSkill.Assassin6))
+                {
+                    ASpeed += 2;
+                }
+
 
                 if (RealItem.Set == ItemSet.None) continue;
 
@@ -8509,8 +8522,13 @@ namespace Server.MirObjects
         {
             for (int i = 0; i < Buffs.Count; i++)
                 if (Buffs[i].Type == BuffType.MoonLight) return;
+            int etime = (GetAttackPower(MinAC, MaxAC) + (magic.Level + 1) * 5) * 500;
+            if (hasItemSk(ItemSkill.Assassin1))
+            {
+                etime = etime * 15 / 10;
+            }
+            AddBuff(new Buff { Type = BuffType.MoonLight, Caster = this, ExpireTime = Envir.Time + etime, Visible = true });
 
-            AddBuff(new Buff { Type = BuffType.MoonLight, Caster = this, ExpireTime = Envir.Time + (GetAttackPower(MinAC, MaxAC) + (magic.Level + 1) * 5) * 500, Visible = true });
             LevelMagic(magic);
         }
         private void Trap(UserMagic magic, MapObject target, out bool cast)
@@ -12716,6 +12734,7 @@ namespace Server.MirObjects
                         return;
                     }
                     //升级成功率75
+                    //升级成功率75
                     int change = 75;
                     if (tempTo.Info.Type == ItemType.Weapon)
                     {
@@ -12737,9 +12756,11 @@ namespace Server.MirObjects
                     if (suss2)
                     {
                         tempTo.quality += 1;
+                        tempTo.sk1 += 31;
                         if (RandomUtils.Next(100) < 70)
                         {
                             tempTo.spiritual += 1;
+                            
                         }
                         canUpgrade = true;
                     }
@@ -19007,7 +19028,7 @@ namespace Server.MirObjects
 
         #endregion
 
-        #region Refining
+        #region Refining 武器升级
 
         public void DepositRefineItem(int from, int to)
         {

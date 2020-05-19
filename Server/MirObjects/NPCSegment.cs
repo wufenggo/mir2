@@ -2899,7 +2899,7 @@ namespace Server.MirObjects
                         //查找武器
                         if (player.Info.Equipment[(int)EquipmentSlot.Weapon] == null)
                         {
-                            player.ReceiveChat($"没有武器，无法封印阵法", ChatType.System);
+                            player.ReceiveChat($"没有武器，无法封印", ChatType.System);
                             return;
                         }
  

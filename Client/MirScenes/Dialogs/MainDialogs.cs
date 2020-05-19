@@ -3602,7 +3602,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
 
-                if (WeaponCell.Item != null)
+                if (WeaponCell.Item != null)//武器内观
                 {
                     RealItem = Functions.GetRealItem(WeaponCell.Item.Info, Level, Class, GameScene.ItemInfoList);
                     Libraries.StateItems.Draw(RealItem.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20),
@@ -3610,7 +3610,7 @@ namespace Client.MirScenes.Dialogs
 
                 }
 
-                if (HelmetCell.Item != null)
+                if (HelmetCell.Item != null)//头盔内观
                     Libraries.StateItems.Draw(HelmetCell.Item.Info.Image, new Point(DisplayLocation.X, DisplayLocation.Y - 20), Color.White, true, 1F);
                 else
                 {
