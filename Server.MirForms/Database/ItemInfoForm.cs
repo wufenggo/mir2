@@ -1122,7 +1122,7 @@ namespace Server
             if (ActiveControl != sender) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
-                _selectedItemInfos[i]. = (ItemSet)ISetComboBox.SelectedItem;
+                _selectedItemInfos[i].Set = (ItemSet)ISetComboBox.SelectedItem;
         }
 
         private void ACRateTextbox_TextChanged(object sender, EventArgs e)

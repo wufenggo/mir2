@@ -3698,6 +3698,17 @@ namespace Client.MirObjects
             frame.Frames.Add(MirAction.Revive, new Frame(464, 8, 0, 100) { Reverse = true });
             MonstersMap.Add(Monster.Monster454, frame);
 
+            //自定义 Monster460 强化骷髅
+            frame = new FrameSet();
+            frame.Frames.Add(MirAction.Standing, new Frame(0, 4, 0, 500));
+            frame.Frames.Add(MirAction.Walking, new Frame(32, 6, 0, 100));
+            frame.Frames.Add(MirAction.Attack1, new Frame(80, 6, 0, 100));
+            frame.Frames.Add(MirAction.Struck, new Frame(128, 2, 0, 200));
+            frame.Frames.Add(MirAction.Die, new Frame(144, 6, 0, 100));
+            frame.Frames.Add(MirAction.Dead, new Frame(149, 1, 6, 1000));
+            frame.Frames.Add(MirAction.Appear, new Frame(192, 10, -10, 100) { Blend = true });
+            frame.Frames.Add(MirAction.Revive, new Frame(144, 6, 0, 100) { Reverse = true });
+            MonstersMap.Add(Monster.Monster460, frame);
 
 
         }

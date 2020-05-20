@@ -8724,6 +8724,9 @@ namespace Client.MirScenes
                 count++;
                 ItemSkillBean skb1 = ItemSkillBean.get(item.sk1);
 
+
+
+
                 MirLabel IDLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -8731,10 +8734,14 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "[封印属性] - 第" + item.skCount + "层封印"
+                    Text = "[封印属性] - 第" + item.skCount + "层封印"+skb1.level+"级"
                 };
+
+
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, IDLabel.DisplayRectangle.Bottom));
+
+
                 MirLabel sk1 = new MirLabel
                 {
                     AutoSize = true,
@@ -9589,7 +9596,7 @@ namespace Client.MirScenes
                     if (x >= Width) break;
                     drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
                     if ((M2CellInfo[x, y].BackImage == 0) || (M2CellInfo[x, y].BackIndex == -1)) continue;
-                    index = (M2CellInfo[x, y].BackImage & 0x1FFFF) - 1;
+                    index = (M2CellInfo[x, y].BackImage & 0X1FFFFFFF) - 1;
                     Libraries.MapLibs[M2CellInfo[x, y].BackIndex].Draw(index, drawX, drawY);
                 }
             }

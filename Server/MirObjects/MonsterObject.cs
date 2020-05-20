@@ -503,6 +503,8 @@ namespace Server.MirObjects
                     return new Monster457(info);
                 case Monster.Monster458:// 未知
                     return new Monster458(info);
+                case Monster.Monster460:// 未知
+                    return new Monster460(info);// 强化骷髅
 
                 default:
                     return new MonsterObject(info);

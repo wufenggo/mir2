@@ -5802,6 +5802,7 @@ namespace ServerPackets
         public string ObjectiveMessage = string.Empty;
         public List<MonsterEventObjective> Objectives = new List<MonsterEventObjective>();
         public int Stage = 0;
+       
         public EventType Type = EventType.None;
         public EnterOrUpdatePublicEvent()
         {

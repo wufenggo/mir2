@@ -151,8 +151,8 @@ public class ItemSkillBean
             //list.Add(new ItemSkillBean(ItemSkill.Wizard5, "分身阵", "强化分身，分身攻击等于本体攻击的", RequiredClass.Wizard, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Wizard7, "法神阵", "强化火雨/火墙技能", RequiredClass.Wizard, 5));
 
-            list.Add(new ItemSkillBean(ItemSkill.Taoist1, "隐藏属性-符咒", "\n感悟火符真谛使得火符威力增加", RequiredClass.道士, 30, ItemGrade.None,2));
-            list.Add(new ItemSkillBean(ItemSkill.Taoist2, "隐藏属性-骷髅", "强化骷髅，召唤出强化骷髅为你做战", RequiredClass.道士, 30,ItemGrade.None, 3));
+            list.Add(new ItemSkillBean(ItemSkill.Taoist1, "隐藏属性-符咒", "\n感悟火符真谛使得火符威力增加", RequiredClass.道士, 30, ItemGrade.None,1));
+            list.Add(new ItemSkillBean(ItemSkill.Taoist2, "隐藏属性-骷髅", "强化骷髅，召唤出强化骷髅为你做战", RequiredClass.道士, 30,ItemGrade.Mythical, 2));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist4, "圣兽阵", "强化神兽，召唤出强化神兽为你做战", RequiredClass.Taoist, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist5, "厚土阵", "魔，防技能魔防提升", RequiredClass.Taoist, 15));
             //list.Add(new ItemSkillBean(ItemSkill.Taoist7, "道尊阵", "施毒术伤害增加，毒云伤害，瘟疫伤害无上限", RequiredClass.Taoist, 5));
@@ -1050,7 +1050,7 @@ public enum Monster : ushort
     Monster456 = 456,
     Monster457 = 457,
     Monster458 = 458,
-
+    Monster460 = 460,
 
     EvilMir = 900,
     EvilMirBody = 901,

@@ -2777,7 +2777,7 @@ namespace Server.MirObjects
             {
                 UserItem item = Info.Inventory[i];
                 if (item != null)
-                    CurrentBagWeight = (ushort)Math.Min(ushort.MaxValue, CurrentBagWeight + item.Weight);
+                    CurrentBagWeight = (ushort)Math.Min(ushort.MaxValue, CurrentBagWeight + item.Weight+item.skCount);
             }
         }
 
@@ -7664,9 +7664,9 @@ namespace Server.MirObjects
             for (int i = 0; i < Pets.Count; i++)
             {
                 monster = Pets[i];
-                if ((monster.Info.Name != Settings.SkeletonName) || monster.Dead) continue;
+                if ((!monster.Info.Name.StartsWith(Settings.SkeletonName)) || monster.Dead) continue;
                 if (monster.Node == null) continue;
-                monster.ActionList.Add(new DelayedAction(DelayedType.Recall, Envir.Time + 500));
+                monster.ActionList.Add(new DelayedAction(DelayedType.Recall, Envir.Time + 100));
                 return;
             }
 
@@ -7682,19 +7682,19 @@ namespace Server.MirObjects
             if (info == null) return;
             if (hasItemSk(ItemSkill.Taoist2))
             {
-                MonsterInfo _info = Envir.GetMonsterInfo(Settings.SkeletonName + "2");
+                MonsterInfo _info = Envir.GetMonsterInfo(Settings.SkeletonName+"2");
 
-                if (_info == null)
+                if (_info != null)
                 {
                     info = _info.Clone();
                 }
                 ushort _skCount = this.skCount;
-                if (_skCount > 50)
+                if (_skCount > 5)
                 {
-                    _skCount = 50;
+                    _skCount = 1000;
                 }
                 _skCount = (ushort)(_skCount / 2);
-                info.MaxMAC += _skCount;
+                info.MoveSpeed += _skCount;
                 info.MaxAC += _skCount;
                 info.MaxDC += _skCount;
             }
@@ -7715,7 +7715,7 @@ namespace Server.MirObjects
 
             //Pets.Add(monster);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, Front);
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 100, this, magic, monster, Front);
             CurrentMap.ActionList.Add(action);
         }
         private void Purification(MapObject target, UserMagic magic)
@@ -12756,7 +12756,7 @@ namespace Server.MirObjects
                     if (suss2)
                     {
                         tempTo.quality += 1;
-                        tempTo.sk1 += 31;
+                        
                         if (RandomUtils.Next(100) < 70)
                         {
                             tempTo.spiritual += 1;
@@ -12842,7 +12842,7 @@ namespace Server.MirObjects
                     tempTo.AttackSpeed = 0;
                     tempTo.GemCount = 0;
                     
-                    canUpgrade = true;
+                    canUpgrade  = true;
                     ReceiveChat("装备已清洗.", ChatType.Hint);
                     Enqueue(new S.ItemUpgraded { Item = tempTo });
                     if (tempFrom.Count > 1)
@@ -12858,12 +12858,81 @@ namespace Server.MirObjects
                     p.Success = true;
                     Enqueue(p);
                     return;
+
+
+                case 14://混沌石升级系统
+                    if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.skCount >= 5 )
+                    {
+                        ReceiveChat("物品已达到最大强化", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    byte type3 = (byte)tempTo.Info.Type;
+                    if (!ValidGemForItem(tempFrom, type3))
+                    {
+                        this.ReceiveChat("当前装备无法使用", ChatType.Hint);
+                        Enqueue(p);
+                        return;
+                    }
+                    //升级成功率75
+                    //升级成功率75
+                    int change1 = 100;
+                    if (tempTo.Info.Type == ItemType.Weapon)
+                    {
+                        //change1 -= (int)(tempTo.quality * 7);
+                    }
+                    else
+                    {
+                       // change1 -= (int)(tempTo.quality * 15);
+                    }
+                    if (change1 < 5)
+                    {
+                        change1 = 5;
+                    }
+                    if (change1 > 70)
+                    {
+                        change1 = 70;
+                    }
+                    bool suss3 = RandomUtils.Next(100) < change1;
+                    if (suss3)
+                    {
+                        //tempTo.skCount += 1;
+
+                        if (RandomUtils.Next(100) < 70)
+                        {
+                            tempTo.skCount += 1;
+
+                        }
+                        canUpgrade = true;
+                        
+
+                    }
+                    else
+                    {
+                        this.ReceiveChat("升级没有效果.", ChatType.Hint);
+                        canUpgrade = false;
+                    }
+                    break;
                 default:
                     Enqueue(p);
                     return;
+                    //刷新包裹
+                   
+
             }
-
-
+            //刷新包裹
+            RefreshBagWeight();
+            RefreshBagStats();
             //刷新包裹
 
             if (canRepair && Info.Inventory[indexTo] != null)
@@ -12904,6 +12973,8 @@ namespace Server.MirObjects
             p.Success = true;
             Enqueue(p);
         }
+        //刷新包裹
+       
         private bool ValidGemForItem(UserItem Gem, byte itemtype)
         {
             switch (itemtype)

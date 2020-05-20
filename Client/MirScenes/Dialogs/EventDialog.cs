@@ -18,8 +18,10 @@ namespace Client.MirScenes.Dialogs
         public List<MirLabel> MonsterObjectives = new List<MirLabel>();
         public List<MirLabel> ObjectiveMessages = new List<MirLabel>();
 
-        public Font QuestFont = new Font(Settings.FontName, 9F);
+        public Font QuestFont = new Font(Settings.FontName, 10F);
 
+
+        
         public EventDialog()
         {
             Movable = true;

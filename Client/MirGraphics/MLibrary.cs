@@ -88,7 +88,7 @@ namespace Client.MirGraphics
                                           ARWeaponsS = new MLibrary[19],
                                           ARHair = new MLibrary[9],
                                           ARHumEffect = new MLibrary[3],
-                                          Monsters = new MLibrary[458],//怪物
+                                          Monsters = new MLibrary[480],//怪物
                                           Gates = new MLibrary[2],
                                           Flags = new MLibrary[12],
                                           Mounts = new MLibrary[12],
@@ -322,7 +322,7 @@ namespace Client.MirGraphics
             MapLibs[0] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Tiles");
             MapLibs[1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Smtiles");
             MapLibs[2] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects");
-            for (int i = 2; i < 24; i++)
+            for (int i = 2; i < 28; i++)
             {
                 MapLibs[i + 1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects" + i.ToString());
             }

@@ -266,7 +266,7 @@ namespace Client.MirScenes.Dialogs
             };
             ALL.Click += (o, e) =>
             {
-                ClassFilter = "全部";
+                ClassFilter = "显示所有";
                 TypeFilter = "显示所有";
                 GetCategories();
                 ResetClass();
@@ -622,7 +622,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (!CategoryList.Contains(shopList[i].Category) && shopList[i].Category != "")
                 {
-                    if (shopList[i].Class == ClassFilter || shopList[i].Class == "全部" || ClassFilter == "显示所有")
+                    if (shopList[i].Class == ClassFilter || shopList[i].Class == "显示所有" || ClassFilter == "显示所有")
                     {
                         if (SectionFilter == "显示所有" || SectionFilter == "热门" && shopList[i].TopItem || SectionFilter == "打折" && shopList[i].Deal || SectionFilter == "新品" && shopList[i].Date > DateTime.Now.AddDays(-7))
                             CategoryList.Add(shopList[i].Category);
@@ -674,7 +674,7 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < ShopList.Count; i++)
             {
-                if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "全部" || ClassFilter == "显示所有")
+                if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "显示所有" || ClassFilter == "显示所有")
                     if (ShopList[i].Category == TypeFilter || TypeFilter == "显示所有")
                     {
                         if (SectionFilter == "显示所有" || SectionFilter == "热门" && ShopList[i].TopItem || SectionFilter == "打折" && ShopList[i].Deal || SectionFilter == "新品" && ShopList[i].Date > DateTime.Now.AddDays(-7))
