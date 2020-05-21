@@ -2450,6 +2450,16 @@ namespace Client.MirObjects
 
                             #endregion
 
+
+                            #region MoonMist 月影雾
+
+                            case Spell.MoonMist:
+                                Effects.Add(new Effect(Libraries.Magic3, 680, 24, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
                             #region EnergyRepulsor
 
                             case Spell.EnergyRepulsor:

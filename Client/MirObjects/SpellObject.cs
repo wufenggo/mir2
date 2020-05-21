@@ -48,6 +48,14 @@ namespace Client.MirObjects
                     FrameCount = 10;
                     Blend = true;
                     break;
+
+                case Spell.MoonMist://月影雾
+                    BodyLibrary = Libraries.Magic3;
+                    DrawFrame = 705;
+                    FrameInterval = 100;
+                    FrameCount = 9;
+                    Blend = true;
+                    break;
                 case Spell.TrapHexagon:
                     BodyLibrary = Libraries.Magic;
                     DrawFrame = 1390;

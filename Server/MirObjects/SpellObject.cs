@@ -176,6 +176,17 @@ namespace Server.MirObjects
                         Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
                     }
                     break;
+
+                case Spell.MoonMist://月影雾
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    //伤害敌军
+                    if (ob.IsAttackTarget(Caster))
+                    {
+                        ob.Attacked(Caster, Value * 10 / 8, DefenceType.MAC, false);
+                    }
+                    
+                    break;
                 case Spell.Blizzard:
                     if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
                     if (ob.Dead) return;
@@ -452,6 +463,7 @@ namespace Server.MirObjects
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
                 case Spell.HealingCircle:
+                case Spell.MoonMist:
                     if (!Show)
                         return null;
 

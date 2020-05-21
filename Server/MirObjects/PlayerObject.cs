@@ -6941,6 +6941,11 @@ namespace Server.MirObjects
                 case Spell.HealingCircle:
                     HealingCircle(magic, target, out cast);
                     break;
+
+
+                case Spell.MoonMist:
+                    MoonMist(magic);
+                    break;
                 case Spell.TrapHexagon:
                     TrapHexagon(magic, target, out cast);
                     break;
@@ -7908,6 +7913,31 @@ namespace Server.MirObjects
                 cast = true;
             }
         }
+
+        private void MoonMist(UserMagic magic)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+                if (Buffs[i].Type == BuffType.MoonLight) return;
+            int etime = (GetAttackPower(MinAC, MaxAC) + (magic.Level + 1) * 5) * 500;
+            int damage = magic.GetDamage(base.GetAttackPower((int)this.MinDC, (int)this.MaxDC));
+            DelayedAction item = new DelayedAction(DelayedType.Magic, MapObject.Envir.Time + 500L, new object[]
+                 {
+                    this,
+                    magic,
+                    damage,
+                    this.CurrentLocation
+                 });
+
+            if (hasItemSk(ItemSkill.Assassin1))
+            {
+                etime = etime * 15 / 10;
+            }
+            AddBuff(new Buff { Type = BuffType.MoonLight, Caster = this, ExpireTime = Envir.Time + etime, Visible = true });
+            base.CurrentMap.ActionList.Add(item);
+            LevelMagic(magic);
+        }
+
+
         private void Reincarnation(UserMagic magic, PlayerObject target, out bool cast)
         {
             cast = true;
