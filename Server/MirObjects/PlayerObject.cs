@@ -1443,9 +1443,9 @@ namespace Server.MirObjects
                             Report.ItemChanged("Death Drop", item, item.Count, 1);
                         }
                     }
-                    if (ItemSets.Any(set => set.Set == ItemSet.Spirit && !set.SetComplete))
+                    if (ItemSets.Any(set => set.Set == ItemSet.祈祷 && !set.SetComplete))
                     {
-                        if (item.Info.Set == ItemSet.Spirit)
+                        if (item.Info.Set == ItemSet.祈祷)
                         {
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
@@ -2669,7 +2669,7 @@ namespace Server.MirObjects
                 if (AttackSpeed < 550) AttackSpeed = 550;
             }
         }
-
+        
         private void RefreshLevelStats()
         {
             MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
@@ -3129,7 +3129,7 @@ namespace Server.MirObjects
                         MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + 2);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
                         break;
-                    case ItemSet.Spirit:
+                    case ItemSet.祈祷:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 2);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 5);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
@@ -6441,7 +6441,7 @@ namespace Server.MirObjects
 
                         if (defence == DefenceType.ACAgility) defence = DefenceType.MACAgility;
 
-                        action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, ob, damageFinal, DefenceType.Agility, false);
+                        action = new DelayedAction(DelayedType.Damage, Envir.Time , ob, damageFinal, DefenceType.Agility, false);
                         ActionList.Add(action);
                         LevelMagic(magic);
                         break;

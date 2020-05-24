@@ -94,28 +94,48 @@ namespace Client
 
     public class KeyBind
     {
-        public KeybindOptions function = KeybindOptions.Bar1Skill1;
+        public KeybindOptions function = KeybindOptions.Bar1Skill1;//捆绑的事件
         public byte RequireCtrl = 0; //so these requirexxx: 0 < only works if you DONT hold the key, 1 < only works if you HOLD the key, 2 < works REGARDLESSS of the key
         public byte RequireShift = 0;
         public byte RequireAlt = 0;
         public byte RequireTilde = 0;
         public Keys Key = 0;
+
+
+        public override string ToString()
+        {
+            return "function:" + function + ",RequireCtrl:" + RequireCtrl + ",RequireShift:" + RequireShift + ",RequireAlt:" + RequireAlt + ",RequireTilde:" + RequireTilde + ",Key:" + Key;
+        }
     }
 
 
     public class KeyBindSettings
     {
-        private static InIReader Reader = new InIReader(@".\KeyBinds.ini");
+        private static InIReader Reader = new InIReader(@".\Config\KeyBinds.ini");
         public List<KeyBind> Keylist = new List<KeyBind>();
+        private Dictionary<KeybindOptions, KeyBind> funcdict = new Dictionary<KeybindOptions, KeyBind>();
+        private Dictionary<Keys, KeyBind> keydict = new Dictionary<Keys, KeyBind>();
+
         public KeyBindSettings()
         {
             New();
-            if (!File.Exists(@".\KeyBinds.ini"))
+            if (!File.Exists(@".\Config\KeyBinds.ini"))
             {
                 Save();
                 return;
             }
             Load();
+            for (int i = 0; i < Keylist.Count; i++)
+            {
+                if (!funcdict.ContainsKey(Keylist[i].function))
+                {
+                    funcdict.Add(Keylist[i].function, Keylist[i]);
+                }
+                if (!keydict.ContainsKey(Keylist[i].Key))
+                {
+                    keydict.Add(Keylist[i].Key, Keylist[i]);
+                }
+            }
         }
 
         public void Load()
@@ -342,6 +362,60 @@ namespace Client
                 }
             }
             return "";
+        }
+
+        //通过fun查询绑定
+        public KeyBind GetKeyBindByFun(KeybindOptions Option)
+        {
+            if (!funcdict.ContainsKey(Option))
+            {
+                return null;
+            }
+            return funcdict[Option];
+        }
+        //通过key查询绑定
+        public KeyBind GetKeyBindByKey(Keys key)
+        {
+            if (!keydict.ContainsKey(key))
+            {
+                return null;
+            }
+            return keydict[key];
+        }
+
+        //通过组合参数查询key
+        public KeyBind GetKeyBind(bool Shift, bool Alt, bool Ctrl, bool Tilde, Keys key)
+        {
+            if (key == Keys.None) return null;
+            if (!keydict.ContainsKey(key))
+            {
+                return null;
+            }
+            //自定义键，0：没有按住。1：必须按住，2：按不按都可以
+            //MirLog.debug("key" + key);
+            KeyBind kb = keydict[key];
+            if (kb == null)
+            {
+                return null;
+            }
+            //MirLog.debug("kb" + kb.ToString());
+            if (kb.RequireShift != 2 && kb.RequireShift != (Shift ? 1 : 0))
+            {
+                return null;
+            }
+            if (kb.RequireAlt != 2 && kb.RequireAlt != (Alt ? 1 : 0))
+            {
+                return null;
+            }
+            if (kb.RequireCtrl != 2 && kb.RequireCtrl != (Ctrl ? 1 : 0))
+            {
+                return null;
+            }
+            if (kb.RequireTilde != 2 && kb.RequireTilde != (Tilde ? 1 : 0))
+            {
+                return null;
+            }
+            return kb;
         }
     }
 

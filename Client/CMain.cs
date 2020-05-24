@@ -121,7 +121,7 @@ namespace Client
             Alt = e.Alt;
             Ctrl = e.Control;
 
-            if (e.KeyCode == Keys.Oem8)
+            if (e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.Oemtilde)
                 CMain.Tilde = true;
 
             try
@@ -172,7 +172,7 @@ namespace Client
             Alt = e.Alt;
             Ctrl = e.Control;
 
-            if (e.KeyCode == Keys.Oem8)
+            if (e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.Oemtilde)
                 CMain.Tilde = false;
 
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)

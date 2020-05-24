@@ -3810,7 +3810,7 @@ namespace Client.MirScenes
             item.sk2 = p.Item.sk2;
             item.sk3 = p.Item.sk3;
             item.sk4 = p.Item.sk4;
-
+            item.Set = p.Item.Set;
             GameScene.Scene.InventoryDialog.DisplayItemGridEffect(item.UniqueID, 0);
 
             //MirAnimatedControl anim = new MirAnimatedControl
@@ -6126,8 +6126,10 @@ namespace Client.MirScenes
                 Parent = ItemLabel,
                 Text = WedRingName
             };
+            
 
-                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
+
+            ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, etcLabel.DisplayRectangle.Bottom + 4));
             
             #region OUTLINE
@@ -6412,6 +6414,7 @@ namespace Client.MirScenes
                     Math.Max(ItemLabel.Size.Height, SCLabel.DisplayRectangle.Bottom));
             }
             #endregion
+           
 
 
             #region ACC
@@ -7191,6 +7194,28 @@ namespace Client.MirScenes
                     Math.Max(ItemLabel.Size.Height, MAGIC_RESISTLabel.DisplayRectangle.Bottom));
             }
 
+            #endregion
+
+            #region set 套装
+
+            if (realItem.Set > 0)
+            {
+                count++;
+                text = string.Format("套装 {0} {1}", realItem.Set, realItem.Name);
+
+                MirLabel SETLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = minValue > 0 ? Color.Cyan : Color.YellowGreen,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    //Text = string.Format("SC + {0}~{1}", minValue, maxValue + addValue)
+                    Text = text
+                };
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SETLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, SETLabel.DisplayRectangle.Bottom));
+            }
             #endregion
 
             if (count > 0)
@@ -8248,6 +8273,10 @@ namespace Client.MirScenes
 
             #endregion
 
+
+
+
+
             if (HoverItem.RentalInformation?.RentalLocked == false)
             {
 
@@ -8461,6 +8490,7 @@ namespace Client.MirScenes
                         break;
                 }
             }
+            
 
             if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
@@ -8496,6 +8526,8 @@ namespace Client.MirScenes
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TOOLTIPLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, TOOLTIPLabel.DisplayRectangle.Bottom));
+
+
             }
 
             #endregion

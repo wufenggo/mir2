@@ -12,107 +12,109 @@ namespace Server.MirForms
     {
         public static Envir EditEnvir = null;
 
+        public static List<MapInfo> MapInfo = new List<MapInfo>();
+        public static List<MapMovements> MapMovements = new List<MapMovements>();
+        public static List<MineInfo> MineInfo = new List<MineInfo>();
+
         private static int _endIndex = 0;
         public static string Path = string.Empty;
 
-        private static List<String> errors = new List<String>();
-
-        public static void Start(Envir envirToUpdate)
+        public static void Start(Envir envir)
         {
             if (Path == string.Empty) return;
-            EditEnvir = envirToUpdate;
+
+            EditEnvir = envir;
 
             if (EditEnvir == null) return;
 
             var lines = File.ReadAllLines(Path);
+
             _endIndex = EditEnvir.MapIndex; // Last map index number
+
             for (int i = 0; i < lines.Length; i++)
             {
-
                 if (lines[i].StartsWith("[")) // Read map info
                 {
                     lines[i] = System.Text.RegularExpressions.Regex.Replace(lines[i], @"\s+", " "); // Clear white-space
+
                     lines[i] = lines[i].Replace(" ;", ";"); // Remove space before semi-colon
 
                     // Trim comment at the end of the line
                     if (lines[i].Contains(';'))
                         lines[i] = lines[i].Substring(0, lines[i].IndexOf(";", System.StringComparison.Ordinal));
 
-                    MirDatabase.MapInfo newMapInfo = new MirDatabase.MapInfo { Index = ++_endIndex };
+                    MapInfo newMapInfo = new MapInfo { Index = ++_endIndex };
 
                     var a = lines[i].Split(']'); // Split map info into [0] = MapFile MapName 0 || [1] = Attributes
+
                     string[] b = a[0].Split(' ');
 
-                    newMapInfo.FileName = b[0].TrimStart('['); // Assign MapFile from variable and trim leading '[' char
-                    newMapInfo.Title = b[1]; // Assign MapName from variable
+                    newMapInfo.MapFile = b[0].TrimStart('['); // Assign MapFile from variable and trim leading '[' char
+                    newMapInfo.MapName = b[1]; // Assign MapName from variable
 
                     List<string> mapAttributes = new List<string>(); // Group of all attributes associated with that map
                     mapAttributes.AddRange(a[1].Split(' '));
 
+                    int nri = mapAttributes.FindIndex(x => x.StartsWith("NORECONNECT(".ToUpper())); // NORECONNECT() placement in list of parameters
+                    int fi = mapAttributes.FindIndex(x => x.StartsWith("FIRE(".ToUpper())); // FIRE() placement in list of parameters
+                    int li = mapAttributes.FindIndex(x => x.StartsWith("LIGHTNING(".ToUpper())); // LIGHTNING() placement in list of parameters
+                    int lighti = mapAttributes.FindIndex(x => x.StartsWith("LIGHT(".ToUpper())); // LIGHT() placement in list of parameters
+                    int mmi = mapAttributes.FindIndex(x => x.StartsWith("MINIMAP(".ToUpper())); // MINIMAP() placement in list of parameters
+                    int bmi = mapAttributes.FindIndex(x => x.StartsWith("BIGMAP(".ToUpper())); // BIGMAP() placement in list of parameters
+                    int mli = mapAttributes.FindIndex(x => x.StartsWith("MAPLIGHT(".ToUpper())); // MAPLIGHT() placement in list of parameters
+                    int minei = mapAttributes.FindIndex(x => x.StartsWith("MINE(".ToUpper())); // MINE() placement in list of parameters
+                    int musici = mapAttributes.FindIndex(x => x.StartsWith("MUSIC(".ToUpper()));
                     newMapInfo.NoTeleport = mapAttributes.Any(s => s.Contains("NOTELEPORT".ToUpper()));
+                    newMapInfo.NoReconnect = mapAttributes.Any(x => x.StartsWith("NORECONNECT(".ToUpper()));
                     newMapInfo.NoRandom = mapAttributes.Any(s => s.Contains("NORANDOMMOVE".ToUpper()));
                     newMapInfo.NoEscape = mapAttributes.Any(s => s.Contains("NOESCAPE".ToUpper()));
                     newMapInfo.NoRecall = mapAttributes.Any(s => s.Contains("NORECALL".ToUpper()));
                     newMapInfo.NoDrug = mapAttributes.Any(s => s.Contains("NODRUG".ToUpper()));
-                    newMapInfo.NoPosition = mapAttributes.Any(s => s.Contains("NOPOSITIONMOVE".ToUpper()));
+                    newMapInfo.NoPositionMove = mapAttributes.Any(s => s.Contains("NOPOSITIONMOVE".ToUpper()));
                     newMapInfo.NoThrowItem = mapAttributes.Any(s => s.Contains("NOTHROWITEM".ToUpper()));
-                    newMapInfo.NoDropPlayer = mapAttributes.Any(s => s.Contains("NOPLAYERDROP".ToUpper()));
-                    newMapInfo.NoDropMonster = mapAttributes.Any(s => s.Contains("NOMONSTERDROP".ToUpper()));
+                    newMapInfo.NoPlayerDrop = mapAttributes.Any(s => s.Contains("NOPLAYERDROP".ToUpper()));
+                    newMapInfo.NoMonsterDrop = mapAttributes.Any(s => s.Contains("NOMONSTERDROP".ToUpper()));
                     newMapInfo.NoNames = mapAttributes.Any(s => s.Contains("NONAMES".ToUpper()));
                     newMapInfo.NoFight = mapAttributes.Any(s => s.Contains("NOFIGHT".ToUpper()));
-                    newMapInfo.NoMount = mapAttributes.Any(s => s.Contains("NOMOUNT".ToUpper()));
-                    newMapInfo.NeedBridle = mapAttributes.Any(s => s.Contains("NEEDBRIDLE".ToUpper()));
                     newMapInfo.Fight = mapAttributes.Any(s => s.Contains("FIGHT".ToUpper()));
-                    newMapInfo.NoTownTeleport = mapAttributes.Any(s => s.Contains("NOTOWNTELEPORT".ToUpper()));
-
                     newMapInfo.Fire = mapAttributes.Any(x => x.StartsWith("FIRE(".ToUpper()));
-                    if (newMapInfo.Fire)
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("FIRE(".ToUpper()));
-                        newMapInfo.FireDamage = Convert.ToInt16(mapAttributes[index].TrimStart("FIRE(".ToCharArray()).TrimEnd(')'));
-                    }
                     newMapInfo.Lightning = mapAttributes.Any(x => x.StartsWith("LIGHTNING(".ToUpper()));
-                    if (newMapInfo.Lightning)
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("LIGHTNING(".ToUpper()));
-                        newMapInfo.LightningDamage = Convert.ToInt16(mapAttributes[index].TrimStart("LIGHTNING(".ToCharArray()).TrimEnd(')'));
-                    }
-                    newMapInfo.NoReconnect = mapAttributes.Any(x => x.StartsWith("NORECONNECT(".ToUpper()));
-                    if (newMapInfo.NoReconnect)
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("NORECONNECT(".ToUpper()));
-                        newMapInfo.NoReconnectMap = newMapInfo.NoReconnectMap == string.Empty ? "0" : mapAttributes[index].TrimStart("NORECONNECT(".ToCharArray()).TrimEnd(')');
-                    }
+                    newMapInfo.MiniMap = mapAttributes.Any(x => x.StartsWith("MINIMAP(".ToUpper()));
+                    newMapInfo.BigMap = mapAttributes.Any(x => x.StartsWith("BIGMAP(".ToUpper()));
+                    newMapInfo.Mine = mapAttributes.Any(s => s.Contains("MINE(".ToUpper()));
+                    newMapInfo.MapLight = mapAttributes.Any(s => s.Contains("MAPLIGHT(".ToUpper()));
+                    newMapInfo.Music = mapAttributes.Any(s => s.Contains("MUSIC(".ToUpper()));
+                    newMapInfo.Light = LightSetting.Normal;
 
-                    if (mapAttributes.Any(x => x.StartsWith("MINIMAP(".ToUpper())))
+
+                    if (newMapInfo.NoReconnect == true) // If there is a NORECONNECT attribute get its MapFile
+                        newMapInfo.ReconnectMap = (newMapInfo.ReconnectMap == string.Empty) ? "0" : mapAttributes[nri].TrimStart("NORECONNECT(".ToCharArray()).TrimEnd(')');
+                    if (mli != -1) // If there is a MAPLIGHT attribute get its value
+                        newMapInfo.MapLightValue = Convert.ToByte(mapAttributes[mli].TrimStart("MAPLIGHT(".ToCharArray()).TrimEnd(')'));
+
+                    if (mapAttributes.Any(s => s.Contains("MINE1".ToUpper()))) // Mir Mine 1
+                        newMapInfo.MineIndex = 1;
+                    if (mapAttributes.Any(s => s.Contains("MINE2".ToUpper()))) // Mir Mine 2
+                        newMapInfo.MineIndex = 2;
+                    if (minei != -1) // If there is a MINE attribute get its value
+                        newMapInfo.MineIndex = Convert.ToByte(mapAttributes[minei].TrimStart("MINE(".ToCharArray()).TrimEnd(')'));
+
+                    if (newMapInfo.Fire == true) // If there is a FIRE attribute get its value
+                        newMapInfo.FireDamage = Convert.ToInt16(mapAttributes[fi].TrimStart("FIRE(".ToCharArray()).TrimEnd(')'));
+                    if (newMapInfo.Lightning == true) // If there is a LIGHTNING attribute get its value
+                        newMapInfo.LightningDamage = Convert.ToInt16(mapAttributes[li].TrimStart("LIGHTNING(".ToCharArray()).TrimEnd(')'));
+
+                    if (newMapInfo.MiniMap == true) // If there is a MINIMAP attribute get its value
+                        newMapInfo.MiniMapNumber = Convert.ToUInt16(mapAttributes[mmi].TrimStart("MINIMAP(".ToCharArray()).TrimEnd(')'));
+                    if (newMapInfo.BigMap == true) // If there is a BIGMAP attribute get its value
+                        newMapInfo.BigMapNumber = Convert.ToUInt16(mapAttributes[bmi].TrimStart("BIGMAP(".ToCharArray()).TrimEnd(')'));
+
+                    if (newMapInfo.Music == true)
+                        newMapInfo.MusicNumber = Convert.ToUInt16(mapAttributes[musici].TrimStart("MUSIC(".ToCharArray()).TrimEnd(')'));
+
+                    if (lighti != -1) // Check if there is a LIGHT attribute and get its value
                     {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("MINIMAP(".ToUpper()));
-                        newMapInfo.MiniMap = Convert.ToUInt16(mapAttributes[index].TrimStart("MINIMAP(".ToCharArray()).TrimEnd(')'));
-                    }
-                    if (mapAttributes.Any(x => x.StartsWith("BIGMAP(".ToUpper())))
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("BIGMAP(".ToUpper()));
-                        newMapInfo.BigMap = Convert.ToUInt16(mapAttributes[index].TrimStart("BIGMAP(".ToCharArray()).TrimEnd(')'));
-                    }
-                    if (mapAttributes.Any(s => s.Contains("MINE(".ToUpper())))
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("MINE(".ToUpper()));
-                        newMapInfo.MineIndex = Convert.ToByte(mapAttributes[index].TrimStart("MINE(".ToCharArray()).TrimEnd(')'));
-                    }
-                    if (mapAttributes.Any(s => s.Contains("MAPLIGHT(".ToUpper())))
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("MAPLIGHT(".ToUpper()));
-                        newMapInfo.MapDarkLight = Convert.ToByte(mapAttributes[index].TrimStart("MAPLIGHT(".ToCharArray()).TrimEnd(')'));
-                    }
-                    if (mapAttributes.Any(s => s.Contains("MUSIC(".ToUpper())))
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("MUSIC(".ToUpper()));
-                        newMapInfo.Music = Convert.ToUInt16(mapAttributes[index].TrimStart("MUSIC(".ToCharArray()).TrimEnd(')'));
-                    }
-                    if (mapAttributes.Any(x => x.StartsWith("LIGHT(".ToUpper()))) // Check if there is a LIGHT attribute and get its value
-                    {
-                        int index = mapAttributes.FindIndex(x => x.StartsWith("LIGHT(".ToUpper()));
-                        switch (mapAttributes[index].TrimStart("LIGHT(".ToCharArray()).TrimEnd(')'))
+                        switch (mapAttributes[lighti].TrimStart("LIGHT(".ToCharArray()).TrimEnd(')'))
                         {
                             case "Dawn":
                                 newMapInfo.Light = LightSetting.Dawn;
@@ -134,7 +136,6 @@ namespace Server.MirForms
                                 break;
                         }
                     }
-                    else newMapInfo.Light = LightSetting.Normal;
 
                     // Check for light type
                     if (mapAttributes.Any(s => s.Contains("DAY".ToUpper()))) // DAY = Day
@@ -142,40 +143,19 @@ namespace Server.MirForms
                     else if (mapAttributes.Any(s => s.Contains("DARK".ToUpper()))) // DARK = Night
                         newMapInfo.Light = LightSetting.Night;
 
-                    EditEnvir.MapInfoList.Add(newMapInfo); // Add map to list
+                    MapInfo.Add(newMapInfo); // Add map to list
                 }
-                else if (lines[i].StartsWith(";")) continue;
-                else errors.Add("Error on Line " + i + ": " + lines[i] + "");
             }
 
-            for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
+            for (int j = 0; j < MapInfo.Count; j++)
             {
                 for (int k = 0; k < lines.Length; k++)
                 {
                     try
                     {
-                        if (lines[k].StartsWith(EditEnvir.MapInfoList[j].FileName + " "))
+                        if (lines[k].StartsWith(MapInfo[j].MapFile + " "))
                         {
-                            MirDatabase.MovementInfo newMovement = new MirDatabase.MovementInfo();
-
-                            if (lines[k].Contains("NEEDHOLE"))
-                            {
-                                newMovement.NeedHole = true;
-                                lines[k] = lines[k].Replace("NEEDHOLE", "");
-                            }
-                            if (lines[k].Contains("NEEDMOVE"))
-                            {
-                                newMovement.NeedMove = true;
-                                lines[k] = lines[k].Replace("NEEDMOVE", "");
-                            }
-                            if (lines[k].Contains("NEEDCONQUEST"))
-                            {
-                                int conqLocation = lines[k].IndexOf(" NEEDCONQUEST");
-                                string conq = lines[k].Substring(conqLocation);
-                                int conqIndex = int.Parse(conq.Replace("NEEDCONQUEST(", "").Replace(")", "")); //get value
-                                newMovement.ConquestIndex = conqIndex;
-                                lines[k] = lines[k].Remove(conqLocation);
-                            }
+                            MapMovements newmapMovements = new MapMovements();
 
                             lines[k] = lines[k].Replace('.', ','); // Replace point with comma
                             lines[k] = lines[k].Replace(":", ","); // Replace colon with comma
@@ -221,6 +201,7 @@ namespace Server.MirForms
                             // END - Get values from line
 
                             string[] d = c[1].Split(',');
+
                             string[] e = c[2].Split(',');
 
 
@@ -231,24 +212,27 @@ namespace Server.MirForms
                             {
                                 toMap = EditEnvir.MapInfoList[toMapIndex].Index; //get real index
                             }
+
                             if (toMap < 0)
                             {
-                                toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.FileName.ToString() == c[3]);
+                                toMapIndex = MapInfo.FindIndex(a => a.MapFile.ToString() == c[3]);
 
                                 if (toMapIndex >= 0)
                                 {
-                                    toMap = EditEnvir.MapInfoList[toMapIndex].Index;
+                                    toMap = MapInfo[toMapIndex].Index;
                                 }
                             }
 
                             if (toMap < 0) continue;
-                            newMovement.MapIndex = toMap;
-                            newMovement.Source = new Point(int.Parse(d[0]), int.Parse(d[1]));
-                            newMovement.Destination = new Point(int.Parse(e[0]), int.Parse(e[1]));
-                            //NeedHole
-                            //NeedMove
-                            //ConquestIndex
-                            EditEnvir.MapInfoList[j].Movements.Add(newMovement);
+
+                            newmapMovements.fromIndex = MapInfo[MapInfo.FindIndex(a => a.MapFile.ToString() == MapInfo[j].MapFile)].Index; // Check MapInfo for MapFile (mapInfo[j].mapFile) and get it's index number
+                            newmapMovements.fromX = d[0];
+                            newmapMovements.fromY = d[1];
+                            newmapMovements.toMap = toMap;
+                            newmapMovements.toX = e[0];
+                            newmapMovements.toY = e[1];
+
+                            MapMovements.Add(newmapMovements); // Add movements
                         }
                     }
                     catch (Exception)
@@ -257,7 +241,8 @@ namespace Server.MirForms
                     }
                 }
             }
-            for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
+
+            for (int j = 0; j < MapInfo.Count; j++)
             {
                 for (int k = 0; k < lines.Length; k++)
                 {
@@ -266,54 +251,106 @@ namespace Server.MirForms
 
                     try
                     {
-                        if (line[1] == EditEnvir.MapInfoList[j].FileName)
+                        if (line[1] == MapInfo[j].MapFile)
                         {
-                            MineZone newMineInfo = new MineZone
+                            MineInfo newMineInfo = new MineInfo
                             {
-                                Mine = Convert.ToByte(line[3]),
+                                MapIndex = MapInfo[j].Index,
+                                MineIndex = Convert.ToInt16(line[3]),
                                 Location = new Point(Convert.ToInt16(line[4]), Convert.ToInt16(line[5])),
-                                Size = Convert.ToUInt16(line[6])
+                                Range = Convert.ToInt16(line[6])
                             };
-                            EditEnvir.MapInfoList[j].MineZones.Add(newMineInfo);
-                        }
-                    }
-                    catch (Exception) { continue; }
-                }
-            }
-            for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
-            {
-                for (int k = 0; k < lines.Length; k++)
-                {
-                    //STARTZONE(0,150,150,50) || SAFEZONE(0,150,150,50)
-                    if (!lines[k].StartsWith("SAFEZONE") && !lines[k].StartsWith("STARTZONE")) continue;
-                    var line = lines[k].Replace(")", "").Split(','); // STARTZONE(0,150,150,50) -> STARTZONE(0 || 150 || 150 || 50
-                    var head = line[0].Split('('); // STARTZONE(0 -> STARTZONE || 0
-                    try
-                    {
-                        if (head[1] == EditEnvir.MapInfoList[j].FileName)
-                        {
-                            MirDatabase.SafeZoneInfo newSafeZone = new MirDatabase.SafeZoneInfo
-                            {
-                                Info = EditEnvir.MapInfoList[j],
-                                StartPoint = head[0].Equals("STARTZONE"),
-                                Location = new Point(Convert.ToInt16(line[2]), Convert.ToInt16(line[3])),
-                                Size = Convert.ToUInt16(line[1])
-                            };
-                            if (!EditEnvir.MapInfoList[j].SafeZones.Exists(sz => sz.StartPoint == newSafeZone.StartPoint && sz.Location.X == newSafeZone.Location.X && sz.Location.Y == newSafeZone.Location.Y))
-                                EditEnvir.MapInfoList[j].SafeZones.Add(newSafeZone);
+
+                            MineInfo.Add(newMineInfo);
                         }
                     }
                     catch (Exception) { continue; }
                 }
             }
         }
+
         public static void End()
         {
-            SMain.Enqueue(String.Join("MapInfo Import Report:", errors.Count > 0 ? "" : "No Errors"));
-            foreach (String error in errors)
-                SMain.Enqueue(error);
+            MapInfo.Clear();
+            MapMovements.Clear();
         }
     }
+
+    public class MapInfo
+    {
+        public LightSetting
+            Light = LightSetting.Normal;
+
+        public int
+            Index = 0,
+            FireDamage = 0,
+            LightningDamage = 0,
+            MineIndex = 0;
+
+        public ushort
+            MiniMapNumber = 0,
+            BigMapNumber = 0,
+            MusicNumber = 0;
+
+        public string
+            MapFile = string.Empty,
+            MapName = string.Empty,
+            ReconnectMap = string.Empty;
+
+        public byte
+            MapLightValue = 0;
+
+        public bool
+            NoTeleport = false,
+            NoReconnect = false,
+            NoRandom = false,
+            NoEscape = false,
+            NoRecall = false,
+            NoDrug = false,
+            NoPositionMove = false,
+            NoThrowItem = false,
+            NoPlayerDrop = false,
+            NoMonsterDrop = false,
+            NoNames = false,
+            Fight = false,
+            NoFight = false,
+            Fire = false,
+            Lightning = false,
+            MiniMap = false,
+            BigMap = false,
+            MapLight = false,
+            Music = false,
+            Mine = false;
+
+        public List<MapMovements>
+            MapMovements = new List<MapMovements>();
+    }
+
+    public class MapMovements
+    {
+        public int
+            fromIndex = 0,
+            toMap = 0;
+
+        public string
+             fromX = string.Empty,
+             fromY = string.Empty,
+
+             toX = string.Empty,
+             toY = string.Empty;
+    }
+
+    public class MineInfo
+    {
+        public int
+            MapIndex,
+            MineIndex,
+            Range;
+
+        public Point
+            Location;
+    }
+
 
     public static class ConvertNPCInfo
     {
@@ -422,7 +459,7 @@ namespace Server.MirForms
                             Range = Convert.ToInt16(Line[4]),
                             Count = Convert.ToInt16(Line[5]),
                             Delay = Convert.ToInt16(Line[6]),
-                            Direction = (Line.Length == 8) ? Convert.ToInt16(Line[7]) : 0                    
+                            Direction = (Line.Length == 8) ? Convert.ToInt16(Line[7]) : 0
                         };
 
                         monGenList.Add(MonGenItem);

@@ -173,6 +173,17 @@ namespace Server
         public static uint MaxDropGold = 2000;
         public static bool DropGold = true;
 
+        //自定义人行怪
+        public static string MonName = "";
+
+
+
+
+
+
+
+
+
         //IntelligentCreature
         public static string[] IntelligentCreatureNameList = { "猪宝宝", "鸡宝宝", "调皮的猫咪", "外星人", "小白猪", "纸人宝宝", "可爱的猫咪", "魔龙宝宝", "圣火宝宝", "雪人宝宝", "青蛙宝宝", "猴宝宝", "(灵物)猴子", "哈士奇" };
         public static string CreatureBlackStoneName = "黑色石头";

@@ -1502,11 +1502,99 @@ namespace Server
             if (ofd.FileName == string.Empty) return;
 
             MirForms.ConvertMapInfo.Path = ofd.FileName;
+
             MirForms.ConvertMapInfo.Start(Envir);
+
+            for (int i = 0; i < MirForms.ConvertMapInfo.MapInfo.Count; i++)
+            {
+
+                MapInfo mi = new MapInfo
+                {
+                    Index = ++Envir.MapIndex,
+                    FileName = MirForms.ConvertMapInfo.MapInfo[i].MapFile,
+                    Title = MirForms.ConvertMapInfo.MapInfo[i].MapName.Replace('*', ' '),
+                    NoTeleport = MirForms.ConvertMapInfo.MapInfo[i].NoTeleport,
+                    NoReconnect = MirForms.ConvertMapInfo.MapInfo[i].NoReconnect,
+                    NoRandom = MirForms.ConvertMapInfo.MapInfo[i].NoRandom,
+                    NoEscape = MirForms.ConvertMapInfo.MapInfo[i].NoEscape,
+                    NoRecall = MirForms.ConvertMapInfo.MapInfo[i].NoRecall,
+                    NoDrug = MirForms.ConvertMapInfo.MapInfo[i].NoDrug,
+                    NoPosition = MirForms.ConvertMapInfo.MapInfo[i].NoPositionMove,
+                    NoThrowItem = MirForms.ConvertMapInfo.MapInfo[i].NoThrowItem,
+                    NoDropPlayer = MirForms.ConvertMapInfo.MapInfo[i].NoPlayerDrop,
+                    NoDropMonster = MirForms.ConvertMapInfo.MapInfo[i].NoMonsterDrop,
+                    NoNames = MirForms.ConvertMapInfo.MapInfo[i].NoNames,
+                    Fight = MirForms.ConvertMapInfo.MapInfo[i].Fight,
+                    NoFight = MirForms.ConvertMapInfo.MapInfo[i].NoFight,
+                    Fire = MirForms.ConvertMapInfo.MapInfo[i].Fire,
+                    Lightning = MirForms.ConvertMapInfo.MapInfo[i].Lightning,
+                    Light = MirForms.ConvertMapInfo.MapInfo[i].Light,
+                    MiniMap = MirForms.ConvertMapInfo.MapInfo[i].MiniMapNumber,
+                    BigMap = MirForms.ConvertMapInfo.MapInfo[i].BigMapNumber,
+                    Music = MirForms.ConvertMapInfo.MapInfo[i].MusicNumber,
+                    MineIndex = (byte)MirForms.ConvertMapInfo.MapInfo[i].MineIndex,
+                };
+
+
+                if (mi.NoReconnect == true)
+                    mi.NoReconnectMap = MirForms.ConvertMapInfo.MapInfo[i].ReconnectMap;
+                if (mi.Fire == true)
+                    mi.FireDamage = MirForms.ConvertMapInfo.MapInfo[i].FireDamage;
+                if (mi.Lightning == true)
+                    mi.LightningDamage = MirForms.ConvertMapInfo.MapInfo[i].LightningDamage;
+                if (MirForms.ConvertMapInfo.MapInfo[i].MapLight == true)
+                    mi.MapDarkLight = MirForms.ConvertMapInfo.MapInfo[i].MapLightValue;
+
+                Envir.MapInfoList.Add(mi);
+            }
+
+            for (int j = 0; j < MirForms.ConvertMapInfo.MapMovements.Count; j++)
+            {
+                try
+                {
+                    MovementInfo newmoveinfo = new MovementInfo();
+
+                    newmoveinfo.MapIndex = Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toMap);
+
+                    newmoveinfo.Source = new Point
+                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromX),
+                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].fromY)));
+
+                    newmoveinfo.Destination = new Point
+                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toX),
+                        (Convert.ToInt16(MirForms.ConvertMapInfo.MapMovements[j].toY)));
+
+                    newmoveinfo.NeedHole = false;
+                    newmoveinfo.NeedMove = false;
+
+                    Envir.MapInfoList[Envir.MapInfoList.FindIndex(a => a.Index == (MirForms.ConvertMapInfo.MapMovements[j].fromIndex))].Movements.Add(newmoveinfo);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+
+            for (int i = 0; i < MirForms.ConvertMapInfo.MineInfo.Count; i++)
+            {
+                MineZone mz = new MineZone();
+
+                try
+                {
+                    mz.Location = MirForms.ConvertMapInfo.MineInfo[i].Location;
+                    mz.Size = (ushort)MirForms.ConvertMapInfo.MineInfo[i].Range;
+                    mz.Mine = (byte)MirForms.ConvertMapInfo.MineInfo[i].MineIndex;
+
+                    Envir.MapInfoList[MirForms.ConvertMapInfo.MineInfo[i].MapIndex - 1].MineZones.Add(mz);
+                }
+                catch (Exception) { continue; }
+            }
+
 
             MirForms.ConvertMapInfo.End();
             UpdateInterface();
 
+            MessageBox.Show("Map Info Import Complete");
         }
         private void ExportMapInfoButton_Click(object sender, EventArgs e)
         {

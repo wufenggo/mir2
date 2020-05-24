@@ -586,7 +586,7 @@ namespace Client.MirObjects
                         MinAC = (ushort)Math.Min(ushort.MaxValue, MinAC + 2);
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 2);
                         break;
-                    case ItemSet.Spirit:
+                    case ItemSet.祈祷:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 2);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 5);
                         ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);

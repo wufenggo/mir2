@@ -1051,7 +1051,7 @@ public enum Monster : ushort
     Monster457 = 457,
     Monster458 = 458,
     Monster460 = 460,
-
+    Monster461 = 461,
     EvilMir = 900,
     EvilMirBody = 901,
     DragonStatue = 902,
@@ -1480,7 +1480,7 @@ public enum RequiredType : byte
 public enum ItemSet : byte
 {
     None = 0,
-    Spirit = 1,
+    祈祷 = 1,
     Recall = 2,
     RedOrchid = 3,
     RedFlower = 4,
@@ -3529,7 +3529,7 @@ public class UserItem
 
     public byte AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery, PoisonRecovery, CriticalRate, CriticalDamage, DCDamage, Freezing, PoisonAttack;
     public sbyte AttackSpeed, Luck;
-
+    public ItemSet Set;
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
 
@@ -3697,6 +3697,8 @@ public class UserItem
         quality = reader.ReadByte();
         spiritual = reader.ReadByte();
         samsaracount = reader.ReadByte();
+
+        Set = (ItemSet)reader.ReadByte();
     }
 
     public void Save(BinaryWriter writer)
@@ -3775,6 +3777,7 @@ public class UserItem
         writer.Write(quality);
         writer.Write(spiritual);
         writer.Write(samsaracount);
+        writer.Write((byte)Set);
     }
 
 
@@ -6317,7 +6320,7 @@ public class ItemSets
                     return 3;
                 case ItemSet.Recall:
                     return 4;
-                case ItemSet.Spirit:
+                case ItemSet.祈祷:
                 case ItemSet.WhiteGold:
                 case ItemSet.WhiteGoldH:
                 case ItemSet.RedJade:
