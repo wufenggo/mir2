@@ -8,7 +8,7 @@ namespace Client
     class Settings
     {
 
-
+        public static string clientVersion = "2020.3.25.1919";
         public const long CleanDelay = 600000;
         public static int ScreenWidth = 800, ScreenHeight = 600;
         private static InIReader Reader = new InIReader(@".\Mir2.dat");
@@ -112,8 +112,9 @@ namespace Client
 
         //Network
         public static bool UseConfig = false;
-        public static string IPAddress = "127.0.0.1";//"175.24.54.202"
-        public static int Port = 7162;
+        public static string serverIp;//服务器IP
+        public static int serverPort;//服务器端口
+        public static string serverName;//服务器名称
         public const int TimeOut = 5000;
 
         //Sound
@@ -237,8 +238,9 @@ namespace Client
             UseConfig = Reader.ReadBoolean("Network", "UseConfig", UseConfig);
             if (UseConfig)
             {
-                IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
-                Port = Reader.ReadInt32("Network", "Port", Port);
+                serverIp = Reader.ReadString("Network", "serverIp", serverIp);
+                serverName = Reader.ReadString("Network", "serverName", serverName);
+                serverPort = Reader.ReadInt32("Network", "serverPort", serverPort);
             }
 
             //Logs

@@ -229,6 +229,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ServerList.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils\BrowserHelper.cs" />
     <EmbeddedResource Include="AMain.resx">

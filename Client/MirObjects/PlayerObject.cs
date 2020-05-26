@@ -1203,7 +1203,6 @@ namespace Client.MirObjects
             }
 
 
-
             //Harvest
             if (CurrentAction == MirAction.Harvest && TransformType < 0)
             {
@@ -1215,6 +1214,7 @@ namespace Client.MirObjects
             {
                 MountLibrary = MountType < Libraries.Mounts.Length ? Libraries.Mounts[MountType] : null;
             }
+
             else
             {
                 MountLibrary = null;
