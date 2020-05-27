@@ -1212,7 +1212,10 @@ namespace Client.MirObjects
             //Mounts
             if (MountType > -1 && RidingMount && showMount)
             {
+
                 MountLibrary = MountType < Libraries.Mounts.Length ? Libraries.Mounts[MountType] : null;
+                
+
             }
 
             else

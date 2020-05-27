@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Windows.Forms;
+using System.Runtime.ExceptionServices;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
@@ -16,37 +17,54 @@ using Client.MirScenes;
 using Client.MirSounds;
 using Microsoft.DirectX.Direct3D;
 using Font = System.Drawing.Font;
+using System.Collections.Concurrent;
+using System.Text;
+using S = ServerPackets;
+using C = ClientPackets;
 
 namespace Client
 {
+    /// <summary>
+    /// 传奇的主窗体
+    /// 这个主窗体销毁，则游戏关闭了哦
+    /// 窗体->场景->各种空间变换显示
+    /// 1个窗口，1个场景(多个场景切换，最有一个场景有效)，N种不同的控件进行显示
+    /// </summary>
     public partial class CMain : Form
     {
+        //dubug提醒，鼠标提示
         public static MirControl DebugBaseLabel, HintBaseLabel;
         public static MirLabel DebugTextLabel, HintTextLabel, ScreenshotTextLabel;
         public static Graphics Graphics;
+        //这个是什么点哦？地图中心点么？应该是当前的鼠标坐标点
         public static Point MPoint;
-
+        //计算系统运行的总时间
         public readonly static Stopwatch Timer = Stopwatch.StartNew();
+        //计算开始时间
         public readonly static DateTime StartTime = DateTime.Now;
+        //Time:运行开始到现在过去的毫秒数
         public static long Time, OldTime;
         public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
+        //随机数
         public static readonly Random Random = new Random();
 
         public static bool DebugOverride;
-
+        //显示帧数，每秒显示一次帧数
         private static long _fpsTime;
         private static int _fps;
         public static int FPS;
 
+        //快捷键处理
         public static bool Shift, Alt, Ctrl, Tilde;
         public static KeyBindSettings InputKeys = new KeyBindSettings();
+        //这里先把异常日志放入队列
+        private static readonly ConcurrentQueue<string> ErrorLog = new ConcurrentQueue<string>();
 
         public CMain()
         {
             InitializeComponent();
-
+            //主窗体的所有事件，传播到子控件
             Application.Idle += Application_Idle;
-
             MouseClick += CMain_MouseClick;
             MouseDown += CMain_MouseDown;
             MouseUp += CMain_MouseUp;
@@ -69,16 +87,44 @@ namespace Client
             Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             Graphics.TextContrast = 0;
+
+            //这句话会卡屏？神经咯。
+            //this.ControlBox = true;
+            this.Text = Settings.serverName != null ? Settings.serverName : "韩服传奇";
+            //
+            timer1.Start();
+
+
         }
+
+        ////.net 提供了ProcessCmdKey 重新实现Form的键盘消息,这个针对F10进行特殊处理，避免卡屏
+        //protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
+        //{
+        //    int WM_KEYDOWN = 256;
+        //    int WM_SYSKEYDOWN = 260;
+        //    if (msg.Msg == WM_KEYDOWN | msg.Msg == WM_SYSKEYDOWN)
+        //    {
+        //        //F10键自定义处理，不经过系统
+        //        if (keyData == Keys.F10)
+        //        {
+        //            MirScene.ActiveScene.OnKeyDown(new KeyEventArgs(keyData));
+        //            return true;
+        //        }
+        //        //屏蔽win键
+        //    }
+        //    return false;
+        //}
 
         private void CMain_Load(object sender, EventArgs e)
         {
-            this.Text = GameLanguage.GameName;
+
             try
             {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-                
+
+                //DX画面控制
                 DXManager.Create();
+                //声音控制
                 SoundManager.Create();
             }
             catch (Exception ex)
@@ -87,25 +133,31 @@ namespace Client
             }
         }
 
-
+        //空闲执行，应该是没有消息需要处理为空闲
+        [HandleProcessCorruptedStateExceptions]
         private static void Application_Idle(object sender, EventArgs e)
         {
             try
             {
+                //当系统没有消息时执行
                 while (AppStillIdle)
                 {
+                    //MirLog.info("AppStillIdle");
+                    //更新系统时间Time,
                     UpdateTime();
+
+                    //更新系统，更新画面，每秒更新一次，同时计算帧数
                     UpdateEnviroment();
+                    //重置环境，重画，拼命重画
                     RenderEnvironment();
                 }
-
             }
             catch (Exception ex)
             {
                 SaveError(ex.ToString());
             }
         }
-
+        //失去焦点时
         private static void CMain_Deactivate(object sender, EventArgs e)
         {
             MapControl.MapButtons = MouseButtons.None;
@@ -114,18 +166,27 @@ namespace Client
             Ctrl = false;
             Tilde = false;
         }
+        //获取当前有效的按键
+        public static KeyBind GetKeyBind(Keys k)
+        {
+            return CMain.InputKeys.GetKeyBind(Shift, Alt, Ctrl, Tilde, k);
+        }
 
+        //按键时
         public static void CMain_KeyDown(object sender, KeyEventArgs e)
         {
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
-
+            //这个~应该是Oemtilde键才对？
             if (e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.Oemtilde)
+            {
                 CMain.Tilde = true;
-
+            }
+            //MirLog.info("Alt:"+ Alt+ e.KeyCode);
             try
             {
+                //切换全屏
                 if (e.Alt && e.KeyCode == Keys.Enter)
                 {
                     ToggleFullScreen();
@@ -133,39 +194,18 @@ namespace Client
                 }
 
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnKeyDown(e);
-
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-            }
-            if (e.KeyCode == Keys.F10)
-            {
-                e.Handled = true;
-                if (GameScene.Scene != null)
                 {
-                    GameScene.Scene.F10();
+                    MirScene.ActiveScene.OnKeyDown(e);
                 }
             }
-        }
-        public static void CMain_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (Settings.FullScreen)
-                Cursor.Clip = new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight);
-
-            MPoint = Program.Form.PointToClient(Cursor.Position);
-
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseMove(e);
-            }
             catch (Exception ex)
             {
                 SaveError(ex.ToString());
             }
         }
+
+
+        //按键结束
         public static void CMain_KeyUp(object sender, KeyEventArgs e)
         {
             Shift = e.Shift;
@@ -174,28 +214,19 @@ namespace Client
 
             if (e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.Oemtilde)
                 CMain.Tilde = false;
-
-            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
+            //这个进行截屏处理？应该捕获不了这个键哦
+            KeyBind kb = GetKeyBind(e.KeyCode);
+            if (kb != null && KeybindOptions.Screenshot == kb.function)
             {
-                if (KeyCheck.function != KeybindOptions.Screenshot) continue;
-                if (KeyCheck.Key != e.KeyCode)
-                    continue;
-                if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (Alt ? 1 : 0)))
-                    continue;
-                if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (Shift ? 1 : 0)))
-                    continue;
-                if ((KeyCheck.RequireCtrl != 2) && (KeyCheck.RequireCtrl != (Ctrl ? 1 : 0)))
-                    continue;
-                if ((KeyCheck.RequireTilde != 2) && (KeyCheck.RequireTilde != (Tilde ? 1 : 0)))
-                    continue;
                 Program.Form.CreateScreenShot();
-                break;
-
             }
+
             try
             {
                 if (MirScene.ActiveScene != null)
+                {
                     MirScene.ActiveScene.OnKeyUp(e);
+                }
             }
             catch (Exception ex)
             {
@@ -207,7 +238,27 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
+                {
                     MirScene.ActiveScene.OnKeyPress(e);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveError(ex.ToString());
+            }
+        }
+        public static void CMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Settings.FullScreen)
+                Cursor.Clip = new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight);
+
+            //当前鼠标的坐标，在窗口内的坐标
+            MPoint = Program.Form.PointToClient(Cursor.Position);
+
+            try
+            {
+                if (MirScene.ActiveScene != null)
+                    MirScene.ActiveScene.OnMouseMove(e);
             }
             catch (Exception ex)
             {
@@ -293,39 +344,59 @@ namespace Client
                 SaveError(ex.ToString());
             }
         }
-
+        //更新时间，更新Now时间
         private static void UpdateTime()
         {
             Time = Timer.ElapsedMilliseconds;
         }
+        //Enviroment：更新系统，更新画面，每秒更新一次，同时计算帧数，这个帧数计算很不准吧?通过空闲调用计算
         private static void UpdateEnviroment()
-        {  
-
+        {
+            //更新系统，更新画面，每秒更新一次，同时计算帧数
             if (Time >= _fpsTime)
             {
                 _fpsTime = Time + 1000;
                 FPS = _fps;
                 _fps = 0;
                 DXManager.Clean(); // Clean once a second.
+                //这里加入游戏名称的更新
+                if (GameScene.User != null && GameScene.User.Name != null && Program.Form.Text != null && !Program.Form.Text.Contains(GameScene.User.Name))
+                {
+                    Program.Form.Text = Settings.serverName != null ? Settings.serverName + " -- " + GameScene.User.Name : "韩服传奇";
+                }
             }
             else
+            {
                 _fps++;
-
+            }
+            //网络数据处理
             Network.Process();
 
+            //场景处理
             if (MirScene.ActiveScene != null)
+            {
                 MirScene.ActiveScene.Process();
+            }
 
+            //动画要一直更新么
             for (int i = 0; i < MirAnimatedControl.Animations.Count; i++)
+            {
                 MirAnimatedControl.Animations[i].UpdateOffSet();
+            }
+
 
             for (int i = 0; i < MirAnimatedButton.Animations.Count; i++)
+            {
                 MirAnimatedButton.Animations[i].UpdateOffSet();
+            }
 
+            //这个是鼠标移动到物体，菜单上显示的提示信息
             CreateHintLabel();
+            //FPS等信息输出
             CreateDebugLabel();
- 
         }
+
+        //循环执行，重置DX环境,重画？
         private static void RenderEnvironment()
         {
             try
@@ -362,6 +433,7 @@ namespace Client
             }
         }
 
+        //这个是输出FPS等信息的，在左上角输出，这个和技能栏重复了。要调整下
         private static void CreateDebugLabel()
         {
             if (!Settings.DebugMode) return;
@@ -369,17 +441,17 @@ namespace Client
             if (DebugBaseLabel == null || DebugBaseLabel.IsDisposed)
             {
                 DebugBaseLabel = new MirControl
-                    {
-                        BackColour = Color.FromArgb(50, 50, 50),
-                        Border = true,
-                        BorderColour = Color.Black,
-                        DrawControlTexture = true,
-                        Location = new Point(5, 5),
-                        NotControl = true,
-                        Opacity = 0.5F
-                    };
+                {
+                    BackColour = Color.FromArgb(50, 50, 50),
+                    Border = true,
+                    BorderColour = Color.Black,
+                    DrawControlTexture = true,
+                    Location = new Point(5, 5),
+                    NotControl = true,
+                    Opacity = 0.5F
+                };
             }
-            
+
             if (DebugTextLabel == null || DebugTextLabel.IsDisposed)
             {
                 DebugTextLabel = new MirLabel
@@ -394,7 +466,7 @@ namespace Client
             }
 
             if (DebugOverride) return;
-            
+
             string text;
             if (MirControl.MouseControl != null)
             {
@@ -432,7 +504,7 @@ namespace Client
             {
                 text = string.Format("FPS: {0}", FPS);
             }
-            
+
 
             DebugTextLabel.Text = text;
         }
@@ -507,6 +579,7 @@ namespace Client
             HintBaseLabel.Location = point;
         }
 
+        //是否全屏的处理
         private static void ToggleFullScreen()
         {
             Settings.FullScreen = !Settings.FullScreen;
@@ -516,18 +589,19 @@ namespace Client
             DXManager.Parameters.Windowed = !Settings.FullScreen;
             DXManager.Device.Reset(DXManager.Parameters);
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
-        }//
+        }
 
+        //截屏处理？
         public void CreateScreenShot()
         {
             Point location = PointToClient(Location);
 
             location = new Point(-location.X, -location.Y);
 
-            string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}", 
-                Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal", 
-                MapControl.User != null ? MapControl.User.Name : "", 
-                Now.ToShortDateString(), 
+            string text = string.Format("[{0}  {1}] {2} {3:hh\\:mm\\:ss}",
+                Settings.serverName.Length > 0 ? Settings.serverName : "热血传奇",
+                MapControl.User != null ? MapControl.User.Name : "",
+                Now.ToShortDateString(),
                 Now.TimeOfDay);
 
             using (Bitmap image = GetImage(Handle, new Rectangle(location, ClientSize)))
@@ -552,16 +626,12 @@ namespace Client
                 image.Save(Path.Combine(path, string.Format("Image {0}.Png", count)), ImageFormat.Png);
             }
         }
-
+        //这里会因为出现异常卡客户端帧数，优化下
         public static void SaveError(string ex)
         {
             try
             {
-                if (Settings.RemainingErrorLogs-- > 0)
-                {
-                    File.AppendAllText(@".\Error.txt",
-                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
-                }
+                ErrorLog.Enqueue(string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
             }
             catch
             {
@@ -583,7 +653,7 @@ namespace Client
 
             DXManager.Create();
         }
-            
+
 
         #region ScreenCapture
 
@@ -600,6 +670,45 @@ namespace Client
                                          IntPtr handle2, int sourX, int sourY, int flag);
         [DllImport("gdi32.dll")]
         public static extern int DeleteDC(IntPtr handle);
+
+        //每2秒执行一次，避免窗口最小化的时候卡帧
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (Timer.ElapsedMilliseconds - Time > 3000)
+            {
+                Application_Idle(sender, e);
+            }
+            //在这里输出日志
+
+            //如果是多个窗口，这个有问题,抓下异常吧
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                while (!ErrorLog.IsEmpty)
+                {
+                    string message;
+                    if (!ErrorLog.TryDequeue(out message)) continue;
+                    sb.Append(message);
+                }
+                if (sb.Length > 0)
+                {
+                    string fn = DateTime.Now.Date.ToString("yyyy-MM-dd") + (MapControl.User != null ? MapControl.User.Name : "");
+                    File.AppendAllText(@".\Config\Error" + "(" + fn + ").txt", sb.ToString());
+                    sb.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+
+        private void ErrorLogSaveThread()
+        {
+
+        }
+
         [DllImport("user32.dll")]
         public static extern int ReleaseDC(IntPtr handle, IntPtr handle2);
         [DllImport("gdi32.dll")]
@@ -660,11 +769,18 @@ namespace Client
 
         private void CMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (CMain.Time < GameScene.LogTime)
+
+            if (CMain.Time < GameScene.LogTime && GameScene.Scene != null && GameScene.Scene.ChatDialog != null)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("请在 " + (GameScene.LogTime - CMain.Time) / 1000 + " 秒后离开游戏.", ChatType.System);
                 e.Cancel = true;
+                return;
             }
+
+            //Network.Enqueue(new C.ItemCollectCancel());
+            //Network.Enqueue(new C.RefineCancel());
+            timer1.Stop();
+
         }
     }
 }

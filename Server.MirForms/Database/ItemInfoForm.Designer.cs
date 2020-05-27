@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.txtSearchItem = new System.Windows.Forms.TextBox();
+            this.lblItemListCount = new System.Windows.Forms.Label();
             this.ItemInfoPanel = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -95,8 +97,10 @@
             this.label14 = new System.Windows.Forms.Label();
             this.MinACTextBox = new System.Windows.Forms.TextBox();
             this.MPratetextbox = new System.Windows.Forms.TextBox();
+            this.DCDamagetextBox = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
+            this.label59 = new System.Windows.Forms.Label();
             this.MaxACTextBox = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.MinMACTextBox = new System.Windows.Forms.TextBox();
@@ -195,8 +199,7 @@
             this.ExportSelectedButton = new System.Windows.Forms.Button();
             this.ImportButton = new System.Windows.Forms.Button();
             this.Gameshop_button = new System.Windows.Forms.Button();
-            this.label59 = new System.Windows.Forms.Label();
-            this.DCDamagetextBox = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
             this.ItemInfoPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -206,10 +209,27 @@
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
+            // txtSearchItem
+            // 
+            this.txtSearchItem.Location = new System.Drawing.Point(52, 407);
+            this.txtSearchItem.Name = "txtSearchItem";
+            this.txtSearchItem.Size = new System.Drawing.Size(116, 21);
+            this.txtSearchItem.TabIndex = 30;
+            this.txtSearchItem.TextChanged += new System.EventHandler(this.txtSearchItem_TextChanged);
+            this.txtSearchItem.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearchItem_KeyUp);
+            // 
+            // lblItemListCount
+            // 
+            this.lblItemListCount.AutoSize = true;
+            this.lblItemListCount.Location = new System.Drawing.Point(12, 390);
+            this.lblItemListCount.Name = "lblItemListCount";
+            this.lblItemListCount.Size = new System.Drawing.Size(0, 12);
+            this.lblItemListCount.TabIndex = 29;
+            // 
             // ItemInfoPanel
             // 
-            this.ItemInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ItemInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ItemInfoPanel.Controls.Add(this.tabControl1);
             this.ItemInfoPanel.Enabled = false;
@@ -980,6 +1000,15 @@
             this.MPratetextbox.TabIndex = 114;
             this.MPratetextbox.TextChanged += new System.EventHandler(this.MPratetextBox_TextChanged);
             // 
+            // DCDamagetextBox
+            // 
+            this.DCDamagetextBox.Location = new System.Drawing.Point(439, 276);
+            this.DCDamagetextBox.MaxLength = 3;
+            this.DCDamagetextBox.Name = "DCDamagetextBox";
+            this.DCDamagetextBox.Size = new System.Drawing.Size(30, 21);
+            this.DCDamagetextBox.TabIndex = 118;
+            this.DCDamagetextBox.TextChanged += new System.EventHandler(this.DCDamagetextBox_TextChanged);
+            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -997,6 +1026,15 @@
             this.label48.Size = new System.Drawing.Size(35, 12);
             this.label48.TabIndex = 113;
             this.label48.Text = "Mp +%";
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(348, 279);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(59, 12);
+            this.label59.TabIndex = 120;
+            this.label59.Text = "攻击伤害:";
             // 
             // MaxACTextBox
             // 
@@ -1909,14 +1947,14 @@
             // 
             // ItemInfoListBox
             // 
-            this.ItemInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.ItemInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.ItemInfoListBox.FormattingEnabled = true;
             this.ItemInfoListBox.ItemHeight = 12;
             this.ItemInfoListBox.Location = new System.Drawing.Point(12, 37);
             this.ItemInfoListBox.Name = "ItemInfoListBox";
             this.ItemInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ItemInfoListBox.Size = new System.Drawing.Size(156, 388);
+            this.ItemInfoListBox.Size = new System.Drawing.Size(156, 352);
             this.ItemInfoListBox.TabIndex = 10;
             this.ItemInfoListBox.SelectedIndexChanged += new System.EventHandler(this.ItemInfoListBox_SelectedIndexChanged);
             // 
@@ -1990,29 +2028,24 @@
             this.Gameshop_button.UseVisualStyleBackColor = true;
             this.Gameshop_button.Click += new System.EventHandler(this.Gameshop_button_Click);
             // 
-            // label59
+            // label60
             // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(348, 279);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(59, 12);
-            this.label59.TabIndex = 120;
-            this.label59.Text = "攻击伤害:";
-            // 
-            // DCDamagetextBox
-            // 
-            this.DCDamagetextBox.Location = new System.Drawing.Point(439, 276);
-            this.DCDamagetextBox.MaxLength = 3;
-            this.DCDamagetextBox.Name = "DCDamagetextBox";
-            this.DCDamagetextBox.Size = new System.Drawing.Size(30, 21);
-            this.DCDamagetextBox.TabIndex = 118;
-            this.DCDamagetextBox.TextChanged += new System.EventHandler(this.DCDamagetextBox_TextChanged);
+            this.label60.AutoSize = true;
+            this.label60.ForeColor = System.Drawing.Color.Blue;
+            this.label60.Location = new System.Drawing.Point(10, 410);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(35, 12);
+            this.label60.TabIndex = 76;
+            this.label60.Text = "搜索:";
             // 
             // ItemInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(812, 442);
+            this.Controls.Add(this.label60);
+            this.Controls.Add(this.lblItemListCount);
+            this.Controls.Add(this.txtSearchItem);
             this.Controls.Add(this.Gameshop_button);
             this.Controls.Add(this.ImportButton);
             this.Controls.Add(this.ExportSelectedButton);
@@ -2041,6 +2074,7 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -2215,5 +2249,8 @@
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.TextBox DCDamagetextBox;
         private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.TextBox txtSearchItem;
+        private System.Windows.Forms.Label lblItemListCount;
+        private System.Windows.Forms.Label label60;
     }
 }

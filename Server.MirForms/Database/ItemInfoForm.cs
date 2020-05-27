@@ -1740,10 +1740,6 @@ namespace Server
                 _selectedItemInfos[i].Bind = (BreakOnDeathcheckbox.Checked ? _selectedItemInfos[i].Bind |= BindMode.BreakOnDeath : _selectedItemInfos[i].Bind ^= BindMode.BreakOnDeath);
         }
 
-        private void ItemInfoForm_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void Gameshop_button_Click(object sender, EventArgs e)
         {
@@ -1814,6 +1810,74 @@ namespace Server
 
             for (int i = 0; i < _selectedItemInfos.Count; i++)
                 _selectedItemInfos[i].DCDamage = temp;
+        }
+
+
+
+        private void txtSearchItem_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (txtSearchItem.Text != "")
+                {
+                    SearchForItem();
+
+                }
+                else
+                {
+                    btnClearItemSearch_Click(sender, e);
+                }
+            }
+        }
+
+        private void btnClearItemSearch_Click(object sender, EventArgs e)
+        {
+
+            ResetItemList();
+        }
+        private void SearchForItem()
+        {
+            List<ItemInfo> results = Envir.ItemInfoList.FindAll(x => x.Name.ToLower().Contains(txtSearchItem.Text.ToLower()));
+
+            if (results.Count > 0)
+            {
+                ItemInfoListBox.Items.Clear();
+
+                foreach (ItemInfo item in results)
+                {
+                    ItemInfoListBox.Items.Add(item);
+                }
+
+                lblItemListCount.Text = "显示 " + ItemInfoListBox.Items.Count.ToString() + " / " + Envir.ItemInfoList.Count.ToString();
+            }
+        }
+
+        private void ResetItemList()
+        {
+            txtSearchItem.Text = "";
+
+            ItemInfoListBox.Items.Clear();
+
+            for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+                ItemInfoListBox.Items.Add(Envir.ItemInfoList[i]);
+
+            lblItemListCount.Text = "显示 " + ItemInfoListBox.Items.Count.ToString() + " / " + Envir.ItemInfoList.Count.ToString();
+
+        }
+        private void txtSearchItem_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSearchItem.Text != "")
+            {
+                SearchForItem();
+            }
+            else
+            {
+                ResetItemList();
+            }
+        }
+        private void ItemInfoForm_Load(object sender, EventArgs e)
+        {
+            txtSearchItem.Focus();
         }
     }
 }

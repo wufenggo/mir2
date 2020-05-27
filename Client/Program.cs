@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using Client.MirSounds;
 
 namespace Client
 {
@@ -16,26 +17,76 @@ namespace Client
 
         public static bool Restart;
 
+
+
         [STAThread]
         private static void Main(string[] args)
         {
-            if (args.Length > 0)
-            {
-                foreach (var arg in args)
-                {
-                    if (arg.ToLower() == "-tc") Settings.UseTestConfig = true;
-                }
-            }
 
-            #if DEBUG
-                Settings.UseTestConfig = true;
-            #endif
+#if DEBUG
+            //Settings.UseTestConfig = true;
+#endif
 
+            //MirLog.info("DEBUG:" + Settings.UseTestConfig);
             try
             {
+                //加大连接并发数
+                System.Net.ServicePointManager.DefaultConnectionLimit = 256;
+
                 if (UpdatePatcher()) return;
 
                 if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }
+
+                long currExeLen = new FileInfo(Process.GetCurrentProcess().MainModule.FileName).Length;
+                //客户端多开限制，只运行开3个客户端
+                int currClient = 0;
+                string[] dsmach = { "Config", "Data", "DirectX", "Map", "Sound" };
+                Process[] ps = Process.GetProcesses();
+                foreach (Process p in ps)
+                {
+                    try
+                    {
+                        if (p.MainModule.FileName == null)
+                        {
+                            continue;
+                        }
+                        MirLog.info(p.MainModule.FileName);
+                        if (new FileInfo(p.MainModule.FileName).Length == currExeLen)
+                        {
+                            currClient++;
+                        }
+
+                        FileInfo f = new FileInfo(p.MainModule.FileName);
+                        DirectoryInfo[] ds = f.Directory.GetDirectories();
+                        int dsmachcount = 0;
+                        foreach (DirectoryInfo di in ds)
+                        {
+                            foreach (string dm in dsmach)
+                            {
+                                if (di.Name.ToLower().Equals(dm.ToLower()))
+                                {
+                                    dsmachcount++;
+                                }
+                            }
+                        }
+                        if (dsmachcount >= 5)
+                        {
+                            //currClient++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MirLog.error(e.Message);
+                    }
+                }
+                if (currClient >= 4)
+                {
+                    MirLog.info("最多只运行同时打开3个客户端");
+                    MessageBox.Show("最多只运行同时打开3个客户端", "提示", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1);
+                    Application.Exit();
+                    return;
+                }
+
 
                 Packet.IsServer = false;
                 Settings.Load();
@@ -43,9 +94,12 @@ namespace Client
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
-                else Application.Run(Form = new CMain());
+                Application.Run(PForm = new Launcher.AMain());
 
+                //if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
+                //else Application.Run(Form = new CMain());
+                //Application.Run(Form = new CMain());
+                //Application.Run( new Test());
                 Settings.Save();
                 CMain.InputKeys.Save();
 
@@ -60,6 +114,8 @@ namespace Client
             }
         }
 
+        //自动更新方法
+        //如果存在AutoPatcher.gz，则执行AutoPatcher.gz。并退出当前应用
         private static bool UpdatePatcher()
         {
             try
@@ -91,7 +147,7 @@ namespace Client
                             }
 
                         if (stopwatch.ElapsedMilliseconds <= 3000) continue;
-                        MessageBox.Show("Failed to close AutoPatcher during update.");
+                        MessageBox.Show("在更新过程中关闭自动更新程序失败.");
                         return true;
                     }
                 }
@@ -105,10 +161,12 @@ namespace Client
             catch (Exception ex)
             {
                 CMain.SaveError(ex.ToString());
-                
+
                 throw;
             }
         }
+
+        //.Net版本之间是有一定联系的，目前为止微软推出了3个版本的CLR，分别是 1.1， 2.0 ， 4.0 并且你要注意的是 .Net 4是基于CLR4的，而.Net 2.0 3.0 3.5都是基于 CLR2.0， 3.0 3.5其实只是在2.0的基础上增加了新的功能，并没有改变CLR。
 
         public static class RuntimePolicyHelper
         {

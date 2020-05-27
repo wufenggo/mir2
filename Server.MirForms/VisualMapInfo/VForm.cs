@@ -440,8 +440,8 @@ namespace Server.MirForms.VisualMapInfo
                 }
 
                 return true;
-            } 
-            
+            }
+
             if (keyData == Keys.Right && VisualizerGlobal.FocusModeActive == true)
             {
                 if (VisualizerGlobal.SelectedFocusType == VisualizerGlobal.FocusType.Mining)
@@ -725,7 +725,7 @@ namespace Server.MirForms.VisualMapInfo
             RespawnsFilter.Enabled = false;
             RespawnsRemoveSelected.Enabled = false;
         }
-        
+
         private void RespawnsInvertSelection_Click(object sender, EventArgs e)
         {
             for (int i = RespawnPanel.Controls.Count - 1; i > -1; i--)

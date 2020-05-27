@@ -205,7 +205,7 @@ namespace Server.MirDatabase
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", Name, lines[i]));
+                    MessageQueue.Enqueue(string.Format("无法加载爆率：{0}，行{1}", Name, lines[i]));
                     continue;
                 }
 
@@ -329,7 +329,7 @@ namespace Server.MirDatabase
             DropInfo info = new DropInfo();
 
             if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;
-            if (string.Compare(parts[1], "Gold", StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(parts[1], "金币", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 if (parts.Length < 3) return null;
                 if (!uint.TryParse(parts[2], out info.Gold) || info.Gold == 0) return null;
