@@ -189,7 +189,7 @@ namespace Server.MirDatabase
                         ";Belts", string.Empty, string.Empty,
                         ";Stone",
                     };
-                
+
                 File.WriteAllLines(path, contents);
 
 

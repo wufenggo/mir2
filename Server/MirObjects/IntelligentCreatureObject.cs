@@ -742,7 +742,7 @@ namespace Server.MirObjects
 
         public override void ReceiveChat(string text, ChatType type)
         {
-            if (type == ChatType.WhisperIn) CreatureSay("What?");
+            if (type == ChatType.WhisperIn) CreatureSay("主人，目标不在线");
         }
 
         public override bool IsAttackTarget(PlayerObject attacker)

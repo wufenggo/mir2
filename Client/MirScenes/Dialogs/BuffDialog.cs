@@ -516,6 +516,8 @@ namespace Client.MirScenes.Dialogs
 
                 case BuffType.MagicBooster:
                     return 73;
+                case BuffType.FlyingSky:
+                    return 77;
                 case BuffType.MagicShield:
                     return 30;
 

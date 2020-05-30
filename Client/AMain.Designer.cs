@@ -47,9 +47,9 @@ namespace Launcher
             this.SpeedLabel = new System.Windows.Forms.Label();
             this.InterfaceTimer = new System.Windows.Forms.Timer(this.components);
             this.Movement_panel = new System.Windows.Forms.Panel();
-            this.lab_version = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.Config_pb = new System.Windows.Forms.PictureBox();
+            this.lab_version = new System.Windows.Forms.Label();
             this.Close_pb = new System.Windows.Forms.PictureBox();
             this.Main_browser = new System.Windows.Forms.WebBrowser();
             this.CurrentFile_label = new System.Windows.Forms.Label();
@@ -126,17 +126,6 @@ namespace Launcher
             this.Movement_panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Movement_panel_MouseMove);
             this.Movement_panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Movement_panel_MouseUp);
             // 
-            // lab_version
-            // 
-            this.lab_version.AutoSize = true;
-            this.lab_version.BackColor = System.Drawing.Color.Chartreuse;
-            this.lab_version.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.lab_version.Location = new System.Drawing.Point(84, 576);
-            this.lab_version.Name = "lab_version";
-            this.lab_version.Size = new System.Drawing.Size(41, 12);
-            this.lab_version.TabIndex = 35;
-            this.lab_version.Text = "版本号";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::Client.Properties.Resources.server_base;
@@ -161,6 +150,17 @@ namespace Launcher
             this.Config_pb.MouseEnter += new System.EventHandler(this.Config_pb_MouseEnter);
             this.Config_pb.MouseLeave += new System.EventHandler(this.Config_pb_MouseLeave);
             this.Config_pb.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Config_pb_MouseUp);
+            // 
+            // lab_version
+            // 
+            this.lab_version.AutoSize = true;
+            this.lab_version.BackColor = System.Drawing.Color.Chartreuse;
+            this.lab_version.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.lab_version.Location = new System.Drawing.Point(84, 576);
+            this.lab_version.Name = "lab_version";
+            this.lab_version.Size = new System.Drawing.Size(41, 12);
+            this.lab_version.TabIndex = 35;
+            this.lab_version.Text = "版本号";
             // 
             // Close_pb
             // 
@@ -321,7 +321,7 @@ namespace Launcher
             // 
             this.treeView1.BackColor = System.Drawing.Color.Black;
             this.treeView1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.treeView1.ForeColor = System.Drawing.Color.Lime;
+            this.treeView1.ForeColor = System.Drawing.Color.Chartreuse;
             this.treeView1.LineColor = System.Drawing.Color.Gray;
             this.treeView1.Location = new System.Drawing.Point(620, 57);
             this.treeView1.Name = "treeView1";

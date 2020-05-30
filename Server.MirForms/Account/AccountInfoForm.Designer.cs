@@ -77,6 +77,7 @@
             this.expiryDateHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.MatchFilterCheckBox = new System.Windows.Forms.CheckBox();
             this.WipeCharButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.AccountInfoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,7 +119,7 @@
             // 
             // AccountInfoPanel
             // 
-            this.AccountInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.AccountInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AccountInfoPanel.Controls.Add(this.AdminCheckBox);
             this.AccountInfoPanel.Controls.Add(this.PermBanButton);
@@ -448,8 +449,8 @@
             // AccountInfoListView
             // 
             this.AccountInfoListView.AllowColumnReorder = true;
-            this.AccountInfoListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.AccountInfoListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AccountInfoListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.indexHeader,
@@ -530,6 +531,16 @@
             this.WipeCharButton.UseVisualStyleBackColor = true;
             this.WipeCharButton.Click += new System.EventHandler(this.WipeCharButton_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(534, 11);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 21);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "导出";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.AccountDc_Click);
+            // 
             // AccountInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -543,6 +554,7 @@
             this.Controls.Add(this.RefreshButton);
             this.Controls.Add(this.FilterTextBox);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.AccountInfoListView);
             this.Name = "AccountInfoForm";
@@ -606,5 +618,6 @@
         private System.Windows.Forms.TextBox FilterPlayerTextBox;
         private System.Windows.Forms.CheckBox MatchFilterCheckBox;
         private System.Windows.Forms.Button WipeCharButton;
+        private System.Windows.Forms.Button button1;
     }
 }

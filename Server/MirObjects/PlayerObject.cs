@@ -4128,7 +4128,10 @@ namespace Server.MirObjects
                             buff.ExpireTime = 0;
                         }
                         break;
-
+                    case "HOME":
+                        if (!IsGM) return;
+                        Teleport(Envir.GetMap(BindMapIndex), BindLocation);
+                        break;
                     case "CLEARBAG":
                         if (!IsGM && !Settings.TestServer) return;
                         player = this;
@@ -4147,6 +4150,9 @@ namespace Server.MirObjects
                         }
                         player.RefreshStats();
                         break;
+                    
+
+
 
                     case "SUPERMAN":
                         if (!IsGM && !Settings.TestServer) return;
@@ -4181,6 +4187,8 @@ namespace Server.MirObjects
                         hintstring = EnableGuildInvite ? "允许公会邀请" : "禁止公会邀请.";
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
+
+
                     case "RECALL":
                         if (!IsGM) return;
 
@@ -6883,6 +6891,9 @@ namespace Server.MirObjects
                 case Spell.MagicBooster:
                     MagicBooster(magic);
                     break;
+                case Spell.FlyingSky:
+                    FlyingSky(magic);
+                    break;
                 case Spell.Vampirism:
                     Vampirism(target, magic);
                     break;
@@ -7565,12 +7576,29 @@ namespace Server.MirObjects
             action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, monster, Front, false);
             CurrentMap.ActionList.Add(action);
         }
+
+        //是否具有某个技能
+        public bool hasItemSk1(BuffType sk)
+        {
+            if (BuffType.FlyingSky == sk)
+            {
+                return true;
+            }
+
+            return false;
+        }
         private void Blizzard(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
 
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            //冰雨几率不卡顿
 
+            //Buff buff = "天上秘术";
+            //if (buff.ObjectID.ToString)
+            //{
+            //    Enqueue(new S.BlizzardStopTime() { stopTime = 500 });
+            //}
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
 
             ActiveBlizzard = true;
@@ -7605,6 +7633,13 @@ namespace Server.MirObjects
         }
 
         private void MagicBooster(UserMagic magic)
+        {
+            int bonus = 6 + magic.Level * 6;
+
+            ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 500, magic, bonus));
+        }
+
+        private void FlyingSky(UserMagic magic)
         {
             int bonus = 6 + magic.Level * 6;
 
@@ -9422,6 +9457,17 @@ namespace Server.MirObjects
                     value = (int)data[1];
 
                     AddBuff(new Buff { Type = BuffType.MagicBooster, Caster = this, ExpireTime = Envir.Time + 60000, Values = new int[] { value, 6 + magic.Level }, Visible = true });
+                    LevelMagic(magic);
+                    break;
+
+                #endregion
+
+                #region FlyingSky
+
+                case Spell.FlyingSky:
+                    value = (int)data[1];
+
+                    AddBuff(new Buff { Type = BuffType.FlyingSky, Caster = this, ExpireTime = Envir.Time + 60000, Values = new int[] { value, 6 + magic.Level }, Visible = true });
                     LevelMagic(magic);
                     break;
 
@@ -20440,7 +20486,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat("You're trying to buy more of this item than is available.", ChatType.System);
+                    ReceiveChat("你想买的东西太多了.", ChatType.System);
                     GameShopStock(Product);
                     MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock isn't available.");
                     return;
@@ -20453,7 +20499,7 @@ namespace Server.MirObjects
             
             if (stockAvailable)
             {
-                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
+                MessageQueue.EnqueueDebugging(Info.Name + " 正在尝试购买 " + Product.Info.FriendlyName + " x " + Quantity + " - 有现货");
                 if (Product.CreditPrice * Quantity < Account.Credit)
                 {
                     canAfford = true;
@@ -20470,8 +20516,8 @@ namespace Server.MirObjects
                     else
                     {
 
-                        ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
-                        MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
+                        ReceiveChat("你没有足够的货币购买.", ChatType.System);
+                        MessageQueue.EnqueueDebugging(Info.Name + " 正在尝试购买 " + Product.Info.FriendlyName + " x " + Quantity + " - 货币不足.");
                         return;
                     }
                 }
@@ -20483,12 +20529,12 @@ namespace Server.MirObjects
 
             if (canAfford)
             {
-                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
+                MessageQueue.EnqueueDebugging(Info.Name + " 正在尝试购买 " + Product.Info.FriendlyName + " x " + Quantity + " - 有足够的货币.");
                 Account.Gold -= GoldCost;
                 Account.Credit -= CreditCost;
 
-                Report.GoldChanged("GameShop", GoldCost, true, Product.Info.FriendlyName);
-                Report.CreditChanged("GameShop", CreditCost, true, Product.Info.FriendlyName);
+                Report.GoldChanged("商城", GoldCost, true, Product.Info.FriendlyName);
+                Report.CreditChanged("商城", CreditCost, true, Product.Info.FriendlyName);
 
                 if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
                 if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
@@ -20527,7 +20573,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            Report.ItemGSBought("GameShop", Product, Quantity, CreditCost, GoldCost);
+            Report.ItemGSBought("商城", Product, Quantity, CreditCost, GoldCost);
 
             uint quantity = (Quantity * Product.Count);
 
@@ -20562,14 +20608,14 @@ namespace Server.MirObjects
             MailInfo mail = new MailInfo(Info.Index)
                 {
                     MailID = ++Envir.NextMailID,
-                    Sender = "Gameshop",
-                    Message = "Thank you for your purchase from the Gameshop. Your item(s) are enclosed.",
+                    Sender = "商城",
+                    Message = "感谢您从游戏商店购买。随函附上你的物品.",
                     Items = mailItems,
                 };
                 mail.Send();
 
-            MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Purchases Sent!");
-            ReceiveChat("Your purchases have been sent to your Mailbox.", ChatType.Hint);
+            MessageQueue.EnqueueDebugging(Info.Name + " 正在尝试购买 " + Product.Info.FriendlyName + " x " + Quantity + " - 已发送!");
+            ReceiveChat("您的购买的已发送到您的邮箱.请去仓库接收", ChatType.Hint);
         }
             
         public void GetGameShop()

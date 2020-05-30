@@ -354,15 +354,15 @@ namespace Client.MirScenes
                         if (!InventoryDialog.Visible) InventoryDialog.Show();
                         else InventoryDialog.Hide();
                         break;
-                    //case KeybindOptions.Equipment:
-                    //case KeybindOptions.Equipment2:
-                    //    if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
-                    //    {
-                    //        CharacterDialog.Show();
-                    //        CharacterDialog.ShowCharacterPage();
-                    //    }
-                    //    else CharacterDialog.Hide();
-                    //    break;
+                    case KeybindOptions.Equipment:
+                    case KeybindOptions.Equipment2:
+                        if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
+                        {
+                            CharacterDialog.Show();
+                            CharacterDialog.ShowCharacterPage();
+                        }
+                        else CharacterDialog.Hide();
+                        break;
                     case KeybindOptions.Skills:
                     case KeybindOptions.Skills2:
                         if (!CharacterDialog.Visible || !CharacterDialog.SkillPage.Visible)
@@ -662,15 +662,15 @@ namespace Client.MirScenes
             }
         }
 
-        public void F10()
-        {
-            if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
-            {
-                CharacterDialog.Show();
-                CharacterDialog.ShowCharacterPage();
-            }
-            else CharacterDialog.Hide();
-        }
+        //public void F10()
+        //{
+        //    if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
+        //    {
+        //        CharacterDialog.Show();
+        //        CharacterDialog.ShowCharacterPage();
+        //    }
+        //    else CharacterDialog.Hide();
+        //}
 
         public void UseSpell(int key)
         {
@@ -11307,11 +11307,15 @@ namespace Client.MirScenes
                 case BuffType.MagicBooster:
                     text = string.Format("魔法狂暴 \n增加魔法: {0}-{0}.\n增加魔法消耗 {1}%.\n", Values[0], Values[1]);
                     break;
+
+                case BuffType.FlyingSky:
+                    text = string.Format("流星火雨，冰焰术无需引导.\n");
+                    break;
                 case BuffType.MagicShield:
                     text = string.Format("魔法盾\n减少伤害 {0}%.\n", (Values[0] + 2) * 10);
                     break;
                 case BuffType.HumUp:
-                    text = string.Format("飞升 \n增加多项属性.\n", Values[0]);
+                    text += string.Format("飞升 \n增加多项属性.\n", Values[0]);
                     break;
 
                 //special

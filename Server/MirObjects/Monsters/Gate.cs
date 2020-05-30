@@ -70,7 +70,7 @@ namespace Server.MirObjects.Monsters
                     }
                     break;
             }
-           
+
             Direction = MirDirection.Up;
         }
         public override void Despawn()
@@ -82,7 +82,7 @@ namespace Server.MirObjects.Monsters
             CheckDirection();
 
             if (!Conquest.WarIsOn || attacker.MyGuild != null && Conquest.Owner == attacker.MyGuild.Guildindex) damage = 0;
-             
+
             return base.Attacked(attacker, damage, type, damageWeapon);
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Server.Library.MirEnvir;
 using Server.MirDatabase;
 using S = ServerPackets;
 
@@ -119,7 +118,7 @@ namespace Server.MirObjects.Monsters
 
             byte random = DragonLink ? (byte)(Envir.DragonSystem.MaxLevel + 3 - Envir.DragonSystem.Info.Level) : (byte)8;
 
-            if (RandomUtils.Next(random) > 0 /*&& Target.CurrentLocation.Y >= CurrentLocation.Y - 1*/)//in theory it shouldnt fire 'behind' it, but it should shoot at stuff in it's top left corner (and this code made it only hit below him not 'infront' of him)
+            if (Envir.Random.Next(random) > 0 /*&& Target.CurrentLocation.Y >= CurrentLocation.Y - 1*/)//in theory it shouldnt fire 'behind' it, but it should shoot at stuff in it's top left corner (and this code made it only hit below him not 'infront' of him)
             {
                 MassAttack = false;
                 Direction = SetDirection(Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation));
@@ -147,11 +146,11 @@ namespace Server.MirObjects.Monsters
 
             if (Target.Attacked(this, damage, DefenceType.MAC) <= 0) return;
 
-            if (RandomUtils.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
+            if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.PoisonResist)
             {
-                if (RandomUtils.Next(5) == 0)
+                if (Envir.Random.Next(5) == 0)
                     Target.ApplyPoison(new Poison { Owner = this, Duration = 15, PType = PoisonType.Green, Value = GetAttackPower(MinSC, MaxSC), TickSpeed = 2000 }, this);
-                if (RandomUtils.Next(15) == 0)
+                if (Envir.Random.Next(15) == 0)
                     Target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, this);
             }
         }
@@ -173,7 +172,7 @@ namespace Server.MirObjects.Monsters
 
         public override void ChangeHP(int amount)
         {
-            if (DragonLink && amount < 0) Envir.DragonSystem.GainExp(RandomUtils.Next(1, 40));
+            if (DragonLink && amount < 0) Envir.DragonSystem.GainExp(Envir.Random.Next(1, 40));
             base.ChangeHP(amount);
         }
 
@@ -186,7 +185,7 @@ namespace Server.MirObjects.Monsters
             {
                 if (Info.HasDieScript && (Envir.MonsterNPC != null))
                 {
-                    Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                    Envir.MonsterNPC.Call(this, string.Format("[@_DIE({0})]", Info.Index));
                 }
                 Envir.DragonSystem.GainExp(250);//why would hitting em give you so little 'points', while hitting them gives so much
                 Sleeping = true;

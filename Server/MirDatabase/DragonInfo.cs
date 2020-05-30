@@ -22,7 +22,7 @@ namespace Server.MirDatabase
         public string MapFileName, MonsterName, BodyName;
         public Point Location, DropAreaTop, DropAreaBottom;
         public List<DropInfo>[] Drops = new List<DropInfo>[Globals.MaxDragonLevel];
-        public long[] Exps = new long[Globals.MaxDragonLevel - 1];
+        public long[] Exps = new long[Globals.MaxDragonLevel - 1+9900];
 
         public byte Level;
         public long Experience;
@@ -32,8 +32,8 @@ namespace Server.MirDatabase
             //Default values
             Enabled = false;
             MapFileName = "D2083";
-            MonsterName = "Evil Mir";
-            BodyName = "00";
+            MonsterName = "破天魔龙";
+            BodyName = "0";
             Location = new Point(82, 44);
             DropAreaTop = new Point(75, 45);
             DropAreaBottom = new Point(86, 57);
@@ -159,7 +159,7 @@ namespace Server.MirDatabase
                 DropInfo info = new DropInfo();
 
                 if (!int.TryParse(parts[0].Substring(2), out info.Chance)) return null;
-                if (string.Compare(parts[1], "Gold", StringComparison.OrdinalIgnoreCase) == 0)
+                if (string.Compare(parts[1], "金币", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     if (parts.Length < 4) return null;
                     if (!uint.TryParse(parts[2], out info.Gold) || info.Gold == 0) return null;

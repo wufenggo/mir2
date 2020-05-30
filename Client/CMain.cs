@@ -90,30 +90,30 @@ namespace Client
 
             //这句话会卡屏？神经咯。
             //this.ControlBox = true;
-            this.Text = Settings.serverName != null ? Settings.serverName : "韩服传奇";
+            this.Text = Settings.serverName != null ? Settings.serverName : "夜火传奇";
             //
             timer1.Start();
 
 
         }
 
-        ////.net 提供了ProcessCmdKey 重新实现Form的键盘消息,这个针对F10进行特殊处理，避免卡屏
-        //protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
-        //{
-        //    int WM_KEYDOWN = 256;
-        //    int WM_SYSKEYDOWN = 260;
-        //    if (msg.Msg == WM_KEYDOWN | msg.Msg == WM_SYSKEYDOWN)
-        //    {
-        //        //F10键自定义处理，不经过系统
-        //        if (keyData == Keys.F10)
-        //        {
-        //            MirScene.ActiveScene.OnKeyDown(new KeyEventArgs(keyData));
-        //            return true;
-        //        }
-        //        //屏蔽win键
-        //    }
-        //    return false;
-        //}
+        //.net 提供了ProcessCmdKey 重新实现Form的键盘消息,这个针对F10进行特殊处理，避免卡屏
+        protected override bool ProcessCmdKey(ref System.Windows.Forms.Message msg, System.Windows.Forms.Keys keyData)
+        {
+            int WM_KEYDOWN = 256;
+            int WM_SYSKEYDOWN = 260;
+            if (msg.Msg == WM_KEYDOWN | msg.Msg == WM_SYSKEYDOWN)
+            {
+                //F10键自定义处理，不经过系统
+                if (keyData == Keys.F10)
+                {
+                    MirScene.ActiveScene.OnKeyDown(new KeyEventArgs(keyData));
+                    return true;
+                }
+                //屏蔽win键
+            }
+            return false;
+        }
 
         private void CMain_Load(object sender, EventArgs e)
         {
@@ -362,7 +362,7 @@ namespace Client
                 //这里加入游戏名称的更新
                 if (GameScene.User != null && GameScene.User.Name != null && Program.Form.Text != null && !Program.Form.Text.Contains(GameScene.User.Name))
                 {
-                    Program.Form.Text = Settings.serverName != null ? Settings.serverName + " -- " + GameScene.User.Name : "韩服传奇";
+                    Program.Form.Text = Settings.serverName != null ? Settings.serverName + " -- " + GameScene.User.Name : "夜火传奇";
                 }
             }
             else
@@ -784,3 +784,4 @@ namespace Client
         }
     }
 }
+

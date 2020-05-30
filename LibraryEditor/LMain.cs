@@ -808,50 +808,50 @@ namespace LibraryEditor
         }
 
         // Move Left and Right through images.
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (keyData == Keys.Left)
-            {
-                previousImageToolStripMenuItem_Click(null, null);
-                return true;
-            }
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    if (keyData == Keys.Left)
+        //    {
+        //        previousImageToolStripMenuItem_Click(null, null);
+        //        return true;
+        //    }
 
-            if (keyData == Keys.Right)
-            {
-                nextImageToolStripMenuItem_Click(null, null);
-                return true;
-            }
+        //    if (keyData == Keys.Right)
+        //    {
+        //        nextImageToolStripMenuItem_Click(null, null);
+        //        return true;
+        //    }
 
-            if (keyData == Keys.Up) //Not 100% accurate but works for now.
-            {
-                double d = Math.Floor((double)(PreviewListView.Width / 67));
-                int index = PreviewListView.SelectedIndices[0] - (int)d;
+        //    if (keyData == Keys.Up) //Not 100% accurate but works for now.
+        //    {
+        //        double d = Math.Floor((double)(PreviewListView.Width / 67));
+        //        int index = PreviewListView.SelectedIndices[0] - (int)d;
 
-                PreviewListView.SelectedIndices.Clear();
-                if (index < 0)
-                    index = 0;
+        //        PreviewListView.SelectedIndices.Clear();
+        //        if (index < 0)
+        //            index = 0;
 
-                this.PreviewListView.Items[index].Selected = true;
+        //        this.PreviewListView.Items[index].Selected = true;
 
-                return true;
-            }
+        //        return true;
+        //    }
 
-            if (keyData == Keys.Down) //Not 100% accurate but works for now.
-            {
-                double d = Math.Floor((double)(PreviewListView.Width / 67));
-                int index = PreviewListView.SelectedIndices[0] + (int)d;
+        //    if (keyData == Keys.Down) //Not 100% accurate but works for now.
+        //    {
+        //        double d = Math.Floor((double)(PreviewListView.Width / 67));
+        //        int index = PreviewListView.SelectedIndices[0] + (int)d;
 
-                PreviewListView.SelectedIndices.Clear();
-                if (index > PreviewListView.Items.Count - 1)
-                    index = PreviewListView.Items.Count - 1;
+        //        PreviewListView.SelectedIndices.Clear();
+        //        if (index > PreviewListView.Items.Count - 1)
+        //            index = PreviewListView.Items.Count - 1;
 
-                this.PreviewListView.Items[index].Selected = true;
+        //        this.PreviewListView.Items[index].Selected = true;
 
-                return true;
-            }
+        //        return true;
+        //    }
 
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+        //    return base.ProcessCmdKey(ref msg, keyData);
+        //}
 
         private void buttonSkipNext_Click(object sender, EventArgs e)
         {

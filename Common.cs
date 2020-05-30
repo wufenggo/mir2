@@ -1599,6 +1599,7 @@ public enum Spell : byte
     IceThrust = 53,
     FastMove = 54,
     StormEscape = 55,
+    FlyingSky = 56,
 
     //Taoist
     Healing = 61,
@@ -1755,6 +1756,7 @@ public enum BuffType : byte
     MentalState,
     EnergyShield,
     MagicBooster,
+    FlyingSky,
     PetEnhancer,
     ImmortalSkin,
     MagicShield,
@@ -3154,6 +3156,7 @@ public class ItemInfo
     public RequiredClass RequiredClass = RequiredClass.通用;
     public RequiredGender RequiredGender = RequiredGender.None;
     public ItemSet Set;
+    
 
 
 

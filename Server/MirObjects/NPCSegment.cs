@@ -2999,7 +2999,7 @@ namespace Server.MirObjects
                         break;
 
                     case ActionType.RemoveSkill:
-
+                        
                         if (!Enum.TryParse(param[0], true, out skill)) return;
 
                         if (!player.Info.Magics.Any(e => e.Spell == skill)) break;

@@ -48,13 +48,34 @@ namespace Server.MirObjects.Monsters
         public override void Spawned()
         {
             base.Spawned();
-        }
 
+            if (BlockArray == null) return;
+
+            MonsterInfo bInfo = new MonsterInfo
+            {
+                HP = this.HP,
+                Image = Monster.EvilMirBody,
+                CanTame = false,
+                CanPush = false,
+                AutoRev = false
+            };
+
+            foreach (var block in BlockArray)
+            {
+                BlockingObject b = new BlockingObject(this, bInfo);
+                BlockingObjects.Add(b);
+
+                if (!b.Spawn(this.CurrentMap, new Point(this.CurrentLocation.X + block.X, this.CurrentLocation.Y + block.Y)))
+                {
+                    MessageQueue.EnqueueDebugging(string.Format("{3} blocking mob not spawned at {0} {1}:{2}", CurrentMap.Info.FileName, block.X, block.Y, Info.Name));
+                }
+            }
+        }
         protected override void ProcessAI()
         {
             base.ProcessAI();
 
-            if(!Closed && CloseTime > 0 && CloseTime < Envir.Time)
+            if (!Closed && CloseTime > 0 && CloseTime < Envir.Time)
             {
                 CloseDoor();
                 CloseTime = 0;
@@ -67,7 +88,7 @@ namespace Server.MirObjects.Monsters
 
             SearchTime = Envir.Time + SearchDelay;
 
-            if(Closed && AutoOpen)
+            if (Closed && AutoOpen)
             {
                 var nearby = FindAllNearby(4, CurrentLocation);
 
@@ -109,7 +130,7 @@ namespace Server.MirObjects.Monsters
         }
 
         protected override void ProcessRoam() { }
-        
+
         public override Packet GetInfo()
         {
             return base.GetInfo();

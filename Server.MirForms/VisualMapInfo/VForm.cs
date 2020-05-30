@@ -375,6 +375,7 @@ namespace Server.MirForms.VisualMapInfo
             }
         }
 
+
         // Quick Keys
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -790,9 +791,9 @@ namespace Server.MirForms.VisualMapInfo
 
 
 
-        
 
-        
+
+
 
     }
 }

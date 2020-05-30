@@ -458,5 +458,10 @@ namespace Server
                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
         }
+
+        private void AccountDc_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -1220,7 +1220,11 @@ namespace Client.MirObjects
 
             else
             {
-                MountLibrary = null;
+                if (MountType > -1 && RidingMount && showMount)
+                    MountLibrary = MountType < Libraries.UpMounts.Length ? Libraries.UpMounts[MountType] : null;
+                else
+                    MountLibrary =null;
+
             }
 
             //Fishing
@@ -2638,6 +2642,15 @@ namespace Client.MirObjects
 
                             case Spell.MagicBooster:
                                 Effects.Add(new Effect(Libraries.Magic3, 80, 9, 9 * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
+
+                            #endregion
+
+                            #region FlyingSky
+
+                            case Spell.FlyingSky:
+                                Effects.Add(new Effect(Libraries.Magic3, 2100, 8, 8 * FrameInterval, this));
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 

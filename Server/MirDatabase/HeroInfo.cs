@@ -17,17 +17,11 @@ namespace Server.MirDatabase
 {
     public class HeroInfo
     {
-        [Key]
+       
         public int Index { get; set; }
         public string Name { get; set; }
-        [NotMapped]
+        
         public ushort Level { get; set; }
-
-        public int DBLevel
-        {
-            get { return Level; }
-            set { Level = (ushort)value; }
-        }
 
         public MirClass Class { get; set; }
         public MirGender Gender { get; set; }
@@ -63,7 +57,7 @@ namespace Server.MirDatabase
         }
         public MirDirection Direction { get; set; }
 
-        [NotMapped]
+       
         public ushort HP { get; set; }
 
         public int DBHP
@@ -71,7 +65,7 @@ namespace Server.MirDatabase
             get { return HP; }
             set { HP = (ushort)value; }
         }
-        [NotMapped]
+     
         public ushort MP { get; set; }
 
         public int DBMP
@@ -109,8 +103,6 @@ namespace Server.MirDatabase
         public long HeroOrbId { get; set; } = 0;
 
         public PlayerObject Player;
-
-        [ForeignKey("CharacterInfo")]
         public int CharacterIndex { get; set; }
         public CharacterInfo CharacterInfo { get; set; }
 
@@ -131,11 +123,11 @@ namespace Server.MirDatabase
     {
         public long id { get; set; }
 
-        [ForeignKey("HeroInfo")]
+ 
         public int HeroIndex { get; set; }
         public HeroInfo HeroInfo { get; set; }
 
-        [ForeignKey("UserItem")]
+
         public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
@@ -144,27 +136,25 @@ namespace Server.MirDatabase
     {
         public long id { get; set; }
 
-        [ForeignKey("HeroInfo")]
+
         public int HeroIndex { get; set; }
         public HeroInfo HeroInfo { get; set; }
-
-        [ForeignKey("UserItem")]
         public long? ItemUniqueID { get; set; }
         public UserItem UserItem { get; set; }
     }
 
     public class HeroBuff
     {
-        [Key]
+    
         public int Index { get; set; }
 
         public BuffType Type { get; set; }
-        [NotMapped]
+  
         public MapObject Caster { get; set; }
 
         public string CasterName { get; set; }
         public bool Visible { get; set; }
-        [NotMapped]
+
         public uint ObjectID { get; set; }
 
         public long DBObjectID
@@ -183,11 +173,10 @@ namespace Server.MirDatabase
         public bool Infinite { get; set; }
 
         public bool RealTime { get; set; }
-        public DateTime? RealTimeExpire { get; set; } = SqlDateTime.MinValue.Value;
+        public DateTime RealTimeExpire;
 
         public bool Paused { get; set; }
-
-        [ForeignKey("HeroInfo")]
+       
         public int HeroIndex { get; set; }
         public HeroInfo HeroInfo { get; set; }
     }
@@ -197,16 +186,14 @@ namespace Server.MirDatabase
         public long id { get; set; }
 
         public Spell Spell { get; set; }
-        [NotMapped]
+      
         public MagicInfo Info => GetMagicInfo(Spell);
-
-        [ForeignKey("HeroInfo")]
+     
         public int HeroIndex { get; set; }
         public HeroInfo HeroInfo { get; set; }
 
         public byte Level { get; set; }
         public byte Key { get; set; }
-        [NotMapped]
         public ushort Experience { get; set; }
 
         public int DBExperience
@@ -291,7 +278,7 @@ namespace Server.MirDatabase
                 Delay = GetDelay(),
                 Range = Info.Range,
                 CastTime = (CastTime != 0) && (MessageQueue.Envir.Time > CastTime) ? MessageQueue.Envir.Time - CastTime : 0,
-                // IsHeroMagic = true
+               // IsHeroMagic = true
             };
         }
 
