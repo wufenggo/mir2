@@ -7200,8 +7200,9 @@ namespace Client.MirScenes
 
             if (realItem.Set > 0)
             {
+
                 count++;
-                text = string.Format("套装 {0} {1}", realItem.Set, realItem.Name);
+                text = string.Format("套装 {0} {1}", realItem.Set);
 
                 MirLabel SETLabel = new MirLabel
                 {

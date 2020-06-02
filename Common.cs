@@ -24,7 +24,7 @@ public class MirLog
         }
         System.Console.WriteLine(msg);
 
-        //File.AppendAllText( @".\mir2info.txt",msg);
+        File.AppendAllText( @".\mir2info.txt",msg);
     }
 
     public static void debug(string msg)
@@ -34,7 +34,7 @@ public class MirLog
             return;
         }
         System.Console.WriteLine(msg);
-        //File.AppendAllText(@".\mir2debug.txt", msg);
+        File.AppendAllText(@".\mir2debug.txt", msg);
     }
 
     public static void error(string msg)
@@ -44,7 +44,7 @@ public class MirLog
             return;
         }
         System.Console.WriteLine(msg);
-        //File.AppendAllText(@".\mir2error.txt", msg);
+        File.AppendAllText(@".\mir2error.txt", msg);
     }
 }
 //宠物类型
@@ -1643,9 +1643,10 @@ public enum Spell : byte
     SwiftFeet = 102,
     DarkBody = 103,
     Hemorrhage = 104,
+
     CrescentSlash = 105,
     MoonMist = 106,
-
+    Miaoyuanlan = 107,
     //Archer
     Focus = 121,
     StraightShot = 122,

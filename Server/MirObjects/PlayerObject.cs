@@ -7592,25 +7592,33 @@ namespace Server.MirObjects
             cast = false;
 
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
-            //冰雨几率不卡顿
+           // 冰雨几率不卡顿
 
-            //Buff buff = "天上秘术";
-            //if (buff.ObjectID.ToString)
-            //{
-            //    Enqueue(new S.BlizzardStopTime() { stopTime = 500 });
-            //}
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
+           Buff buff = Buffs.Where(e => e.Type == BuffType.FlyingSky).FirstOrDefault();
+            if (buff!= null)
+            {
+                Enqueue(new S.BlizzardStopTime() { stopTime = 500 });
+            }
 
-            ActiveBlizzard = true;
-            CurrentMap.ActionList.Add(action);
-            cast = true;
+                DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
+                ActiveBlizzard = true;
+                CurrentMap.ActionList.Add(action);
+                cast = true;
+     
+
         }
         private void MeteorStrike(UserMagic magic, Point location, out bool cast)
         {
             cast = false;
 
             int damage = magic.GetDamage(GetAttackPower(MinMC, MaxMC));
+            // 火雨几率不卡顿
 
+            Buff buff = Buffs.Where(e => e.Type == BuffType.FlyingSky).FirstOrDefault();
+            if (buff != null)
+            {
+                Enqueue(new S.BlizzardStopTime() { stopTime = 500 });
+            }
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
 
             ActiveBlizzard = true;

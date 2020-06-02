@@ -3647,20 +3647,20 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 433,
                 Sound = SoundList.ButtonA,
-                Hint = "Invite to Group",
+                Hint = "邀请加入群",
             };
             GroupButton.Click += (o, e) =>
             {
 
                 if (GroupDialog.GroupList.Count >= Globals.MaxGroup)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("您的组已达到最大成员数.", ChatType.System);
                     return;
                 }
                 if (GroupDialog.GroupList.Count > 0 && GroupDialog.GroupList[0] != MapObject.User.Name)
                 {
 
-                    GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat("你不是你们小组的组长.", ChatType.System);
                 }
 
                 Network.Enqueue(new C.AddMember { Name = Name });
@@ -3676,7 +3676,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 436,
                 Sound = SoundList.ButtonA,
-                Hint = "Add to Friends List",
+                Hint = "添加到好友列表",
             };
             FriendButton.Click += (o, e) =>
             {
@@ -3692,7 +3692,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
-                Hint = "Send Mail",
+                Hint = "发送邮件",
             };
             MailButton.Click += (o, e) => GameScene.Scene.MailComposeLetterDialog.ComposeMail(Name);
 
@@ -3705,7 +3705,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 525,
                 Sound = SoundList.ButtonA,
-                Hint = "Trade",
+                Hint = "贸易",
             };
             TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
 

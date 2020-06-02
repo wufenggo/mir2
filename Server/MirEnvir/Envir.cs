@@ -389,7 +389,7 @@ namespace Server.MirEnvir
             if (!MagicExists(Spell.DarkBody)) MagicInfoList.Add(new MagicInfo { Name = "烈火身", Spell = Spell.DarkBody, Icon = 70, Level1 = 46, Level2 = 49, Level3 = 52, Need1 = 6000, Need2 = 10000, Need3 = 14000, BaseCost = 40, LevelCost = 7, Range = 0 });
             
             if (!MagicExists(Spell.Hemorrhage)) MagicInfoList.Add(new MagicInfo { Name = "血风击", Spell = Spell.Hemorrhage, Icon = 75, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 9000, Need2 = 15000, Need3 = 21000, Range = 0 });
-            if (!MagicExists(Spell.Hemorrhage)) MagicInfoList.Add(new MagicInfo { Name = "猫舌兰", Spell = Spell.Hemorrhage, Icon = 79, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 9000, Need2 = 15000, Need3 = 21000, Range = 0 });
+            if (!MagicExists(Spell.Miaoyuanlan)) MagicInfoList.Add(new MagicInfo { Name = "猫舌兰", Spell = Spell.Miaoyuanlan, Icon = 79, Level1 = 47, Level2 = 51, Level3 = 55, Need1 = 9000, Need2 = 15000, Need3 = 21000, Range = 0 });
             if (!MagicExists(Spell.CrescentSlash)) MagicInfoList.Add(new MagicInfo { Name = "月华乱舞", Spell = Spell.CrescentSlash, Icon = 71, Level1 = 50, Level2 = 53, Level3 = 56, Need1 = 12000, Need2 = 16000, Need3 = 24000, BaseCost = 19, LevelCost = 5, Range = 0 });
             if (!MagicExists(Spell.MoonMist)) MagicInfoList.Add(new MagicInfo { Name = "月影雾", Spell = Spell.MoonMist, Icon = 83, Level1 = 60, Level2 = 61, Level3 = 62, Need1 = 5000, Need2 = 6000, Need3 = 7000, BaseCost = 19, LevelCost = 5, DelayBase = 18000, DelayReduction = 2000 });
 
@@ -3158,10 +3158,10 @@ namespace Server.MirEnvir
         public void CleanCharacterRunTimeValues(bool clearWeekly, bool clearDaily)
         {
             if (clearWeekly)
-                MessageQueue.EnqueueDebugging(string.Format("{0}: Removing Players Weekly Completed Events", DateTime.Now));
+                MessageQueue.EnqueueDebugging(string.Format("{0}: 删除玩家每周完成的事件", DateTime.Now));
 
             if (clearDaily)
-                MessageQueue.EnqueueDebugging(string.Format("{0}: Removing Players Daily Completed Events", DateTime.Now));
+                MessageQueue.EnqueueDebugging(string.Format("{0}: 删除玩家每日完成的事件", DateTime.Now));
 
             Task.Run(() =>
             {
@@ -3197,7 +3197,7 @@ namespace Server.MirEnvir
             }
 
             ResetGS = false;
-            MessageQueue.Enqueue("Gameshop Purchase Logs Cleared.");
+            MessageQueue.Enqueue("游戏商店购买日志已清除.");
 
         }
 

@@ -15,6 +15,7 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class BigMapDialog : MirImageControl
     {
+        public List<NPCDialog> NpcList = new List<NPCDialog>();
         public List<MirImageControl> PublicEvents = new List<MirImageControl>();
         private MirLabel pointlab;
         //List<MirLabel> ListLabelTown = new List<MirLabel>();
@@ -22,6 +23,7 @@ namespace Client.MirScenes.Dialogs
         private long LastTeleportTime = 0;
         public BigMapDialog()
         {
+            
             //NotControl = true;
             Location = new Point(130, 100);
             //Border = true;
