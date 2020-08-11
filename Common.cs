@@ -26,7 +26,6 @@ public enum PanelType : byte
     ReplaceWedRing,
 }
 
-
 public enum MarketItemType : byte
 {
     Consign,
@@ -3064,6 +3063,7 @@ public class ItemInfo
     }
 
 }
+
 public class UserItem
 {
     public ulong UniqueID;
@@ -3896,7 +3896,126 @@ public class ClientMagic
         writer.Write(Range);
         writer.Write(CastTime);
     }
-   
+
+}
+
+
+public class ClientRecipeInfo
+{
+    public UserItem Item;
+    public List<UserItem> Ingredients = new List<UserItem>();
+
+    public ClientRecipeInfo()
+    {
+
+    }
+
+    public ClientRecipeInfo(BinaryReader reader)
+    {
+        Item = new UserItem(reader);
+
+        int count = reader.ReadInt32();
+        for (int i = 0; i < count; i++)
+        {
+            Ingredients.Add(new UserItem(reader));
+        }
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        Item.Save(writer);
+
+        writer.Write(Ingredients.Count);
+        foreach (var ingredient in Ingredients)
+        {
+            ingredient.Save(writer);
+        }
+    }
+}
+
+public class ClientFriend
+{
+    public int Index;
+    public string Name;
+    public string Memo = "";
+    public bool Blocked;
+
+    public bool Online;
+
+    public ClientFriend() { }
+
+    public ClientFriend(BinaryReader reader)
+    {
+        Index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Memo = reader.ReadString();
+        Blocked = reader.ReadBoolean();
+
+        Online = reader.ReadBoolean();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(Index);
+        writer.Write(Name);
+        writer.Write(Memo);
+        writer.Write(Blocked);
+
+        writer.Write(Online);
+    }
+}
+
+public class ClientMail
+{
+    public ulong MailID;
+    public string SenderName;
+    public string Message;
+    public bool Opened, Locked, CanReply, Collected;
+
+    public DateTime DateSent;
+
+    public uint Gold;
+    public List<UserItem> Items = new List<UserItem>();
+
+    public ClientMail() { }
+
+    public ClientMail(BinaryReader reader)
+    {
+        MailID = reader.ReadUInt64();
+        SenderName = reader.ReadString();
+        Message = reader.ReadString();
+        Opened = reader.ReadBoolean();
+        Locked = reader.ReadBoolean();
+        CanReply = reader.ReadBoolean();
+        Collected = reader.ReadBoolean();
+
+        DateSent = DateTime.FromBinary(reader.ReadInt64());
+
+        Gold = reader.ReadUInt32();
+        int count = reader.ReadInt32();
+
+        for (int i = 0; i < count; i++)
+            Items.Add(new UserItem(reader));
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(MailID);
+        writer.Write(SenderName);
+        writer.Write(Message);
+        writer.Write(Opened);
+        writer.Write(Locked);
+        writer.Write(CanReply);
+        writer.Write(Collected);
+
+        writer.Write(DateSent.ToBinary());
+
+        writer.Write(Gold);
+        writer.Write(Items.Count);
+
+        for (int i = 0; i < Items.Count; i++)
+            Items[i].Save(writer);
+    }
 }
 
 public class ClientAuction
@@ -3941,7 +4060,7 @@ public class ClientQuestInfo
     public string Name, Group;
     public List<string> Description = new List<string>();
     public List<string> TaskDescription = new List<string>();
-    public List<string> CompletionDescription = new List<string>(); 
+    public List<string> CompletionDescription = new List<string>();
 
     public int MinLevelNeeded, MaxLevelNeeded;
     public int QuestNeeded;
@@ -3994,7 +4113,7 @@ public class ClientQuestInfo
 
         count = reader.ReadInt32();
 
-        for (int i = 0; i < count; i++ )
+        for (int i = 0; i < count; i++)
             RewardsFixedItem.Add(new QuestItemReward(reader));
 
         count = reader.ReadInt32();
@@ -4082,6 +4201,7 @@ public class ClientQuestInfo
     }
 }
 
+
 public class ClientQuestProgress
 {
     public int Id;
@@ -4096,13 +4216,13 @@ public class ClientQuestProgress
 
     public QuestIcon Icon
     {
-        get 
+        get
         {
-            return QuestInfo.GetQuestIcon(Taken, Completed); 
+            return QuestInfo.GetQuestIcon(Taken, Completed);
         }
     }
 
-    public ClientQuestProgress(){ }
+    public ClientQuestProgress() { }
 
     public ClientQuestProgress(BinaryReader reader)
     {
@@ -4133,6 +4253,7 @@ public class ClientQuestProgress
     }
 }
 
+
 public class QuestItemReward
 {
     public ItemInfo Item;
@@ -4152,92 +4273,6 @@ public class QuestItemReward
         writer.Write(Count);
     }
 }
-
-public class ClientMail
-{
-    public ulong MailID;
-    public string SenderName;
-    public string Message;
-    public bool Opened, Locked, CanReply, Collected;
-
-    public DateTime DateSent;
-
-    public uint Gold;
-    public List<UserItem> Items = new List<UserItem>();
-
-    public ClientMail() { }
-
-    public ClientMail(BinaryReader reader)
-    {
-        MailID = reader.ReadUInt64();
-        SenderName = reader.ReadString();
-        Message = reader.ReadString();
-        Opened = reader.ReadBoolean();
-        Locked = reader.ReadBoolean();
-        CanReply = reader.ReadBoolean();
-        Collected = reader.ReadBoolean();
-
-        DateSent = DateTime.FromBinary(reader.ReadInt64());
-
-        Gold = reader.ReadUInt32();
-        int count = reader.ReadInt32();
-
-        for (int i = 0; i < count; i++)
-            Items.Add(new UserItem(reader));
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(MailID);
-        writer.Write(SenderName);
-        writer.Write(Message);
-        writer.Write(Opened);
-        writer.Write(Locked);
-        writer.Write(CanReply);
-        writer.Write(Collected);
-
-        writer.Write(DateSent.ToBinary());
-
-        writer.Write(Gold);
-        writer.Write(Items.Count);
-
-        for (int i = 0; i < Items.Count; i++)
-            Items[i].Save(writer);
-    }
-}
-
-public class ClientFriend
-{
-    public int Index;
-    public string Name;
-    public string Memo = "";
-    public bool Blocked;
-
-    public bool Online;
-
-    public ClientFriend() { }
-
-    public ClientFriend(BinaryReader reader)
-    {
-        Index = reader.ReadInt32();
-        Name = reader.ReadString();
-        Memo = reader.ReadString();
-        Blocked = reader.ReadBoolean();
-
-        Online = reader.ReadBoolean();
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(Index);
-        writer.Write(Name);
-        writer.Write(Memo);
-        writer.Write(Blocked);
-
-        writer.Write(Online);
-    }
-}
-
 
 public enum IntelligentCreaturePickupMode : byte
 {
@@ -4475,7 +4510,6 @@ public class ClientIntelligentCreature
         writer.Write(MaintainFoodTime);
     }
 }
-
 
 public abstract class Packet
 {
@@ -5767,15 +5801,6 @@ public class ChatItem
 }
 
 
-public class UserId
-{
-    public long Id = 0;
-    public string UserName = "";
-}
-
-
-#region ItemSets
-
 public class ItemSets
 {
     public ItemSet Set;
@@ -5834,129 +5859,28 @@ public class ItemSets
     }
 }
 
-#endregion
 
-#region "Mine Related"
-public class MineSet
-{
-    public string Name = string.Empty;
-    public byte SpotRegenRate = 5;
-    public byte MaxStones = 80;
-    public byte HitRate = 25;
-    public byte DropRate = 10;
-    public byte TotalSlots = 100;
-    public List<MineDrop> Drops = new List<MineDrop>();
-    private bool DropsSet = false;
 
-    public MineSet(byte MineType = 0)
-    {
-        switch (MineType)
-        {
-            case 1:
-                TotalSlots = 120;
-                Drops.Add(new MineDrop(){ItemName = "GoldOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10});
-                Drops.Add(new MineDrop() { ItemName = "SilverOre", MinSlot = 3, MaxSlot = 20, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                Drops.Add(new MineDrop() { ItemName = "CopperOre", MinSlot = 21, MaxSlot = 45, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                Drops.Add(new MineDrop() { ItemName = "BlackIronOre", MinSlot = 46, MaxSlot = 56, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                break;
-            case 2:
-                TotalSlots = 100;
-                Drops.Add(new MineDrop(){ItemName = "PlatinumOre", MinSlot = 1, MaxSlot = 2, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10});
-                Drops.Add(new MineDrop() { ItemName = "RubyOre", MinSlot = 3, MaxSlot = 20, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                Drops.Add(new MineDrop() { ItemName = "NephriteOre", MinSlot = 21, MaxSlot = 45, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                Drops.Add(new MineDrop() { ItemName = "AmethystOre", MinSlot = 46, MaxSlot = 56, MinDura = 3, MaxDura = 16, BonusChance = 20, MaxBonusDura = 10 });
-                break;
-        }
-    }
-
-    public void SetDrops(List<ItemInfo> items)
-    {
-        if (DropsSet) return;
-        for (int i = 0; i < Drops.Count; i++)
-        {
-            for (int j = 0; j < items.Count; j++)
-            {
-                ItemInfo info = items[j];
-                if (String.Compare(info.Name.Replace(" ", ""), Drops[i].ItemName, StringComparison.OrdinalIgnoreCase) != 0) continue;
-                Drops[i].Item = info;
-                break;
-            }
-        }
-        DropsSet = true;
-    }
-}
-
-public class MineSpot
-{
-    public byte StonesLeft = 0;
-    public long LastRegenTick = 0;
-    public MineSet Mine;
-}
-
-public class MineDrop
-{
-    public string ItemName;
-    public ItemInfo Item;
-    public byte MinSlot = 0;
-    public byte MaxSlot = 0;
-    public byte MinDura = 1;
-    public byte MaxDura = 1;
-    public byte BonusChance = 0;
-    public byte MaxBonusDura = 1;
-}
-
-public class MineZone
-{
-    public byte Mine;
-    public Point Location;
-    public ushort Size;
-
-    public MineZone()
-    {
-    }
-
-    public MineZone(BinaryReader reader)
-    {
-        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-        Size = reader.ReadUInt16();
-        Mine = reader.ReadByte();
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(Location.X);
-        writer.Write(Location.Y);
-        writer.Write(Size);
-        writer.Write(Mine);
-    }
-    public override string ToString()
-    {
-        return string.Format("Mine: {0}- {1}", Functions.PointToString(Location), Mine);
-    }
-}
-#endregion
-
-#region "Guild Related"
-public class ItemVolume
+public class GuildItemVolume
 {
     public ItemInfo Item;
     public string ItemName;
     public uint Amount;
 }
 
-public class Rank
+public class GuildRank
 {
     public List<GuildMember> Members = new List<GuildMember>();
     public string Name = "";
     public int Index = 0;
-    public RankOptions Options = (RankOptions)0;
-    public Rank() 
+    public GuildRankOptions Options = (GuildRankOptions)0;
+    public GuildRank() 
     {
     }
-    public Rank(BinaryReader reader, bool Offline = false)
+    public GuildRank(BinaryReader reader, bool Offline = false)
     {
         Name = reader.ReadString();
-        Options = (RankOptions)reader.ReadByte();
+        Options = (GuildRankOptions)reader.ReadByte();
         if (!Offline)
             Index = reader.ReadInt32();
         int Membercount = reader.ReadInt32();
@@ -5971,7 +5895,7 @@ public class Rank
             writer.Write(Index);
         writer.Write(Members.Count);
         for (int j = 0; j < Members.Count; j++)
-            Members[j].save(writer);
+            Members[j].Save(writer);
     }
 }
 
@@ -5987,7 +5911,7 @@ public class GuildStorageItem
         Item = new UserItem(reader);
         UserId = reader.ReadInt64();
     }
-    public void save(BinaryWriter writer)
+    public void Save(BinaryWriter writer)
     {
         Item.Save(writer);
         writer.Write(UserId);
@@ -6014,7 +5938,7 @@ public class GuildMember
         Online = reader.ReadBoolean();
         Online = Offline ? false: Online;
     }
-    public void save(BinaryWriter writer)
+    public void Save(BinaryWriter writer)
     {
         writer.Write(name);
         writer.Write(Id);
@@ -6026,7 +5950,7 @@ public class GuildMember
 
 [Flags]
 [Obfuscation(Feature = "renaming", Exclude = true)]
-public enum RankOptions : byte
+public enum GuildRankOptions : byte
 {
     CanChangeRank = 1,
     CanRecruit = 2,
@@ -6363,26 +6287,23 @@ public class GuildBuffOld
     }
 }
 
-#endregion
 
-#region Ranking Pete107|Petesn00beh 15/1/2016
-public class Rank_Character_Info
+public class RankCharacterInfo
 {
     public long PlayerId;
     public string Name;
     public MirClass Class;
     public int level;
-    //public int rank;
+
     public long Experience;//clients shouldnt care about this only server
     public object info;//again only keep this on server!
 
-    public Rank_Character_Info()
+    public RankCharacterInfo()
     {
 
     }
-    public Rank_Character_Info(BinaryReader reader)
+    public RankCharacterInfo(BinaryReader reader)
     {
-        //rank = reader.ReadInt32();
         PlayerId = reader.ReadInt64();
         Name = reader.ReadString();
         level = reader.ReadInt32();
@@ -6391,19 +6312,25 @@ public class Rank_Character_Info
     }
     public void Save(BinaryWriter writer)
     {
-        //writer.Write(rank);
         writer.Write(PlayerId);
         writer.Write(Name);
         writer.Write(level);
         writer.Write((byte)Class);
     }
 }
-#endregion
+
+public enum DoorState : byte
+{
+    Closed = 0,
+    Opening = 1,
+    Open = 2,
+    Closing = 3
+}
 
 public class Door
 {
     public byte index;
-    public byte DoorState;//0: closed, 1: opening, 2: open, 3: closing
+    public DoorState DoorState;
     public byte ImageIndex;
     public long LastTick;
     public Point Location;
@@ -6436,42 +6363,7 @@ public class ItemRentalInformation
     }
 }
 
-public class ClientRecipeInfo
-{
-    public UserItem Item;
-    public List<UserItem> Ingredients = new List<UserItem>();
 
-    public ClientRecipeInfo()
-    {
-
-    }
-
-    public ClientRecipeInfo(BinaryReader reader)
-    {
-        Item = new UserItem(reader);
-
-        int count = reader.ReadInt32();
-        for (int i = 0; i < count; i++)
-        {
-            Ingredients.Add(new UserItem(reader));
-        }
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        Item.Save(writer);
-
-        writer.Write(Ingredients.Count);
-        foreach (var ingredient in Ingredients)
-        {
-            ingredient.Save(writer);
-        }
-    }
-}
-
-
-
-//default is English
 public class GameLanguage
 {
     //Client
@@ -6742,6 +6634,7 @@ public class GameLanguage
             SaveClientLanguage(languageIniPath);
             return;
         }
+
         InIReader reader = new InIReader(languageIniPath);
         GameLanguage.PetMode_Both = reader.ReadString("Language", "PetMode_Both", GameLanguage.PetMode_Both);
         GameLanguage.PetMode_MoveOnly = reader.ReadString("Language", "PetMode_MoveOnly", GameLanguage.PetMode_MoveOnly);
