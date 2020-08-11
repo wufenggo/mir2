@@ -823,6 +823,7 @@ public enum ItemType : byte
 	Awakening = 35,
     Pets = 36,
     Transform = 37,
+    Deco = 38
 }
 
 public enum MirGridType : byte
@@ -4848,7 +4849,7 @@ public abstract class Packet
             case (short)ClientPacketIds.ItemRentalLockItem:
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
-                return new C.ConfirmItemRental();           
+                return new C.ConfirmItemRental();
             default:
                 return null;
         }
@@ -6573,6 +6574,7 @@ public class GameLanguage
                          ItemTypeAwakening = "Awakening",
                          ItemTypePets = "Pets",
                          ItemTypeTransform = "Transform",
+                         ItemTypeDeco = "Deco",
 
                          ItemGradeCommon = "Common",
                          ItemGradeRare = "Rare",
