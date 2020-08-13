@@ -53,8 +53,7 @@ namespace Server.MirEnvir
         public static object AccountLock = new object();
         public static object LoadLock = new object();
 
-        public const int MinVersion = 60;
-        public const int Version = 82;
+        public const int Version = 80;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -71,9 +70,7 @@ namespace Server.MirEnvir
 
         public long Time { get; private set; }
         public RespawnTimer RespawnTick = new RespawnTimer();
-
         private static List<string> DisabledCharNames = new List<string>();
-        private static List<string> LineMessages = new List<string>();
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -127,6 +124,7 @@ namespace Server.MirEnvir
         public List<Map> MapList = new List<Map>();
         public List<SafeZoneInfo> StartPoints = new List<SafeZoneInfo>(); 
         public List<ItemInfo> StartItems = new List<ItemInfo>();
+        public List<MailInfo> Mail = new List<MailInfo>();
         public List<PlayerObject> Players = new List<PlayerObject>();
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
@@ -167,14 +165,31 @@ namespace Server.MirEnvir
             PasswordReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+
+            var path = Path.Combine(Settings.EnvirPath,  "DisabledChars.txt");
+            DisabledCharNames.Clear();
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path,"");
+            }
+            else
+            {
+                var lines = File.ReadAllLines(path);
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
+                    DisabledCharNames.Add(lines[i].ToUpper());
+                }
+            }
         }
 
         public static int LastCount = 0, LastRealCount = 0;
         public static long LastRunTime = 0;
         public int MonsterCount;
 
-        private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime;
-        private int dailyTime = DateTime.Now.Day;
+        private long warTime, mailTime, guildTime, conquestTime, rentalItemsTime;
+        private int DailyTime = DateTime.Now.Day;
 
         private bool MagicExists(Spell spell)
         {
@@ -451,7 +466,9 @@ namespace Server.MirEnvir
                 var conTime = Time;
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
                 var userTime = Time + Settings.Minute * 5;
-                var lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
+                var auctionTime = Time;
+                var spawnTime = Time;
+                var robotTime = Time;
                 var processTime = Time + 1000;
                 var startTime = Time;
 
@@ -511,6 +528,7 @@ namespace Server.MirEnvir
                             processRealCount = 0;
                             processTime = Time + 1000;
                         }
+
 
                         if (conTime != Time)
                         {
@@ -613,14 +631,22 @@ namespace Server.MirEnvir
                                 });
                         }
 
-                        if (LineMessages.Count > 0 && Time >= lineMessageTime)
+                        if (Time >= auctionTime)
                         {
-                            lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
-                            Broadcast(new S.Chat
-                            {
-                                Message = LineMessages[Random.Next(LineMessages.Count)],
-                                Type = ChatType.LineMessage
-                            });
+                            auctionTime = Time + Settings.Minute * 10;
+                            ProcessAuction();
+                        }
+
+                        if (Time >= spawnTime)
+                        {
+                            spawnTime = Time + Settings.Second * 10;
+                            Main.RespawnTick.Process();
+                        }
+
+                        if (Time >= robotTime)
+                        {
+                            robotTime = Time + Settings.Minute;
+                            Robot.Process(RobotNPC);
                         }
 
                         //   if (Players.Count == 0) Thread.Sleep(1);
@@ -629,6 +655,8 @@ namespace Server.MirEnvir
                 }
                 catch (Exception ex)
                 {
+                    MessageQueue.Enqueue(ex);
+
                     lock (Connections)
                     {
                         for (var i = Connections.Count - 1; i >= 0; i--)
@@ -642,7 +670,8 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    MessageQueue.Enqueue($"[inner workloop error. Line {line}]" + ex);
+                    File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
+                        $"[{Now}] {ex} at line {line}{Environment.NewLine}");
                 }
 
                 StopNetwork();
@@ -661,7 +690,9 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                MessageQueue.Enqueue($"[outer workloop error. Line {line}]" + ex);
+                MessageQueue.Enqueue("[outer workloop error]" + ex);
+                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
+                    $"[{Now}] {ex} at line {line}{Environment.NewLine}");
             }
 
             _thread = null;
@@ -733,9 +764,12 @@ namespace Server.MirEnvir
             catch (Exception ex)
             {
                 if (ex is ThreadInterruptedException) return;
+                MessageQueue.Enqueue(ex);
 
-                MessageQueue.Enqueue($"[threadloop error]" + ex);
+                File.AppendAllText(Path.Combine(Settings.ErrorPath, "Error.txt"),
+                    $"[{Now}] {ex}{Environment.NewLine}");
             }
+
         }
 
         private void AdjustLights()
@@ -759,15 +793,14 @@ namespace Server.MirEnvir
 
         public void Process()
         {        
-            if (Now.Day != dailyTime)
+            if (Now.Day != DailyTime)
             {
-                dailyTime = Now.Day;
+                DailyTime = Now.Day;
                 ProcessNewDay();
             }
 
             if(Time >= warTime)
             {
-                warTime = Time + Settings.Minute;
                 for (var i = GuildsAtWar.Count - 1; i >= 0; i--)
                 {
                     GuildsAtWar[i].TimeRemaining -= Settings.Minute;
@@ -776,6 +809,23 @@ namespace Server.MirEnvir
                     GuildsAtWar[i].EndWar();
                     GuildsAtWar.RemoveAt(i);
                 }
+                
+                warTime = Time + Settings.Minute;
+            }
+
+            if (Time >= mailTime)
+            {
+                for (var i = Mail.Count - 1; i >= 0; i--)
+                {
+                    var mail = Mail[i];
+
+                    if(mail.Receive())
+                    {
+                        //collected mail ok
+                    }
+                }
+
+                mailTime = Time + Settings.Minute * 1;
             }
 
             if (Time >= guildTime)
@@ -791,34 +841,13 @@ namespace Server.MirEnvir
             {
                 conquestTime = Time + Settings.Second * 10;
                 for (var i = 0; i < Conquests.Count; i++)
-                {
                     Conquests[i].Process();
-                }
             }
 
-            if (Time >= rentalItemsTime)
-            {
-                rentalItemsTime = Time + Settings.Minute * 5;
-                ProcessRentedItems();
-            }
+            if (Time < rentalItemsTime) return;
+            rentalItemsTime = Time + Settings.Minute * 5;
 
-            if (Time >= auctionTime)
-            {
-                auctionTime = Time + Settings.Minute * 10;
-                ProcessAuction();
-            }
-
-            if (Time >= spawnTime)
-            {
-                spawnTime = Time + Settings.Second * 10;
-                Main.RespawnTick.Process();
-            }
-
-            if (Time >= robotTime)
-            {
-                robotTime = Time + Settings.Minute;
-                Robot.Process(RobotNPC);
-            }
+            ProcessRentedItems();
         }
 
         private void ProcessAuction()
@@ -839,7 +868,7 @@ namespace Server.MirEnvir
                         }
                         else
                         {
-                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.FriendlyName, info.CurrentBid);
+                            string message = string.Format("You won {0} for {1:#,##0} Gold.", info.Item.Name, info.CurrentBid);
 
                             info.Sold = true;
                             MailCharacter(info.CurrentBuyerInfo, info.Item, customMessage: message);
@@ -851,8 +880,8 @@ namespace Server.MirEnvir
                                 info.CurrentBuyerInfo.Player.Enqueue(new S.LoseGold { Gold = info.CurrentBid });
                             }
 
-                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
-                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.FriendlyName, info.CurrentBid), ChatType.Hint);
+                            MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format("You bought {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
+                            MessageAccount(info.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", info.Item.Name, info.CurrentBid), ChatType.Hint);
                         }
                     }
                     else
@@ -969,6 +998,9 @@ namespace Server.MirEnvir
                     auction.Save(writer);
 
                 writer.Write(NextMailID);
+                writer.Write(Mail.Count);
+                foreach (var mail in Mail)
+                        mail.Save(writer);
 
                 writer.Write(GameshopLog.Count);
                 foreach (var item in GameshopLog)
@@ -981,7 +1013,7 @@ namespace Server.MirEnvir
                 foreach (var Spawn in SavedSpawns)
                 {
                     var Save = new RespawnSave { RespawnIndex = Spawn.Info.RespawnIndex, NextSpawnTick = Spawn.NextSpawnTick, Spawned = Spawn.Count >= Spawn.Info.Count * SpawnMultiplier };
-                    Save.Save(writer);
+                    Save.save(writer);
                 }
             }
         }
@@ -1175,34 +1207,28 @@ namespace Server.MirEnvir
             Saving = false;
         }
 
-        public bool LoadDB()
+        public void LoadDB()
         {
             lock (LoadLock)
             {
                 if (!File.Exists(DatabasePath))
-                {
                     SaveDB();
-                }
 
                 using (var stream = File.OpenRead(DatabasePath))
                 using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
-                    LoadCustomVersion = reader.ReadInt32();
-
-                    if (LoadVersion < MinVersion)
-                    {
-                        MessageQueue.Enqueue($"Cannot load a database version {Envir.LoadVersion}. Mininum supported is {Envir.MinVersion}.");
-                        return false;
-                    }
-
+                    if (LoadVersion > 57)
+                        LoadCustomVersion = reader.ReadInt32();
                     MapIndex = reader.ReadInt32();
                     ItemIndex = reader.ReadInt32();
                     MonsterIndex = reader.ReadInt32();
 
-                    NPCIndex = reader.ReadInt32();
-                    QuestIndex = reader.ReadInt32();
-
+                    if (LoadVersion > 33)
+                    {
+                        NPCIndex = reader.ReadInt32();
+                        QuestIndex = reader.ReadInt32();
+                    }
                     if (LoadVersion >= 63)
                     {
                         GameshopIndex = reader.ReadInt32();
@@ -1237,25 +1263,30 @@ namespace Server.MirEnvir
                     for (var i = 0; i < count; i++)
                         MonsterInfoList.Add(new MonsterInfo(reader));
 
-                    count = reader.ReadInt32();
-                    NPCInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        NPCInfoList.Add(new NPCInfo(reader));
-
-                    count = reader.ReadInt32();
-                    QuestInfoList.Clear();
-                    for (var i = 0; i < count; i++)
-                        QuestInfoList.Add(new QuestInfo(reader));
-
-                    DragonInfo = new DragonInfo(reader);
-                    count = reader.ReadInt32();
-                    for (var i = 0; i < count; i++)
+                    if (LoadVersion > 33)
                     {
-                        var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
-                        if (!MagicExists(m.Spell))
-                            MagicInfoList.Add(m);
+                        count = reader.ReadInt32();
+                        NPCInfoList.Clear();
+                        for (var i = 0; i < count; i++)
+                            NPCInfoList.Add(new NPCInfo(reader));
+
+                        count = reader.ReadInt32();
+                        QuestInfoList.Clear();
+                        for (var i = 0; i < count; i++)
+                            QuestInfoList.Add(new QuestInfo(reader));
                     }
 
+                    DragonInfo = LoadVersion >= 11 ? new DragonInfo(reader) : new DragonInfo();
+                    if (LoadVersion >= 58)
+                    {
+                        count = reader.ReadInt32();
+                        for (var i = 0; i < count; i++)
+                        {
+                            var m = new MagicInfo(reader, LoadVersion, LoadCustomVersion);
+                            if(!MagicExists(m.Spell))
+                                MagicInfoList.Add(m);
+                        }
+                    }
                     FillMagicInfoList();
                     if (LoadVersion <= 70)
                         UpdateMagicInfo();
@@ -1292,7 +1323,6 @@ namespace Server.MirEnvir
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
-            return true;
         }
 
         public void LoadAccounts()
@@ -1311,6 +1341,7 @@ namespace Server.MirEnvir
                 RankBottomLevel[i] = 0;
             }
 
+
             lock (LoadLock)
             {
                 if (!File.Exists(AccountPath))
@@ -1320,13 +1351,16 @@ namespace Server.MirEnvir
                 using (var reader = new BinaryReader(stream))
                 {
                     LoadVersion = reader.ReadInt32();
-                    LoadCustomVersion = reader.ReadInt32();
+                    if (LoadVersion > 57) LoadCustomVersion = reader.ReadInt32();
                     NextAccountID = reader.ReadInt32();
                     NextCharacterID = reader.ReadInt32();
                     NextUserItemID = reader.ReadUInt64();
 
-                    GuildCount = reader.ReadInt32();
-                    NextGuildID = reader.ReadInt32();
+                    if (LoadVersion > 27)
+                    {
+                        GuildCount = reader.ReadInt32();
+                        NextGuildID = reader.ReadInt32();
+                    }
 
                     var count = reader.ReadInt32();
                     AccountList.Clear();
@@ -1337,12 +1371,14 @@ namespace Server.MirEnvir
                         CharacterList.AddRange(AccountList[i].Characters);
                     }
 
+                    if (LoadVersion < 7) return;
+
                     foreach (var auction in Auctions)
                         auction.SellerInfo.AccountInfo.Auctions.Remove(auction);
                     Auctions.Clear();
 
-                    NextAuctionID = reader.ReadUInt64();
-
+                    if (LoadVersion >= 8)
+                        NextAuctionID = reader.ReadUInt64();
 
                     count = reader.ReadInt32();
                     for (var i = 0; i < count; i++)
@@ -1355,25 +1391,30 @@ namespace Server.MirEnvir
                         auction.SellerInfo.AccountInfo.Auctions.AddLast(auction);
                     }
 
-                    NextMailID = reader.ReadUInt64();
-
-                    if (LoadVersion <= 80)
+                    if (LoadVersion == 7)
                     {
-                        count = reader.ReadInt32();
-                        for (var i = 0; i < count; i++)
+                        foreach (var auction in Auctions)
                         {
-                            var mail = new MailInfo(reader, LoadVersion, LoadCustomVersion);
+                            if (auction.Sold && auction.Expired) auction.Expired = false;
 
-                            mail.RecipientInfo = GetCharacterInfo(mail.RecipientIndex);
-
-                            if (mail.RecipientInfo != null)
-                            {
-                                mail.RecipientInfo.Mail.Add(mail); //add to players inbox
-                            }
+                            auction.AuctionID = ++NextAuctionID;
                         }
                     }
 
-                    if (LoadVersion >= 63)
+                    if(LoadVersion > 43)
+                    {
+                        NextMailID = reader.ReadUInt64();
+
+                        Mail.Clear();
+
+                        count = reader.ReadInt32();
+                        for (var i = 0; i < count; i++)
+                        {
+                            Mail.Add(new MailInfo(reader, LoadVersion, LoadCustomVersion));
+                        }
+                    }
+
+                    if(LoadVersion >= 63)
                     {
                         var logCount = reader.ReadInt32();
                         for (var i = 0; i < logCount; i++)
@@ -1384,10 +1425,10 @@ namespace Server.MirEnvir
                         if (ResetGS) ClearGameshopLog();
                     }
 
-                    if (LoadVersion >= 68)
+                    if (LoadVersion < 68) return;
                     {
-                        var saveCount = reader.ReadInt32();
-                        for (var i = 0; i < saveCount; i++)
+                        var SaveCount = reader.ReadInt32();
+                        for (var i = 0; i < SaveCount; i++)
                         {
                             var Saved = new RespawnSave(reader);
                             foreach (var Respawn in SavedSpawns)
@@ -1402,6 +1443,7 @@ namespace Server.MirEnvir
                                     Respawn.Spawn();
                                 }
                             }
+
                         }
                     }
                 }
@@ -1767,50 +1809,6 @@ namespace Server.MirEnvir
             }
         }
 
-        public void LoadDisabledChars()
-        {
-            DisabledCharNames.Clear();
-
-            var path = Path.Combine(Settings.EnvirPath, "DisabledChars.txt");
-
-            if (!File.Exists(path))
-            {
-                File.WriteAllText(path, "");
-            }
-            else
-            {
-                var lines = File.ReadAllLines(path);
-
-                for (var i = 0; i < lines.Length; i++)
-                {
-                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-                    DisabledCharNames.Add(lines[i].ToUpper());
-                }
-            }
-        }
-
-        public void LoadLineMessages()
-        {
-            LineMessages.Clear();
-
-            var path = Path.Combine(Settings.EnvirPath, "LineMessage.txt");
-
-            if (!File.Exists(path))
-            {
-                File.WriteAllText(path, "");
-            }
-            else
-            {
-                var lines = File.ReadAllLines(path);
-
-                for (var i = 0; i < lines.Length; i++)
-                {
-                    if (lines[i].StartsWith(";") || string.IsNullOrWhiteSpace(lines[i])) continue;
-                    LineMessages.Add(lines[i]);
-                }
-            }
-        }
-
         private bool BindCharacter(AuctionInfo auction)
         {
             bool bound = false;
@@ -1898,7 +1896,7 @@ namespace Server.MirEnvir
                 .ToArray())
                 RecipeInfoList.Add(new RecipeInfo(recipe));
 
-            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
+            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes loaded.");
 
             for (var i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
@@ -1918,9 +1916,6 @@ namespace Server.MirEnvir
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
             MessageQueue.Enqueue("Drops Loaded.");
-
-            LoadDisabledChars();
-            LoadLineMessages();
 
             if (DragonInfo.Enabled)
             {
@@ -2701,7 +2696,7 @@ namespace Server.MirEnvir
         {
             //can't have expiry on usable items
             if (item.Info.Type == ItemType.Scroll || item.Info.Type == ItemType.Potion || 
-                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script || item.Info.Type == ItemType.Deco) return;
+                item.Info.Type == ItemType.Transform || item.Info.Type == ItemType.Script) return;
 
             var expiryInfo = new ExpireInfo();
 
@@ -2760,8 +2755,8 @@ namespace Server.MirEnvir
             if (stat.MaxAcChance > 0 && Random.Next(stat.MaxAcChance) == 0) item.AC = (byte)(RandomomRange(stat.MaxAcMaxStat-1, stat.MaxAcStatChance)+1);
             if (stat.MaxMacChance > 0 && Random.Next(stat.MaxMacChance) == 0) item.MAC = (byte)(RandomomRange(stat.MaxMacMaxStat-1, stat.MaxMacStatChance)+1);
             if (stat.MaxDcChance > 0 && Random.Next(stat.MaxDcChance) == 0) item.DC = (byte)(RandomomRange(stat.MaxDcMaxStat-1, stat.MaxDcStatChance)+1);
-            if (stat.MaxMcChance > 0 && Random.Next(stat.MaxMcChance) == 0) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
-            if (stat.MaxScChance > 0 && Random.Next(stat.MaxScChance) == 0) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
+            if (stat.MaxMcChance > 0 && Random.Next(stat.MaxScChance) == 0) item.MC = (byte)(RandomomRange(stat.MaxMcMaxStat-1, stat.MaxMcStatChance)+1);
+            if (stat.MaxScChance > 0 && Random.Next(stat.MaxMcChance) == 0) item.SC = (byte)(RandomomRange(stat.MaxScMaxStat-1, stat.MaxScStatChance)+1);
             if (stat.AccuracyChance > 0 && Random.Next(stat.AccuracyChance) == 0) item.Accuracy = (byte)(RandomomRange(stat.AccuracyMaxStat-1, stat.AccuracyStatChance)+1);
             if (stat.AgilityChance > 0 && Random.Next(stat.AgilityChance) == 0) item.Agility = (byte)(RandomomRange(stat.AgilityMaxStat-1, stat.AgilityStatChance)+1);
             if (stat.HpChance > 0 && Random.Next(stat.HpChance) == 0) item.HP = (byte)(RandomomRange(stat.HpMaxStat-1, stat.HpStatChance)+1);
