@@ -358,15 +358,15 @@ namespace Client.MirScenes
                         if (!InventoryDialog.Visible) InventoryDialog.Show();
                         else InventoryDialog.Hide();
                         break;
-                    //case KeybindOptions.Equipment:
-                    //case KeybindOptions.Equipment2:
-                    //    if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
-                    //    {
-                    //        CharacterDialog.Show();
-                    //        CharacterDialog.ShowCharacterPage();
-                    //    }
-                    //    else CharacterDialog.Hide();
-                    //    break;
+                    case KeybindOptions.Equipment:
+                    case KeybindOptions.Equipment2:
+                        if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
+                        {
+                            CharacterDialog.Show();
+                            CharacterDialog.ShowCharacterPage();
+                        }
+                        else CharacterDialog.Hide();
+                        break;
                     case KeybindOptions.Skills:
                     case KeybindOptions.Skills2:
                         if (!CharacterDialog.Visible || !CharacterDialog.SkillPage.Visible)
@@ -634,16 +634,6 @@ namespace Client.MirScenes
                         break;
                 }
             }
-        }
-
-        public void F10()
-        {
-            if (!CharacterDialog.Visible || !CharacterDialog.CharacterPage.Visible)
-            {
-                CharacterDialog.Show();
-                CharacterDialog.ShowCharacterPage();
-            }
-            else CharacterDialog.Hide();
         }
 
         public void ChangeSkillMode(bool? ctrl)
