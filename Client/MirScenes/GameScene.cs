@@ -2910,10 +2910,10 @@ namespace Client.MirScenes
                 switch (item.Info.Type)
                 {
                     case ItemType.Mount:
-                        ChatDialog.ReceiveChat(string.Format("{0} is no longer loyal to you.", item.Info.Name), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format("{0} is no longer loyal to you.", item.Info.FriendlyName), ChatType.System);
                         break;
                     default:
-                        ChatDialog.ReceiveChat(string.Format("{0}'s dura has dropped to 0.", item.Info.Name), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format("{0}'s dura has dropped to 0.", item.Info.FriendlyName), ChatType.System);
                         break;
                 }
                 
@@ -3137,9 +3137,13 @@ namespace Client.MirScenes
                 NPCDialog.Hide();
 
             NPCGoodsDialog.Hide();
-            // BuyBackDialog.Hide();
             NPCDropDialog.Hide();
             StorageDialog.Hide();
+            NPCAwakeDialog.Hide();
+            RefineDialog.Hide();
+            StorageDialog.Hide();
+            TrustMerchantDialog.Hide();
+            QuestListDialog.Hide();
         }
         private void NPCUpdate(S.NPCUpdate p)
         {
@@ -4870,8 +4874,8 @@ namespace Client.MirScenes
                     fromCell.Locked = false;
                     break;
                 case 4://failretrieve
-                    toCell = p.From < User.BeltIdx ? BeltDialog.Grid[p.From] : InventoryDialog.Grid[p.From - User.BeltIdx];
-                    fromCell = GuildDialog.StorageGrid[p.To];
+                    toCell = p.To < User.BeltIdx ? BeltDialog.Grid[p.To] : InventoryDialog.Grid[p.To - User.BeltIdx];
+                    fromCell = GuildDialog.StorageGrid[p.From];
 
                     if (toCell == null || fromCell == null) return;
 
@@ -6959,7 +6963,7 @@ namespace Client.MirScenes
             int count = 0;
 
             #region AWAKENAME
-            if (HoverItem.Awake.getAwakeLevel() > 0)
+            if (HoverItem.Awake.GetAwakeLevel() > 0)
             {
                 count++;
                 MirLabel AWAKENAMELabel = new MirLabel
@@ -6969,7 +6973,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("{0} Awakening({1})", HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeLevel())
+                    Text = string.Format("{0} Awakening({1})", HoverItem.Awake.Type.ToString(), HoverItem.Awake.GetAwakeLevel())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKENAMELabel.DisplayRectangle.Right + 4),
@@ -6979,7 +6983,7 @@ namespace Client.MirScenes
             #endregion
 
             #region AWAKE_TOTAL_VALUE
-            if (HoverItem.Awake.getAwakeValue() > 0)
+            if (HoverItem.Awake.GetAwakeValue() > 0)
             {
                 count++;
                 MirLabel AWAKE_TOTAL_VALUELabel = new MirLabel
@@ -6989,7 +6993,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(realItem.Type != ItemType.Armour ? "{0} + {1}~{2}" : "MAX {0} + {1}", HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeValue(), HoverItem.Awake.getAwakeValue())
+                    Text = string.Format(realItem.Type != ItemType.Armour ? "{0} + {1}~{2}" : "MAX {0} + {1}", HoverItem.Awake.Type.ToString(), HoverItem.Awake.GetAwakeValue(), HoverItem.Awake.GetAwakeValue())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKE_TOTAL_VALUELabel.DisplayRectangle.Right + 4),
@@ -6999,10 +7003,10 @@ namespace Client.MirScenes
             #endregion
 
             #region AWAKE_LEVEL_VALUE
-            if (HoverItem.Awake.getAwakeLevel() > 0)
+            if (HoverItem.Awake.GetAwakeLevel() > 0)
             {
                 count++;
-                for (int i = 0; i < HoverItem.Awake.getAwakeLevel(); i++)
+                for (int i = 0; i < HoverItem.Awake.GetAwakeLevel(); i++)
                 {
                     MirLabel AWAKE_LEVEL_VALUELabel = new MirLabel
                     {
@@ -7011,7 +7015,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = string.Format(realItem.Type != ItemType.Armour ? "Level {0} : {1} + {2}~{3}" : "Level {0} : MAX {1} + {2}~{3}", i + 1, HoverItem.Awake.type.ToString(), HoverItem.Awake.getAwakeLevelValue(i), HoverItem.Awake.getAwakeLevelValue(i))
+                        Text = string.Format(realItem.Type != ItemType.Armour ? "Level {0} : {1} + {2}~{3}" : "Level {0} : MAX {1} + {2}~{3}", i + 1, HoverItem.Awake.Type.ToString(), HoverItem.Awake.GetAwakeLevelValue(i), HoverItem.Awake.GetAwakeLevelValue(i))
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKE_LEVEL_VALUELabel.DisplayRectangle.Right + 4),
@@ -9360,9 +9364,13 @@ namespace Client.MirScenes
                         NPCObject npc = MapObject.MouseObject as NPCObject;
                         if (npc != null)
                         {
-                            GameScene.Scene.NPCDialog.Hide();
+                            if (npc.ObjectID == GameScene.NPCID && 
+                                (CMain.Time <= GameScene.NPCTime || GameScene.Scene.NPCDialog.Visible))
+                            {
+                                return;
+                            }
 
-                            if (CMain.Time <= GameScene.NPCTime && npc.ObjectID == GameScene.NPCID) return;
+                            //GameScene.Scene.NPCDialog.Hide();
 
                             GameScene.NPCTime = CMain.Time + 5000;
                             GameScene.NPCID = npc.ObjectID;
@@ -9409,7 +9417,7 @@ namespace Client.MirScenes
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
                 {
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("You cannot drop {0}", cell.Item.Name), MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format("You cannot drop {0}", cell.Item.FriendlyName), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     GameScene.SelectedCell = null;
                     return;
