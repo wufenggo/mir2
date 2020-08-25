@@ -832,8 +832,7 @@ public enum ChatType : byte
     Relationship = 12,
     Mentor = 13,
     Shout2 = 14,
-    Shout3 = 15,
-    LineMessage = 16,
+    Shout3 = 15
 }
 
 public enum ItemType : byte
@@ -1558,8 +1557,7 @@ public enum ServerPacketIds : short
     OpenBrowser,
     PlaySound,
     SetTimer,
-    ExpireTimer,
-    UpdateNotice
+    ExpireTimer
 }
 
 public enum ClientPacketIds : short
