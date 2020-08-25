@@ -8,14 +8,13 @@ using System.Windows.Forms;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
 using Shared;
-using System.Globalization;
 
 namespace Client.MirScenes.Dialogs
 {
     public sealed class NoticeDialog : MirImageControl
     {
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
-        public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
+        public static Regex L = new Regex(@"\[((.*?)\/(.*?))\]");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, OkButton;
         public MirLabel[] TextLabel;
@@ -189,22 +188,22 @@ namespace Client.MirScenes.Dialogs
             PositionBar.Location = new Point(x, y);
         }
 
-        public void Update(Notice notice)
+        public void Update(Notice newNotice)
         {
-            this.Notice = notice;
+            this.Notice = newNotice;
 
             List<string> temp = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(notice.Message))
-            {
-                return;
-            }
-
-            string[] lines = notice.Message.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            string[] lines = newNotice.Message.Split(new string[] { "\r\n" }, StringSplitOptions.None);
 
             foreach (string line in lines)
             {
                 temp.Add(line);
+            }
+
+            if (temp.Count == 0)
+            {
+                return;
             }
 
             NewText(temp);
@@ -342,7 +341,7 @@ namespace Client.MirScenes.Dialogs
 
             temp.Click += (o, e) =>
             {
-                if (link.StartsWith("http://", true, CultureInfo.InvariantCulture))
+                if (link.Length > 0 && link.Contains("http") && link.Contains("://"))
                 {
                     System.Diagnostics.Process.Start(link);
                 }

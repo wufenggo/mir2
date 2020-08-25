@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 
 public class Notice
 {
     public string Title = string.Empty;
     public string Message = string.Empty;
-    public DateTime LastUpdate;
 
     public Notice() { }
 

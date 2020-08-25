@@ -11,7 +11,6 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
 using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
@@ -26,7 +25,7 @@ namespace Client.MirScenes.Dialogs
     {
         public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
-        public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
+        public static Regex L = new Regex(@"\[((.*?)\/(.*?))\]");
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton;
         public MirLabel[] TextLabel;
@@ -333,7 +332,7 @@ namespace Client.MirScenes.Dialogs
             {
                 temp.Click += (o, e) =>
                 {
-                    if (link.StartsWith("http://", true, CultureInfo.InvariantCulture))
+                    if (link.Length > 0 && link.Contains("http") && link.Contains("://"))
                     {
                         System.Diagnostics.Process.Start(link);
                     }

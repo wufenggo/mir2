@@ -389,8 +389,6 @@ namespace Server.MirObjects
                     }
                 }
             }
-
-            Info.LastLoginDate = Envir.Now;
         }
 
         public void StopGame(byte reason)
@@ -500,7 +498,7 @@ namespace Server.MirObjects
             Fishing = false;
 
             Info.LastIP = Connection.IPAddress;
-            Info.LastLogoutDate = Envir.Now;
+            Info.LastDate = Envir.Now;
 
             Report.Disconnected(logReason);
 
@@ -2080,10 +2078,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(Settings.Notice.Message) && Settings.Notice.LastUpdate > Info.LastLogoutDate)
-            {
-                Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
-            }
+            Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
 
             Spawned();
 
@@ -2192,9 +2187,9 @@ namespace Server.MirObjects
                     Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
             }
 
-            if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
+            if (InSafeZone && Info.LastDate > DateTime.MinValue)
             {
-                double totalMinutes = (Envir.Now - Info.LastLogoutDate).TotalMinutes;
+                double totalMinutes = (Envir.Now - Info.LastDate).TotalMinutes;
 
                 _restedCounter = (int)(totalMinutes * 60);
             }
@@ -2862,26 +2857,14 @@ namespace Server.MirObjects
         {
             foreach (var s in ItemSets)
             {
-                if ((s.Set == ItemSet.Smash) &&
-                    ((s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet)) || (s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Necklace)) || (s.Type.Contains(ItemType.Bracelet) && s.Type.Contains(ItemType.Necklace))))
-                {
+                if ((s.Set == ItemSet.Smash) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                     ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
-                }
-
                 if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
-                {
                     Holy = Math.Min(byte.MaxValue, (byte)(Holy + 3));
-                }
-
                 if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
                     MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                     MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
-                }
-
-                if ((s.Set == ItemSet.DarkGhost) && (s.Type.Contains(ItemType.Necklace)) && (s.Type.Contains(ItemType.Bracelet)))
-                {
-                    MaxHP = Math.Min(byte.MaxValue, (byte)(MaxHP + 25));
                 }
 
                 if (!s.SetComplete) continue;
@@ -2908,14 +2891,18 @@ namespace Server.MirObjects
                     case ItemSet.Smash:
                         MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
                         MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 3);
+                        ASpeed = (sbyte)Math.Min(sbyte.MaxValue, ASpeed + 2);
                         break;
                     case ItemSet.HwanDevil:
                         MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
                         MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
+                        MaxBagWeight = (ushort)Math.Min(ushort.MaxValue, MaxBagWeight + 20);
+                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 5);
                         break;
                     case ItemSet.Purity:
                         MinSC = (ushort)Math.Min(ushort.MaxValue, MinSC + 1);
                         MaxSC = (ushort)Math.Min(ushort.MaxValue, MaxSC + 2);
+                        Holy = (byte)Math.Min(ushort.MaxValue, Holy + 3);
                         break;
                     case ItemSet.FiveString:
                         MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + (((double)MaxHP / 100) * 30));
@@ -3003,25 +2990,6 @@ namespace Server.MirObjects
                     case ItemSet.Oppressive:
                         MaxAC = (ushort)Math.Min(ushort.MaxValue, MaxAC + 1);
                         Agility = (byte)Math.Min(byte.MaxValue, Agility + 1);
-                        break;
-                    case ItemSet.BlueFrost:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 1);
-                        MinMC = (ushort)Math.Min(ushort.MaxValue, MinMC + 1);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 1);
-                        MaxHandWeight = (ushort)Math.Min(ushort.MaxValue, MaxHandWeight + 1);
-                        MaxWearWeight = (ushort)Math.Min(ushort.MaxValue, MaxWearWeight + 2);
-                        break;
-                    case ItemSet.BlueFrostH:
-                        MinDC = (ushort)Math.Min(ushort.MaxValue, MinDC + 1);
-                        MaxDC = (ushort)Math.Min(ushort.MaxValue, MaxDC + 2);
-                        MaxMC = (ushort)Math.Min(ushort.MaxValue, MaxMC + 2);
-                        Accuracy = (byte)Math.Min(byte.MaxValue, Accuracy + 1);
-                        MaxHP = (ushort)Math.Min(ushort.MaxValue, MaxHP + 50);
-                        break;
-                    case ItemSet.DarkGhost:
-                        MaxMP = (ushort)Math.Min(ushort.MaxValue, MaxMP + 25);
-                        ASpeed = (sbyte)Math.Min(int.MaxValue, ASpeed + 2);
                         break;
                 }
             }
@@ -5928,17 +5896,6 @@ namespace Server.MirObjects
                     ob.ProcessSpell(this);
                     //break;
                 }
-
-                SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
-                if (szi != null)
-                {
-                    BindLocation = szi.Location;
-                    BindMapIndex = CurrentMapIndex;
-                    InSafeZone = true;
-                }
-                else
-                    InSafeZone = false;
             }
 
             ActionTime = Envir.Time + 500;
@@ -6229,7 +6186,7 @@ namespace Server.MirObjects
                 if (magic != null)
                 {
                     if (FatalSword)
-                        damageFinal = magic.GetDamage(damageBase);
+                        damageBase = magic.GetDamage(damageBase);
 
                     if (!FatalSword && Envir.Random.Next(10) == 0)
                         FatalSword = true;
@@ -8110,6 +8067,7 @@ namespace Server.MirObjects
 
             if (travel > 0 && !wall)
             {
+
                 if (target != null) target.Attacked(this, magic.GetDamage(0), DefenceType.None, false);
                 LevelMagic(magic);
             }
@@ -9168,7 +9126,6 @@ namespace Server.MirObjects
                     {
                         ReincarnationTarget.Enqueue(new S.RequestReincarnation { });
                         LevelMagic(magic);
-                        ReincarnationReady = false;
                     }
                     break;
 
@@ -14665,9 +14622,18 @@ namespace Server.MirObjects
                     return;
                 }
 
-                uint cost = (uint)(temp.RepairPrice() * script.PriceRate(this));
-
-                uint baseCost = (uint)(temp.RepairPrice() * script.PriceRate(this, true));
+                uint cost;
+                uint baseCost;
+                if (!special)
+                {
+                    cost = (uint)(temp.RepairPrice() * script.PriceRate(this));
+                    baseCost = (uint)(temp.RepairPrice() * script.PriceRate(this, true));
+                }
+                else
+                {
+                    cost = (uint)(temp.RepairPrice() * 3 * script.PriceRate(this));
+                    baseCost = (uint)(temp.RepairPrice() * 3 * script.PriceRate(this, true));
+                }
 
                 if (cost > Account.Gold) return;
 
@@ -15350,6 +15316,7 @@ namespace Server.MirObjects
                             newItem.Count = item.Count;
                             newItem.Slots = item.Slots;
                             newItem.Awake = item.Awake;
+                            newItem.ExpireInfo = item.ExpireInfo;
 
                             Info.Inventory[i] = newItem;
 
