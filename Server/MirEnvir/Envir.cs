@@ -54,7 +54,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 82;
+        public const int Version = 81;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -451,7 +451,7 @@ namespace Server.MirEnvir
                 var conTime = Time;
                 var saveTime = Time + Settings.SaveDelay * Settings.Minute;
                 var userTime = Time + Settings.Minute * 5;
-                var lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
+                var lineMessageTime = Time + Settings.Minute * 2;
                 var processTime = Time + 1000;
                 var startTime = Time;
 
@@ -615,7 +615,7 @@ namespace Server.MirEnvir
 
                         if (LineMessages.Count > 0 && Time >= lineMessageTime)
                         {
-                            lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
+                            lineMessageTime = Time + Settings.Minute * 2;
                             Broadcast(new S.Chat
                             {
                                 Message = LineMessages[Random.Next(LineMessages.Count)],
@@ -1892,14 +1892,6 @@ namespace Server.MirEnvir
 
             LoadDB();
 
-            RecipeInfoList.Clear();
-            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
-                .Select(path => Path.GetFileNameWithoutExtension(path))
-                .ToArray())
-                RecipeInfoList.Add(new RecipeInfo(recipe));
-
-            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
-
             for (var i = 0; i < MapInfoList.Count; i++)
                 MapInfoList[i].CreateMap();
             MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
@@ -1918,6 +1910,14 @@ namespace Server.MirEnvir
             LoadStrongBoxDrops();
             LoadBlackStoneDrops();
             MessageQueue.Enqueue("Drops Loaded.");
+
+            RecipeInfoList.Clear();
+            foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
+                .Select(path => Path.GetFileNameWithoutExtension(path))
+                .ToArray())
+                RecipeInfoList.Add(new RecipeInfo(recipe));
+
+            MessageQueue.Enqueue($"{RecipeInfoList.Count} Recipes Loaded.");
 
             LoadDisabledChars();
             LoadLineMessages();

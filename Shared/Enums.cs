@@ -833,7 +833,7 @@ public enum ChatType : byte
     Mentor = 13,
     Shout2 = 14,
     Shout3 = 15,
-    LineMessage = 16
+    LineMessage = 16,
 }
 
 public enum ItemType : byte
@@ -1079,10 +1079,7 @@ public enum ItemSet : byte
     Monitor = 27,
     Oppressive = 28,
     Paeok = 29,
-    Sulgwan = 30,
-    BlueFrost = 31,
-    DarkGhost = 38,
-    BlueFrostH = 39
+    Sulgwan = 30
 }
 
 public enum Spell : byte
