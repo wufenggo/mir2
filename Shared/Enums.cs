@@ -1078,7 +1078,10 @@ public enum ItemSet : byte
     Monitor = 27,
     Oppressive = 28,
     Paeok = 29,
-    Sulgwan = 30
+    Sulgwan = 30,
+    BlueFrost = 31,
+    DarkGhost = 38,
+    BlueFrostH = 39
 }
 
 public enum Spell : byte
