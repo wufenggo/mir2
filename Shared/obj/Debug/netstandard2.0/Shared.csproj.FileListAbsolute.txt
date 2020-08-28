@@ -6,3 +6,4 @@ E:\mir2\Shared\obj\Debug\netstandard2.0\Shared.AssemblyInfo.cs
 E:\mir2\Shared\obj\Debug\netstandard2.0\Shared.csproj.CoreCompileInputs.cache
 E:\mir2\Shared\obj\Debug\netstandard2.0\Shared.dll
 E:\mir2\Shared\obj\Debug\netstandard2.0\Shared.pdb
+E:\mir2\Shared\obj\Debug\netstandard2.0\Shared.csprojAssemblyReference.cache
