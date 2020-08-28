@@ -14,7 +14,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
-using SlimDX.Direct3D9;
+using Microsoft.DirectX.Direct3D;
 using Font = System.Drawing.Font;
 
 namespace Client
@@ -355,9 +355,8 @@ namespace Client
                     DXManager.Device.Present();
                 }
             }
-            catch (Direct3D9Exception ex)
+            catch (DeviceLostException)
             {
-                DXManager.DeviceLost = true;
             }
             catch (Exception ex)
             {
@@ -516,7 +515,7 @@ namespace Client
 
             Program.Form.ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
 
-            DXManager.ResetDevice();
+            DXManager.Device.Reset(DXManager.Parameters);
 
             if (MirScene.ActiveScene == GameScene.Scene)
                 GameScene.Scene.MapControl.FloorValid = false;
@@ -583,7 +582,7 @@ namespace Client
 
             DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
             DXManager.Device.Present();
-            DXManager.ResetDevice();
+            DXManager.Device.Reset(DXManager.Parameters);
 
             Program.Form.CenterToScreen();
         }
