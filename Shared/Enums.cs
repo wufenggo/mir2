@@ -1247,6 +1247,7 @@ public enum SpellEffect : byte
     Behemoth,
     Stunned,
     IcePillar
+
 }
 
 public enum BuffType : byte
@@ -1304,7 +1305,8 @@ public enum BuffType : byte
     Defence,
     MagicDefence,
     WonderDrug,
-    Knapsack
+    Knapsack,
+    Group
 }
 
 public enum DefenceType : byte

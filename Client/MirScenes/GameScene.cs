@@ -468,7 +468,7 @@ namespace Client.MirScenes
                         QuestLogDialog.Hide();
                         NPCAwakeDialog.Hide();
                         RefineDialog.Hide();
-                        BigMapDialog.Visible = false;
+                        BigMapDialog.Hide();
                         if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
                         MailComposeLetterDialog.Hide();
                         MailComposeParcelDialog.Hide();
@@ -8612,6 +8612,10 @@ namespace Client.MirScenes
         
         public static List<Effect> Effects = new List<Effect>();
 
+        //自动寻路
+        public List<Point> RouteList = new List<Point>();//路径列表
+        public Point RouteTarget;//目的地
+
         public MapControl()
         {
             MapButtons = MouseButtons.None;
@@ -8634,9 +8638,12 @@ namespace Client.MirScenes
         public void LoadMap()
         {
             GameScene.Scene.NPCDialog.Hide();
+
             Objects.Clear();
             Effects.Clear();
             Doors.Clear();
+            //换了地图，要重新清空这个自动寻路
+            RouteList.Clear();
 
             if (User != null)
                 Objects.Add(User);
@@ -8739,7 +8746,39 @@ namespace Client.MirScenes
                 Redraw();
             }
         }
+        //开启自动行走
+        public bool StartRoute()
+        {
+            if (RouteTarget == null)
+            {
+                return false;
+            }
+            RouteList.Clear();
+            byte[,] R = new byte[Width, Height];
+            for (int w = 0; w < Width; w++)
+            {
+                for (int h = 0; h < Height; h++)
+                {
+                    if (M2CellInfo[w, h].EmptyCell())
+                    {
+                        R[w, h] = 1;
+                    }
+                    else
+                    {
+                        R[w, h] = 0;
+                    }
+                }
+            }
 
+            AutoRoute ar = new AutoRoute(R);
+            RouteList = ar.FindeWay(User.CurrentLocation, RouteTarget);
+            if (RouteList.Count <= 0)
+            {
+                GameScene.Scene.ChatDialog.ReceiveChat("自动寻路失败，找不到合适的路径", ChatType.System);
+                return false;
+            }
+            return true;
+        }
         public static MapObject GetObject(uint targetID)
         {
             for (int i = 0; i < Objects.Count; i++)
@@ -9519,7 +9558,16 @@ namespace Client.MirScenes
         {
             if (AwakeningAction == true) return;
 
-            if ((MouseControl == this) && (MapButtons != MouseButtons.None)) AutoHit = false;//mouse actions stop mining even when frozen!
+            //有鼠标点击了地图，自动挖矿，自动寻路都要取消
+            if ((MouseControl == this) && (MapButtons != MouseButtons.None))
+            {
+                AutoHit = false;//mouse actions stop mining even when frozen!
+                if (RouteList.Count > 0)
+                {
+                    RouteList.Clear();
+                    GameScene.Scene.ChatDialog.ReceiveChat("[自动寻路关闭]", ChatType.Hint);
+                }
+            }
             if (!CanRideAttack()) AutoHit = false;
             
             if (CMain.Time < InputDelay || User.Poison.HasFlag(PoisonType.Paralysis) || User.Poison.HasFlag(PoisonType.LRParalysis) || User.Poison.HasFlag(PoisonType.Frozen) || User.Fishing) return;
@@ -9582,8 +9630,102 @@ namespace Client.MirScenes
                     return;
                 }
             }
+            //自动行走
+            if (RouteList.Count > 0)
+            {
+                //1.先清除多余的点
+                int remidx = RouteList.Count;//需要删除的index;
+                for (int i = RouteList.Count - 1; i >= 0 && i > RouteList.Count - 4; i--)
+                {
+                    Point xp = RouteList[i];
+                    //忽略自身
+                    if (User.CurrentLocation == xp)
+                    {
+                        remidx = i;
+                        break;
+                    }
+                }
 
-            
+                for (int i = RouteList.Count - 1; i >= remidx; i--)
+                {
+                    RouteList.RemoveAt(i);
+                }
+
+
+                int distance = User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2;//可以走动的步数
+
+                int realdist = 1;//实际走动的步数
+                MirDirection tdir;//朝向
+                Point p1 = Point.Empty, p2 = Point.Empty, p3 = Point.Empty;//最多一次跑3个点
+                //一次最多取2-3个点
+                for (int i = RouteList.Count - 1; i >= 0 && i > RouteList.Count - 4; i--)
+                {
+                    Point xp = RouteList[i];
+                    if (p1 == Point.Empty)
+                    {
+                        p1 = xp;
+                    }
+                    else if (p2 == Point.Empty)
+                    {
+                        p2 = xp;
+                    }
+                    else if (p3 == Point.Empty)
+                    {
+                        p3 = xp;
+                    }
+                }
+                if (p1 == Point.Empty)
+                {
+                    return;
+                }
+                tdir = Functions.DirectionFromPoint(User.CurrentLocation, p1);
+                if (distance == 2 && p1 != Point.Empty && p2 != Point.Empty)
+                {
+                    if (tdir == Functions.DirectionFromPoint(p1, p2))
+                    {
+                        realdist = 2;
+                    }
+                }
+
+                if (distance == 3 && p1 != Point.Empty && p2 != Point.Empty && p2 != Point.Empty)
+                {
+                    if (tdir == Functions.DirectionFromPoint(p1, p2) && tdir == Functions.DirectionFromPoint(p2, p3))
+                    {
+                        realdist = 3;
+                    }
+                }
+                //MirLog.info("realdist:"+ realdist);
+                if (realdist > 1)
+                {
+                    if (GameScene.CanRun && CanRun(tdir) && CMain.Time > GameScene.NextRunTime && User.HP >= 10 && (!User.Sneaking || (User.Sneaking && User.Sprint)))
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = tdir, Location = Functions.PointMove(User.CurrentLocation, tdir, realdist) };
+                    }
+                    else
+                    {
+                        realdist = 1;
+                    }
+                }
+                if (realdist == 1)
+                {
+                    if ((CanWalk(tdir)) && (CheckDoorOpen(Functions.PointMove(User.CurrentLocation, tdir, 1))))
+                    {
+                        User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = tdir, Location = Functions.PointMove(User.CurrentLocation, tdir, realdist) };
+                    }
+                    else
+                    {
+                        //重新规划路线
+                        StartRoute();
+                        //MirLog.info("重新规划路线:" + realdist);
+                    }
+                }
+                return;
+            }
+
+
+
+            //这里进行各种鼠标动作处理？
+
             MirDirection direction;
             if (MouseControl == this)
             {
@@ -9782,6 +9924,25 @@ namespace Client.MirScenes
             direction = Functions.DirectionFromPoint(User.CurrentLocation, MapObject.TargetObject.CurrentLocation);
 
             if (!CanWalk(direction)) return;
+
+            //增加跑步追踪目标的代码
+            GameScene.CanRun = User.FastRun ? true : GameScene.CanRun;
+            if (GameScene.CanRun && CanRun(direction) && User.HP >= 10) //slow removed
+            {
+                int distance = User.RidingMount || User.Sprint && !User.Sneaking ? 3 : 2;
+                bool fail = false;
+                for (int i = 0; i <= distance; i++)
+                {
+                    if (!CheckDoorOpen(Functions.PointMove(User.CurrentLocation, direction, i)))
+                        fail = true;
+                }
+                if (!fail)
+                {
+                    User.QueuedAction = new QueuedAction { Action = MirAction.Running, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, User.RidingMount || (User.Sprint && !User.Sneaking) ? 3 : 2) };
+                    return;
+                }
+            }
+            //这里是走向目标,优化这里，改成跑向目标
 
             User.QueuedAction = new QueuedAction { Action = MirAction.Walking, Direction = direction, Location = Functions.PointMove(User.CurrentLocation, direction, 1) };
         }

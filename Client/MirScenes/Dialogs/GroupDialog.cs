@@ -22,7 +22,10 @@ namespace Client.MirScenes.Dialogs
         public MirImageControl TitleLabel;
         public MirButton SwitchButton, CloseButton, AddButton, DelButton;
         public MirLabel[] GroupMembers;
+        public MirLabel GroupStage, GroupExperient, checkBoxLabel;
+        public MirCheckBox LockInfoBox;
 
+        public bool LockInfo = false;
         public GroupDialog()
         {
             Index = 120;
@@ -66,13 +69,34 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 361,
                 Index = 360,
-                Location = new Point(206, 3),
+                Location = new Point(209, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
                 Sound = SoundList.ButtonA,
+                Hint = "关闭"
             };
             CloseButton.Click += (o, e) => Hide();
+
+            GroupStage = new MirLabel
+            {
+                AutoSize = true,
+                Location = new Point(78, 248),
+                Parent = this,
+                NotControl = true,
+                Text = "阶段: 0",
+                Font = new Font(Settings.FontName, 8F, FontStyle.Bold),
+            };
+
+            GroupExperient = new MirLabel
+            {
+                AutoSize = true,
+                Location = new Point(78, 284),
+                Parent = this,
+                NotControl = true,
+                Text = "额外经验+ 0%",
+                Font = new Font(Settings.FontName, 8F, FontStyle.Bold),
+            };
 
             SwitchButton = new MirButton
             {
@@ -83,10 +107,38 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.GroupSwitch
             };
             SwitchButton.Click += (o, e) => Network.Enqueue(new C.SwitchGroup { AllowGroup = !AllowGroup });
 
+            LockInfoBox = new MirCheckBox
+            {
+                Index = 2086,
+                UnTickedIndex = 2086,
+                TickedIndex = 2087,
+                Library = Libraries.Prguse,
+                Parent = this,
+                Location = new Point(136, 268),
+                Hint = "组队信息开/关.",
+                Checked = false,
+                Visible = false
+            };
+            checkBoxLabel = new MirLabel
+            {
+                Text = "组队信息开/关.",
+                Location = new Point(136, 268),
+                ForeColour = Color.Goldenrod,
+                Font = new Font(Settings.FontName, 12f),
+                Parent = this,
+                Visible = false,
+                NotControl = true
+            };
+            LockInfoBox.Click += (o, e) =>
+            {
+                if (LockInfoBox.Checked)
+                    LockInfo = true;
+                else
+                    LockInfo = false;
+            };
             AddButton = new MirButton
             {
                 HoverIndex = 134,
@@ -96,7 +148,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 135,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.GroupAdd
+                Hint = "添加"
             };
             AddButton.Click += (o, e) => AddMember();
 
@@ -109,7 +161,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 138,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.GroupRemove
+                Hint = "删除"
             };
             DelButton.Click += (o, e) => DelMember();
 
@@ -125,15 +177,28 @@ namespace Client.MirScenes.Dialogs
                 AddButton.Index = 130;
                 AddButton.HoverIndex = 131;
                 AddButton.PressedIndex = 132;
+
+                GroupExperient.Visible = false;
+                GroupStage.Visible = false;
+                LockInfoBox.Visible = false;
+                checkBoxLabel.Visible = false;
             }
             else
             {
+
                 AddButton.Index = 133;
                 AddButton.HoverIndex = 134;
                 AddButton.PressedIndex = 135;
+
+                GroupExperient.Visible = true;
+                GroupStage.Visible = true;
             }
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
+                LockInfoBox.Visible = true;
+                LockInfoBox.Location = new Point(136, 268);
+                checkBoxLabel.Visible = true;
+                checkBoxLabel.Location = new Point(136, 268);
                 AddButton.Visible = false;
                 DelButton.Visible = false;
             }
@@ -141,6 +206,11 @@ namespace Client.MirScenes.Dialogs
             {
                 AddButton.Visible = true;
                 DelButton.Visible = true;
+
+                LockInfoBox.Location = new Point(136, 268);
+                checkBoxLabel.Location = new Point(136, 268);
+                LockInfoBox.Visible = true;
+                checkBoxLabel.Visible = true;
             }
 
             if (AllowGroup)
@@ -158,18 +228,28 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < GroupMembers.Length; i++)
                 GroupMembers[i].Text = i >= GroupList.Count ? string.Empty : GroupList[i];
+
+            GroupExperient.Text = "额外经验+ 0%";
+            GroupStage.Text = "阶段: 0";
+
+            var grpBuff = GameScene.Scene.Buffs.FirstOrDefault(x => x.Type == BuffType.Group);
+            if (grpBuff != null)
+            {
+                GroupExperient.Text = "额外经验+ " + grpBuff.Values[0] + "%";
+                GroupStage.Text = "阶段: " + grpBuff.Values[1];
+            }
         }
 
         public void AddMember(string name)
         {
             if (GroupList.Count >= Globals.MaxGroup)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你的小组已经满员了", ChatType.System);
                 return;
             }
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你不是小组队长", ChatType.System);
                 return;
             }
 
@@ -180,17 +260,17 @@ namespace Client.MirScenes.Dialogs
         {
             if (GroupList.Count >= Globals.MaxGroup)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你的小组已经满员了", ChatType.System);
                 return;
             }
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
 
-                GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你不是小组队长", ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupAddEnterName);
+            MirInputBox inputBox = new MirInputBox("请输入你想要加入玩家的名字");
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -204,11 +284,11 @@ namespace Client.MirScenes.Dialogs
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
 
-                GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat("你不是小组队长", ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupRemoveEnterName);
+            MirInputBox inputBox = new MirInputBox("请输入你想要踢除玩家的名字");
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -216,6 +296,18 @@ namespace Client.MirScenes.Dialogs
                 inputBox.Dispose();
             };
             inputBox.Show();
+        }
+
+
+        public void Hide()
+        {
+            if (!Visible) return;
+            Visible = false;
+        }
+        public void Show()
+        {
+            if (Visible) return;
+            Visible = true;
         }
     }
 }

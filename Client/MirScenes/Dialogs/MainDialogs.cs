@@ -4830,106 +4830,106 @@ namespace Client.MirScenes.Dialogs
             FKeys[Key - 1].PressedIndex = 1658;
         }
     }
-    public sealed class BigMapDialog : MirControl
-    {
-        public BigMapDialog()
-        {
-            NotControl = true;
-            Location = new Point(130, 100);
-            //Border = true;
-            //BorderColour = Color.Lime;
-            BeforeDraw += (o, e) => OnBeforeDraw();
-            Sort = true;
-        }
+    ////public sealed class BigMapDialog : MirControl
+    ////{
+    ////    public BigMapDialog()
+    ////    {
+    ////        NotControl = true;
+    ////        Location = new Point(130, 100);
+    ////        //Border = true;
+    ////        //BorderColour = Color.Lime;
+    ////        BeforeDraw += (o, e) => OnBeforeDraw();
+    ////        Sort = true;
+    ////    }
 
-        private void OnBeforeDraw()
-        {
-            MapControl map = GameScene.Scene.MapControl;
-            if (map == null || !Visible) return;
+    ////    private void OnBeforeDraw()
+    ////    {
+    ////        MapControl map = GameScene.Scene.MapControl;
+    ////        if (map == null || !Visible) return;
 
-            //int index = map.BigMap <= 0 ? map.MiniMap : map.BigMap;
-            int index = map.BigMap;
+    ////        //int index = map.BigMap <= 0 ? map.MiniMap : map.BigMap;
+    ////        int index = map.BigMap;
 
-            if (index <= 0)
-            {
-                if (Visible)
-                {
-                    Visible = false;
-                }
-                return;
-            }
+    ////        if (index <= 0)
+    ////        {
+    ////            if (Visible)
+    ////            {
+    ////                Visible = false;
+    ////            }
+    ////            return;
+    ////        }
 
-            TrySort();
+    ////        TrySort();
 
-            Rectangle viewRect = new Rectangle(0, 0, 600, 400);
+    ////        Rectangle viewRect = new Rectangle(0, 0, 600, 400);
 
-            Size = Libraries.MiniMap.GetSize(index);
+    ////        Size = Libraries.MiniMap.GetSize(index);
 
-            if (Size.Width < 600)
-                viewRect.Width = Size.Width;
+    ////        if (Size.Width < 600)
+    ////            viewRect.Width = Size.Width;
 
-            if (Size.Height < 400)
-                viewRect.Height = Size.Height;
+    ////        if (Size.Height < 400)
+    ////            viewRect.Height = Size.Height;
 
-            viewRect.X = (Settings.ScreenWidth - viewRect.Width) / 2;
-            viewRect.Y = (Settings.ScreenHeight - 120 - viewRect.Height) / 2;
+    ////        viewRect.X = (Settings.ScreenWidth - viewRect.Width) / 2;
+    ////        viewRect.Y = (Settings.ScreenHeight - 120 - viewRect.Height) / 2;
 
-            Location = viewRect.Location;
-            Size = viewRect.Size;
+    ////        Location = viewRect.Location;
+    ////        Size = viewRect.Size;
 
-            float scaleX = Size.Width / (float)map.Width;
-            float scaleY = Size.Height / (float)map.Height;
+    ////        float scaleX = Size.Width / (float)map.Width;
+    ////        float scaleY = Size.Height / (float)map.Height;
 
-            viewRect.Location = new Point(
-                (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
-                (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
+    ////        viewRect.Location = new Point(
+    ////            (int)(scaleX * MapObject.User.CurrentLocation.X) - viewRect.Width / 2,
+    ////            (int)(scaleY * MapObject.User.CurrentLocation.Y) - viewRect.Height / 2);
 
-            if (viewRect.Right >= Size.Width)
-                viewRect.X = Size.Width - viewRect.Width;
-            if (viewRect.Bottom >= Size.Height)
-                viewRect.Y = Size.Height - viewRect.Height;
+    ////        if (viewRect.Right >= Size.Width)
+    ////            viewRect.X = Size.Width - viewRect.Width;
+    ////        if (viewRect.Bottom >= Size.Height)
+    ////            viewRect.Y = Size.Height - viewRect.Height;
 
-            if (viewRect.X < 0) viewRect.X = 0;
-            if (viewRect.Y < 0) viewRect.Y = 0;
+    ////        if (viewRect.X < 0) viewRect.X = 0;
+    ////        if (viewRect.Y < 0) viewRect.Y = 0;
 
-            Libraries.MiniMap.Draw(index, Location, Size, Color.FromArgb(255, 255, 255));
+    ////        Libraries.MiniMap.Draw(index, Location, Size, Color.FromArgb(255, 255, 255));
 
-            int startPointX = (int)(viewRect.X / scaleX);
-            int startPointY = (int)(viewRect.Y / scaleY);
+    ////        int startPointX = (int)(viewRect.X / scaleX);
+    ////        int startPointY = (int)(viewRect.Y / scaleY);
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-
-
-                if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue; // || (ob.ObjectID != MapObject.User.ObjectID)
-                float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + Location.X;
-                float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + Location.Y;
-
-                Color colour;
-
-                if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
-                    colour = Color.FromArgb(0, 0, 255);
-                else
-                    if (ob is PlayerObject)
-                    colour = Color.FromArgb(255, 255, 255);
-                else if (ob is NPCObject || ob.AI == 6)
-                    colour = Color.FromArgb(0, 255, 50);
-                else
-                    colour = Color.FromArgb(255, 0, 0);
-
-                DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
-            }
-        }
+    ////        for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+    ////        {
+    ////            MapObject ob = MapControl.Objects[i];
 
 
-        public void Toggle()
-        {
-            Visible = !Visible;
+    ////            if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell) continue; // || (ob.ObjectID != MapObject.User.ObjectID)
+    ////            float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + Location.X;
+    ////            float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + Location.Y;
 
-            Redraw();
-        }
-    }
+    ////            Color colour;
+
+    ////            if ((GroupDialog.GroupList.Contains(ob.Name) && MapObject.User != ob) || ob.Name.EndsWith(string.Format("({0})", MapObject.User.Name)))
+    ////                colour = Color.FromArgb(0, 0, 255);
+    ////            else
+    ////                if (ob is PlayerObject)
+    ////                colour = Color.FromArgb(255, 255, 255);
+    ////            else if (ob is NPCObject || ob.AI == 6)
+    ////                colour = Color.FromArgb(0, 255, 50);
+    ////            else
+    ////                colour = Color.FromArgb(255, 0, 0);
+
+    ////            DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
+    ////        }
+    ////    }
+
+
+    ////    public void Toggle()
+    ////    {
+    ////        Visible = !Visible;
+
+    ////        Redraw();
+    ////    }
+    ////}
     public sealed class DuraStatusDialog : MirImageControl
     {
         public MirButton Character;
