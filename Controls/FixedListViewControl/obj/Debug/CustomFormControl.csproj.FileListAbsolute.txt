@@ -3,4 +3,3 @@ E:\mir2\Components\CustomFormControl.pdb
 E:\mir2\Controls\FixedListViewControl\obj\Debug\CustomFormControl.csproj.CoreCompileInputs.cache
 E:\mir2\Controls\FixedListViewControl\obj\Debug\CustomFormControl.dll
 E:\mir2\Controls\FixedListViewControl\obj\Debug\CustomFormControl.pdb
-E:\mir2\Controls\FixedListViewControl\obj\Debug\CustomFormControl.csprojAssemblyReference.cache
