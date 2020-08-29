@@ -11,7 +11,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using Microsoft.DirectX.Direct3D;
+using SlimDX;
+using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
 using S = ServerPackets;
 using C = ClientPackets;
@@ -8575,9 +8576,6 @@ namespace Client.MirScenes
 
         public bool FloorValid, LightsValid;
 
-        private Texture _floorTexture, _lightTexture;
-        private Surface _floorSurface, _lightSurface;
-
         public long OutputDelay;
 
         private static bool _awakeningAction;
@@ -8660,8 +8658,11 @@ namespace Client.MirScenes
             {
                 if (SetMusic != Music)
                 {
-                    SoundManager.Device.Dispose();
-                    SoundManager.Create();
+                    if (SoundManager.Music != null)
+                    {
+                        SoundManager.Music.Dispose();
+                    }
+
                     SoundManager.PlayMusic(Music, true);
                 }
             }
@@ -8808,7 +8809,6 @@ namespace Client.MirScenes
             {
                 DXManager.ControlList.Add(this);
                 ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-                ControlTexture.Disposing += ControlTexture_Disposing;
                 TextureSize = Size;
             }
 
@@ -8820,7 +8820,7 @@ namespace Client.MirScenes
             DrawBackground();
 
             if (FloorValid)
-                DXManager.Sprite.Draw2D(_floorTexture, Point.Empty, 0F, Point.Empty, Color.White);
+                DXManager.Sprite.Draw(DXManager.FloorTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
 
             DrawObjects();
 
@@ -8880,7 +8880,7 @@ namespace Client.MirScenes
             float oldOpacity = DXManager.Opacity;
 
             DXManager.SetOpacity(Opacity);
-            DXManager.Sprite.Draw2D(ControlTexture, Point.Empty, 0F, Point.Empty, Color.White);
+            DXManager.Sprite.Draw(ControlTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             DXManager.SetOpacity(oldOpacity);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
@@ -8888,17 +8888,16 @@ namespace Client.MirScenes
 
         private void DrawFloor()
         {
-            if (_floorTexture == null || _floorTexture.Disposed)
+            if (DXManager.FloorTexture == null || DXManager.FloorTexture.Disposed)
             {
-                _floorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-                _floorTexture.Disposing += FloorTexture_Disposing;
-                _floorSurface = _floorTexture.GetSurfaceLevel(0);
+                DXManager.FloorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+                DXManager.FloorSurface = DXManager.FloorTexture.GetSurfaceLevel(0);
             }
 
 
             Surface oldSurface = DXManager.CurrentSurface;
 
-            DXManager.SetSurface(_floorSurface);
+            DXManager.SetSurface(DXManager.FloorSurface);
             DXManager.Device.Clear(ClearFlags.Target, Color.Empty, 0, 0); //Color.Black
 
             int index;
@@ -9215,15 +9214,14 @@ namespace Client.MirScenes
         {
             if (DXManager.Lights == null || DXManager.Lights.Count == 0) return;
 
-            if (_lightTexture == null || _lightTexture.Disposed)
+            if (DXManager.LightTexture == null || DXManager.LightTexture.Disposed)
             {
-                _lightTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-                _lightTexture.Disposing += FloorTexture_Disposing;
-                _lightSurface = _lightTexture.GetSurfaceLevel(0);
+                DXManager.LightTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+                DXManager.LightSurface = DXManager.LightTexture.GetSurfaceLevel(0);
             }
 
             Surface oldSurface = DXManager.CurrentSurface;
-            DXManager.SetSurface(_lightSurface);
+            DXManager.SetSurface(DXManager.LightSurface);
 
             #region Night Lights
             Color Darkness = Color.Black;
@@ -9253,7 +9251,7 @@ namespace Client.MirScenes
             int light;
             Point p;
             DXManager.SetBlend(true);
-            DXManager.Device.RenderState.SourceBlend = Blend.SourceAlpha;
+            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, Blend.SourceAlpha);
 
             #region Object Lights (Player/Mob/NPC)
             for (int i = 0; i < Objects.Count; i++)
@@ -9300,7 +9298,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[LightRange] != null && !DXManager.Lights[LightRange].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[LightRange].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[LightRange].Y / 2) - (CellHeight / 2) -5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[LightRange], PointF.Empty, 0, p, lightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[LightRange], new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightColour);
                     }
 
                 }
@@ -9318,7 +9316,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, effect.LightColour);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), effect.LightColour);
                     }
 
                 }
@@ -9342,7 +9340,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2), -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, Color.White);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), Color.White);
                     }
                 }
             }
@@ -9400,7 +9398,7 @@ namespace Client.MirScenes
                     if (DXManager.Lights[light] != null && !DXManager.Lights[light].Disposed)
                     {
                         p.Offset(-(DXManager.LightSizes[light].X / 2) - (CellWidth / 2) + 10, -(DXManager.LightSizes[light].Y / 2) - (CellHeight / 2) - 5);
-                        DXManager.Sprite.Draw2D(DXManager.Lights[light], PointF.Empty, 0, p, lightIntensity);
+                        DXManager.Sprite.Draw(DXManager.Lights[light], new Rectangle(0, 0, DXManager.LightSizes[light].X, DXManager.LightSizes[light].Y), Vector3.Zero, new Vector3((float)p.X, (float)p.Y, 0.0F), lightIntensity);
                     }
                 }
             }
@@ -9409,10 +9407,10 @@ namespace Client.MirScenes
             DXManager.SetBlend(false);
             DXManager.SetSurface(oldSurface);
 
-            DXManager.Device.RenderState.SourceBlend = Blend.DestinationColor;
-            DXManager.Device.RenderState.DestinationBlend = Blend.BothInvSourceAlpha;
+            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, Blend.DestinationColor);
+            DXManager.Device.SetRenderState(SlimDX.Direct3D9.RenderState.DestinationBlend, Blend.BothInverseSourceAlpha);
 
-            DXManager.Sprite.Draw2D(_lightTexture, PointF.Empty, 0, PointF.Empty, Color.White);
+            DXManager.Sprite.Draw(DXManager.LightTexture, new Rectangle(0, 0, Settings.ScreenWidth, Settings.ScreenHeight), Vector3.Zero, Vector3.Zero, Color.White);
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
         }
@@ -10348,15 +10346,6 @@ namespace Client.MirScenes
             return false;
         }
 
-        private void FloorTexture_Disposing(object sender, EventArgs e)
-        {
-            FloorValid = false;
-            _floorTexture = null;
-
-            if (_floorSurface != null && !_floorSurface.Disposed)
-                _floorSurface.Dispose();
-            _floorSurface = null;
-        }
         #region Disposable
 
         protected override void Dispose(bool disposing)
@@ -10383,13 +10372,6 @@ namespace Client.MirScenes
                 LightsValid = false;
                 MapDarkLight = 0;
                 Music = 0;
-
-                if (_floorSurface != null && !_floorSurface.Disposed)
-                    _floorSurface.Dispose();
-
-
-                if (_lightSurface != null && !_lightSurface.Disposed)
-                    _lightSurface.Dispose();
 
                 AnimationCount = 0;
                 Effects.Clear();
