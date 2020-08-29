@@ -6809,7 +6809,7 @@ namespace Server.MirObjects
                     UltimateEnhancer(target, magic, out cast);
                     break;
                 case Spell.Plague:
-                    Plague(magic, target == null ? location : target.CurrentLocation, out cast);
+                    Plague(magic, target, out cast);
                     break;
                 case Spell.SwiftFeet:
                     SwiftFeet(magic, out cast);
@@ -7798,32 +7798,37 @@ namespace Server.MirObjects
                     break;
             }
         }
-        private void Plague(UserMagic magic, Point location, out bool cast)
+        private void Plague(UserMagic magic, MapObject target, out bool cast)
         {
             cast = false;
+            if (target == null)
+                return;
             UserItem item = GetAmulet(1);
             if (item == null) return;
             cast = true;
 
-            int delay = Functions.MaxDistance(CurrentLocation, location) * 50 + 500; //50 MS per Step
+            int delay = Functions.MaxDistance(CurrentLocation, target.CurrentLocation) * 50 + 500; //50 MS per Step
 
 
             PoisonType pType = PoisonType.None;
 
-            UserItem itemp = GetPoison(1, 1);
+            UserItem itemp = GetPoison(1, 2);
 
             if (itemp != null)
-                pType = PoisonType.Green;
+                pType = PoisonType.Red;
             else
             {
-                itemp = GetPoison(1, 2);
+                itemp = GetPoison(1, 1);
 
                 if (itemp != null)
-                    pType = PoisonType.Red;
+                    pType = PoisonType.Green;
             }
+            int dmgVal = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+            
+            int duration = magic.Level == 0 ? 2 : magic.Level == 1 ? 4 : magic.Level == 2 ? 5 : magic.Level == 3 ? 6 : 7;
+            DelayedAction action = new DelayedAction(DelayedType.Magic, delay, magic, dmgVal, target, pType, duration);
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, this, magic, magic.GetDamage(GetAttackPower(MinSC, MaxSC)), location, pType);
-            CurrentMap.ActionList.Add(action);
+            ActionList.Add(action);
 
             ConsumeItem(item, 1);
             if (itemp != null) ConsumeItem(itemp, 1);
@@ -8805,7 +8810,7 @@ namespace Server.MirObjects
         private void CompleteMagic(IList<object> data)
         {
             UserMagic magic = (UserMagic)data[0];
-            int value;
+            int value, PvPValue;
             MapObject target;
             Point targetLocation;
             Point location;
@@ -8830,6 +8835,150 @@ namespace Server.MirObjects
                     if (target.Attacked(this, value, DefenceType.MAC, false) > 0) LevelMagic(magic);
                     break;
 
+                #endregion
+                #region Plague
+                case Spell.Plague:
+                    {
+
+                        value = (int)data[1];
+                        target = (MapObject)data[2];
+                        PvPValue = (int)data[5];
+                        if (target.IsAttackTarget(this))
+                        {
+                            if (target.Race == ObjectType.Player)
+                                value = PvPValue;
+                            PoisonType tmp = (PoisonType)data[3];
+                            PoisonType poison;
+                            int _duration = (int)data[4];
+                            //  100.00% = 10000
+                            int _chance = Envir.Random.Next(10000);
+                            //  5%
+                            if (_chance >= 0 && _chance < 500)
+                                poison = PoisonType.Frozen;
+                            //  10%
+                            else if (_chance >= 500 && _chance < 1500)
+                                poison = PoisonType.Slow;
+                            //  85% to stick with green/red (default)
+                            else
+                                poison = tmp;
+
+                            int tempValue = 0;
+
+                            if (poison == PoisonType.Green)
+                            {
+                                tempValue = value / 15 + magic.Level + 1;
+                            }
+                            else
+                            {
+                                tempValue = value + (magic.Level + 1) * 2;
+                            }
+                            if (poison == PoisonType.Red)
+                            {
+                                for (int y = target.CurrentLocation.Y - 2; y < target.CurrentLocation.Y + 2; y++)
+                                {
+                                    for (int x = target.CurrentLocation.X - 2; x < target.CurrentLocation.X + 2; x++)
+                                    {
+                                        if (!target.CurrentMap.ValidPoint(x, y))
+                                            continue;
+                                        Cell cell = target.CurrentMap.GetCell(x, y);
+                                        if (cell == null)
+                                            continue;
+                                        if (cell.Objects == null ||
+                                            cell.Objects.Count == 0)
+                                            continue;
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject ob = cell.Objects[i];
+                                            if (ob.Race != ObjectType.Player &&
+                                                ob.Race != ObjectType.Monster)
+                                                continue;
+                                            if (!ob.IsAttackTarget(this))
+                                                continue;
+                                            if (ob.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                            {
+
+                                                if (poison != PoisonType.None)
+                                                {
+                                                    ob.ApplyPoison(new Poison { PType = poison, Duration = _duration, TickSpeed = 1000, Value = tempValue, Owner = this }, this, false, false);
+                                                }
+
+                                                if (ob.Race == ObjectType.Player)
+                                                {
+                                                    PlayerObject tempOb = (PlayerObject)ob;
+
+                                                    tempOb.ChangeMP(-tempValue);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                                LevelMagic(magic);
+                            }
+                            else if (poison == PoisonType.Slow)
+                            {
+                                for (int y = target.CurrentLocation.Y - 1; y < target.CurrentLocation.Y + 1; y++)
+                                {
+                                    for (int x = target.CurrentLocation.X - 1; x < target.CurrentLocation.X + 1; x++)
+                                    {
+                                        if (!target.CurrentMap.ValidPoint(x, y))
+                                            continue;
+                                        Cell cell = target.CurrentMap.GetCell(x, y);
+                                        if (cell == null)
+                                            continue;
+                                        if (cell.Objects == null ||
+                                            cell.Objects.Count == 0)
+                                            continue;
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject ob = cell.Objects[i];
+                                            if (ob.Race != ObjectType.Player &&
+                                                ob.Race != ObjectType.Monster)
+                                                continue;
+                                            if (!ob.IsAttackTarget(this))
+                                                continue;
+                                            if (ob.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                            {
+
+                                                if (poison != PoisonType.None)
+                                                {
+                                                    ob.ApplyPoison(new Poison { PType = poison, Duration = _duration, TickSpeed = 1000, Value = tempValue, Owner = this }, this, false, false);
+                                                }
+
+                                                if (ob.Race == ObjectType.Player)
+                                                {
+                                                    PlayerObject tempOb = (PlayerObject)ob;
+
+                                                    tempOb.ChangeMP(-tempValue);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                LevelMagic(magic);
+                            }
+                            else if (poison == PoisonType.Frozen)
+                            {
+                                if (target.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                {
+
+                                    if (poison != PoisonType.None)
+                                    {
+                                        target.ApplyPoison(new Poison { PType = poison, Duration = _duration, TickSpeed = 1000, Value = tempValue, Owner = this }, this, false, false);
+                                    }
+
+                                    if (target.Race == ObjectType.Player)
+                                    {
+                                        PlayerObject tempOb = (PlayerObject)target;
+
+                                        tempOb.ChangeMP(-tempValue);
+                                    }
+                                    LevelMagic(magic);
+                                }
+                            }
+                        }
+                    }
+                    break;
                 #endregion
 
                 #region FrostCrunch
@@ -9533,6 +9682,8 @@ namespace Server.MirObjects
                     CurrentMap.ActionList.Add(action);
                     break;
                 #endregion
+
+                
 
             }
         }
