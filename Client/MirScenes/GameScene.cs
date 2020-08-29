@@ -10010,16 +10010,6 @@ namespace Client.MirScenes
                 case Spell.Entrapment:
                 case Spell.Hallucination:
                 case Spell.Plague:
-                    if (User.NextMagicObject != null)
-                    {
-                        if (!User.NextMagicObject.Dead && User.NextMagicObject.Race != ObjectType.Item && User.NextMagicObject.Race != ObjectType.Merchant)
-                            target = User.NextMagicObject;
-                    }
-
-                    if (target == null) target = MapObject.MagicObject;
-
-                    if (target != null && (target.Race == ObjectType.Monster)) MapObject.MagicObject = target;
-                    break;
                 case Spell.DarkBody:
                     if (User.NextMagicObject != null)
                     {

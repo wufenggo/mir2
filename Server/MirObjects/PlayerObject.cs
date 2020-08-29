@@ -8810,7 +8810,7 @@ namespace Server.MirObjects
         private void CompleteMagic(IList<object> data)
         {
             UserMagic magic = (UserMagic)data[0];
-            int value, PvPValue;
+            int value;
             MapObject target;
             Point targetLocation;
             Point location;
@@ -8842,13 +8842,14 @@ namespace Server.MirObjects
 
                         value = (int)data[1];
                         target = (MapObject)data[2];
-                        PvPValue = (int)data[5];
+                        
                         if (target.IsAttackTarget(this))
                         {
-                            if (target.Race == ObjectType.Player)
-                                value = PvPValue;
+      
                             PoisonType tmp = (PoisonType)data[3];
                             PoisonType poison;
+                            Point place1 = target.CurrentLocation;
+
                             int _duration = (int)data[4];
                             //  100.00% = 10000
                             int _chance = Envir.Random.Next(10000);
@@ -8856,8 +8857,10 @@ namespace Server.MirObjects
                             if (_chance >= 0 && _chance < 500)
                                 poison = PoisonType.Frozen;
                             //  10%
-                            else if (_chance >= 500 && _chance < 1500)
+                            else if (_chance >= 500 && _chance < 1000)
                                 poison = PoisonType.Slow;
+                            else if (_chance >= 1000 && _chance < 1500)
+                                poison = PoisonType.Paralysis;
                             //  85% to stick with green/red (default)
                             else
                                 poison = tmp;
@@ -8874,9 +8877,11 @@ namespace Server.MirObjects
                             }
                             if (poison == PoisonType.Red)
                             {
-                                for (int y = target.CurrentLocation.Y - 2; y < target.CurrentLocation.Y + 2; y++)
+                                
+
+                                for (int y = place1.Y; y < place1.Y+1 ; y++)
                                 {
-                                    for (int x = target.CurrentLocation.X - 2; x < target.CurrentLocation.X + 2; x++)
+                                    for (int x = place1.X; x < place1.X+1; x++)
                                     {
                                         if (!target.CurrentMap.ValidPoint(x, y))
                                             continue;
@@ -8894,7 +8899,7 @@ namespace Server.MirObjects
                                                 continue;
                                             if (!ob.IsAttackTarget(this))
                                                 continue;
-                                            if (ob.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                            if (ob.Attacked(this, GetAttackPower(MinSC*2, MaxSC*2), DefenceType.MAC, false) > 0)
                                             {
 
                                                 if (poison != PoisonType.None)
@@ -8917,13 +8922,13 @@ namespace Server.MirObjects
                             }
                             else if (poison == PoisonType.Slow)
                             {
-                                for (int y = target.CurrentLocation.Y - 1; y < target.CurrentLocation.Y + 1; y++)
+                                for (int y = place1.Y; y < place1.Y+1; y++)
                                 {
-                                    for (int x = target.CurrentLocation.X - 1; x < target.CurrentLocation.X + 1; x++)
+                                    for (int x = place1.X; x < place1.X+1; x++)
                                     {
                                         if (!target.CurrentMap.ValidPoint(x, y))
                                             continue;
-                                        Cell cell = target.CurrentMap.GetCell(x, y);
+                                        Cell cell = CurrentMap.GetCell(x, y);
                                         if (cell == null)
                                             continue;
                                         if (cell.Objects == null ||
@@ -8937,7 +8942,7 @@ namespace Server.MirObjects
                                                 continue;
                                             if (!ob.IsAttackTarget(this))
                                                 continue;
-                                            if (ob.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                            if (ob.Attacked(this, GetAttackPower(MinSC*2, MaxSC*2), DefenceType.MAC, false) > 0)
                                             {
 
                                                 if (poison != PoisonType.None)
@@ -8959,7 +8964,7 @@ namespace Server.MirObjects
                             }
                             else if (poison == PoisonType.Frozen)
                             {
-                                if (target.Attacked(this, GetAttackPower(MinSC, MaxSC), DefenceType.MAC, false) > 0)
+                                if (target.Attacked(this, GetAttackPower(MinSC*2, MaxSC*2), DefenceType.MAC, false) > 0)
                                 {
 
                                     if (poison != PoisonType.None)
@@ -8976,7 +8981,75 @@ namespace Server.MirObjects
                                     LevelMagic(magic);
                                 }
                             }
+
+                            else if (poison == PoisonType.Paralysis)
+                            {
+                                if (target.Attacked(this, GetAttackPower(MinSC * 2, MaxSC * 2), DefenceType.MAC, false) > 0)
+                                {
+
+                                    if (poison != PoisonType.None)
+                                    {
+                                        target.ApplyPoison(new Poison { PType = poison, Duration = _duration, TickSpeed = 1000, Value = tempValue, Owner = this }, this, false, false);
+                                    }
+
+                                    if (target.Race == ObjectType.Player)
+                                    {
+                                        PlayerObject tempOb = (PlayerObject)target;
+
+                                        tempOb.ChangeMP(-tempValue);
+                                    }
+                                    LevelMagic(magic);
+                                }
+                            }
+                            if (poison == PoisonType.Green)
+                            {
+
+
+                                for (int y = place1.Y; y < place1.Y + 1; y++)
+                                {
+                                    for (int x = place1.X; x < place1.X + 1; x++)
+                                    {
+                                        if (!target.CurrentMap.ValidPoint(x, y))
+                                            continue;
+                                        Cell cell = target.CurrentMap.GetCell(x, y);
+                                        if (cell == null)
+                                            continue;
+                                        if (cell.Objects == null ||
+                                            cell.Objects.Count == 0)
+                                            continue;
+                                        for (int i = 0; i < cell.Objects.Count; i++)
+                                        {
+                                            MapObject ob = cell.Objects[i];
+                                            if (ob.Race != ObjectType.Player &&
+                                                ob.Race != ObjectType.Monster)
+                                                continue;
+                                            if (!ob.IsAttackTarget(this))
+                                                continue;
+                                            if (ob.Attacked(this, GetAttackPower(MinSC * 2, MaxSC * 2), DefenceType.MAC, false) > 0)
+                                            {
+
+                                                if (poison != PoisonType.None)
+                                                {
+                                                    ob.ApplyPoison(new Poison { PType = poison, Duration = _duration, TickSpeed = 1000, Value = tempValue, Owner = this }, this, false, false);
+                                                }
+
+                                                if (ob.Race == ObjectType.Player)
+                                                {
+                                                    PlayerObject tempOb = (PlayerObject)ob;
+
+                                                    tempOb.ChangeMP(-tempValue);
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                                LevelMagic(magic);
+                            }
+
                         }
+                     
+
                     }
                     break;
                 #endregion
