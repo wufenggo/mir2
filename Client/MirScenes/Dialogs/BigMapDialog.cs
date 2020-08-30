@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SlimDX;
+using SlimDX.Direct3D9;
 using S = ServerPackets;
 using C = ClientPackets;
 namespace Client.MirScenes.Dialogs
@@ -129,7 +131,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     colour = Color.FromArgb(255, 0, 0);
 
-                DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
             }
             //for (int i = 0; i < ListTown.Count; i++)
             //{
@@ -159,7 +161,7 @@ namespace Client.MirScenes.Dialogs
                 Color colour = Color.White;
                 float x = ((map.RouteList[i].X - startPointX) * scaleX) + Location.X;
                 float y = ((map.RouteList[i].Y - startPointY) * scaleY) + Location.Y;
-                DXManager.Sprite.Draw2D(DXManager.RadarTexture, Point.Empty, 0, new PointF((int)(x - 0.5F), (int)(y - 0.5F)), colour);
+                DXManager.Sprite.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), Vector3.Zero, new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
             }
           
 

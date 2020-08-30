@@ -1247,7 +1247,12 @@ public enum SpellEffect : byte
     TurtleKing,
     Behemoth,
     Stunned,
-    IcePillar
+    IcePillar,
+    GreenTherapy,
+    BlackWave
+
+
+
 
 }
 
