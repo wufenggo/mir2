@@ -64,6 +64,15 @@ namespace Client.MirObjects
                     Light = 3;
                     Blend = true;
                     break;
+
+                case Spell.HealingCircle:
+                    BodyLibrary = Libraries.Magic3;
+                    DrawFrame = 630;
+                    FrameInterval = 120;
+                    FrameCount = 10;
+                    Light = 2;
+                    Blend = true;
+                    break;
                 case Spell.DigOutZombie:
                     BodyLibrary = (ushort)Monster.DigOutZombie < Libraries.Monsters.Count() ? Libraries.Monsters[(ushort)Monster.DigOutZombie] : Libraries.Magic;
                     DrawFrame = 304 + (byte) Direction;

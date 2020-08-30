@@ -1707,6 +1707,8 @@ namespace Client.MirObjects
 
                             #endregion
 
+
+
                             #region ThunderBolt
 
                             case Spell.ThunderBolt:
@@ -1808,6 +1810,13 @@ namespace Client.MirObjects
                                 SoundManager.PlaySound(20000 + (ushort)Spell * 10);
                                 break;
 
+                            #endregion
+
+                            #region HealingCircle
+                            case Spell.HealingCircle:
+                                Effects.Add(new Effect(Libraries.Magic3, 620, 10, Frame.Count * FrameInterval, this));
+                                SoundManager.PlaySound(20000 + (ushort)Spell * 10);
+                                break;
                             #endregion
 
                             #region TrapHexagon

@@ -60,7 +60,7 @@ namespace Server.MirObjects
 
             if (Caster != null && Caster.Node == null) Caster = null;
 
-            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
+            if (Envir.Time > ExpireTime || ((Spell == Spell.FireWall || Spell == Spell.HealingCircle || Spell == Spell.Portal || Spell == Spell.ExplosiveTrap || Spell == Spell.Reincarnation) && Caster == null) || (Spell == Spell.TrapHexagon && Target != null) || (Spell == Spell.Trap && Target != null))
             {
                 if (Spell == Spell.TrapHexagon && Target != null || Spell == Spell.Trap && Target != null)
                 {
@@ -114,6 +114,24 @@ namespace Server.MirObjects
 
                     if (!ob.IsAttackTarget(Caster)) return;
                     ob.Attacked(Caster, Value, DefenceType.MAC, false);
+                    break;
+
+                case Spell.HealingCircle://
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) return;
+                    if (ob.Dead) return;
+                    //DMAGE
+                    if (ob.IsAttackTarget(Caster))
+                    {
+                        ob.Attacked(Caster, Value * 10 / 8, DefenceType.MAC, false);
+                        Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.BlackWave });
+                    }
+                    else if (ob.IsFriendlyTarget(Caster))//Healing
+                    {
+                        //if (ob.HealAmount != 0 || ob.PercentHealth == 100) return;
+                        if (ob.HealAmount > Value * 2 || ob.PercentHealth == 100) return;
+                        ob.HealAmount += (ushort)(Value * 2);
+                        Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.GreenTherapy });
+                    }
                     break;
                 case Spell.Healing: //SafeZone
                     if (ob.Race != ObjectType.Player && (ob.Race != ObjectType.Monster || ob.Master == null || ob.Master.Race != ObjectType.Player)) return;
@@ -314,6 +332,7 @@ namespace Server.MirObjects
                 case Spell.Healing:
                     return null;
                 case Spell.PoisonCloud:
+                case Spell.HealingCircle:
                 case Spell.Blizzard:
                 case Spell.MeteorStrike:
                     if (!Show)

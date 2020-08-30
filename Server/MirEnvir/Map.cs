@@ -2095,7 +2095,94 @@ namespace Server.MirEnvir
                     }
                     break;
 
+                #endregion
+
+                #region HealingCircle
+                case Spell.HealingCircle:
+                    value = (int)data[2];
+                    location = (Point)data[3];
+                    long duration = (long)data[4];
+                    
+                    train = true;
+                    {
+                        bool show1 = true;
+
+                        for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                        {
+                            if (y < 0)
+                                continue;
+                            if (y >= Height)
+                                break;
+
+                            for (int x = location.X - 2; x <= location.X + 2; x++)
+                            {
+                                if (x < 0)
+                                    continue;
+                                if (x >= Width)
+                                    break;
+
+                                cell = GetCell(x, y);
+
+                                if (!cell.Valid)
+                                    continue;
+
+                                bool cast = true;
+                                if (cell.Objects != null)
+                                    for (int o = 0; o < cell.Objects.Count; o++)
+                                    {
+                                        MapObject target = cell.Objects[o];
+                                        if (target.Race == ObjectType.Player ||
+                                            target.Race == ObjectType.Monster )
+                                            
+                                        {
+                                            if (target.IsFriendlyTarget(player))
+                                            {
+                                                if (target.Health >= target.MaxHealth) continue;
+                                                target.HealAmount = (ushort)Math.Min(ushort.MaxValue, target.HealAmount + value);
+                                                target.OperateTime = 0;
+                                            }
+                                            else if (target.IsAttackTarget(player))
+                                            {
+                                                if (target.Race == ObjectType.Player)
+                                                    target.Attacked(player, value, DefenceType.MAC);
+                                                else
+                                                    target.Attacked(player, value, DefenceType.MAC);
+                                            }
+                                        }
+                                        if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.HealingCircle)
+                                            continue;
+
+                                        cast = false;
+                                        break;
+                                    }
+                                if (!cast)
+                                    continue;
+                                SpellObject ob = new SpellObject
+                                {
+                                    Spell = magic.Spell,
+                                    Value = value,
+                                    ExpireTime = Envir.Time + duration,
+                                    TickSpeed = 2000,
+                                    Caster = player,
+                                    CurrentLocation = new Point(x, y),
+                                    CastLocation = location,
+                                    Show = show1,
+                                    CurrentMap = this,
+                                    StartTime = Envir.Time + 800,
+                                    
+                                };
+
+                                show1 = false;
+
+                                AddObject(ob);
+                                ob.Spawned();
+                            }
+                        }
+                    }
+                    break;
+
                     #endregion
+
             }
 
             if (train)

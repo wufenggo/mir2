@@ -3859,6 +3859,16 @@ namespace Client.MirScenes
                     case SpellEffect.IcePillar:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.IcePillar], 18, 8, 800, ob));
                         break;
+                    case SpellEffect.BlackWave:
+                        SoundManager.PlaySound(20000 + (ushort)Spell.Healing * 10 + 1);
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 660, 10, 800, ob));
+                       
+                        break;
+                    case SpellEffect.GreenTherapy:
+                        SoundManager.PlaySound(20000 + (ushort)Spell.Healing * 10 + 1);
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 650, 10, 800, ob));
+                        break;
+
                 }
                 return;
             }
@@ -10076,6 +10086,7 @@ namespace Client.MirScenes
                 case Spell.FireBang:
                 case Spell.MassHiding:
                 case Spell.FireWall:
+                case Spell.HealingCircle:
                 case Spell.TrapHexagon:
                     if (User.NextMagicObject != null)
                     {

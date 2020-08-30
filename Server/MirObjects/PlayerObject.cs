@@ -6706,6 +6706,9 @@ namespace Server.MirObjects
                 case Spell.MassHealing:
                     MassHealing(magic, target == null ? location : target.CurrentLocation);
                     break;
+                case Spell.HealingCircle:
+                    HealingCircle(magic, target == null ? location : target.CurrentLocation, out cast);
+                    break;
                 case Spell.ShoulderDash:
                     ShoulderDash(magic);
                     return;
@@ -7563,6 +7566,33 @@ namespace Server.MirObjects
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location);
             CurrentMap.ActionList.Add(action);
+        }
+
+        private void HealingCircle(UserMagic magic, Point location, out bool cast)
+        {
+            cast = false;
+            UserItem item = GetAmulet(3);
+            if (item == null) return;
+            cast = true;
+
+            
+            int value = magic.GetDamage(GetAttackPower(MinSC, MaxSC));
+
+
+            long duration = 0;
+
+            if (magic.Level == 0)
+                duration = Settings.Second * 4;
+            else if (magic.Level == 1)
+                duration = Settings.Second * 6;
+            else if (magic.Level == 2)
+                duration = Settings.Second * 8;
+            else if (magic.Level == 3)
+                duration = Settings.Second * 9;
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, value, location, duration);
+            CurrentMap.ActionList.Add(action);
+
+            ConsumeItem(item, 3);
         }
         private void Revelation(MapObject target, UserMagic magic)
         {
