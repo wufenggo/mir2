@@ -789,7 +789,12 @@ public enum MirClass : byte
     Wizard = 1,
     Taoist = 2,
     Assassin = 3,
-    Archer = 4
+    Archer = 4,
+    HighWarrior = 5,
+    HighWizard = 6,
+    HighTaoist = 7,
+    HighAssassin = 8,
+    HighArcher = 9,
 }
 
 public enum MirDirection : byte
@@ -1020,8 +1025,16 @@ public enum RequiredClass : byte
     Taoist = 4,
     Assassin = 8,
     Archer = 16,
+    基础职业 = Warrior | Wizard | Taoist | Assassin | Archer,
+    
+    HighWarrior = 11,
+    HighWizard = 12,
+    HighTaoist = 13,
+    HighAssassin = 14,
+    HighArcher = 15,
+    High = HighWarrior | HighWizard | HighTaoist | HighAssassin | HighArcher,
     WarWizTao = Warrior | Wizard | Taoist,
-    None = WarWizTao | Assassin | Archer
+    None = 基础职业 | High,
 }
 
 [Flags]
@@ -1249,7 +1262,9 @@ public enum SpellEffect : byte
     Stunned,
     IcePillar,
     GreenTherapy,
-    BlackWave
+    BlackWave,
+    HumUpEffect//stupple
+
 
 
 
@@ -1312,6 +1327,7 @@ public enum BuffType : byte
     MagicDefence,
     WonderDrug,
     Knapsack,
+    HumUp,
     Group
 }
 
@@ -1570,7 +1586,8 @@ public enum ServerPacketIds : short
     PlaySound,
     SetTimer,
     ExpireTimer,
-    UpdateNotice
+    UpdateNotice,
+    HumUpPlayer
 }
 
 public enum ClientPacketIds : short

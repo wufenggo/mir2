@@ -837,6 +837,8 @@ public abstract class Packet
                 return new S.ExpireTimer();
             case (short)ServerPacketIds.UpdateNotice:
                 return new S.UpdateNotice();
+            case (short)ServerPacketIds.HumUpPlayer://stupple
+                return new S.HumUpPlayer();
             default:
                 return null;
         }

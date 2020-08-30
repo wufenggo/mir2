@@ -7,9 +7,11 @@ public class BaseStats
 
     public BaseStats(MirClass Job)
     {
-        switch (Job)
+
+       switch (Job)
         {
             case MirClass.Warrior:
+            case MirClass.HighWarrior:
                 HpGain = 4F;
                 HpGainRate = 4.5F;
                 MpGainRate = 0;
@@ -34,6 +36,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Wizard:
+            case MirClass.HighWizard:
                 HpGain = 15F;
                 HpGainRate = 1.8F;
                 MpGainRate = 0;
@@ -58,6 +61,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Taoist:
+            case MirClass.HighTaoist:
                 HpGain = 6F;
                 HpGainRate = 2.5F;
                 MpGainRate = 0;
@@ -82,6 +86,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Assassin:
+            case MirClass.HighAssassin:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;
@@ -106,6 +111,7 @@ public class BaseStats
                 CriticalDamageGain = 0;
                 break;
             case MirClass.Archer:
+            case MirClass.HighArcher:
                 HpGain = 4F;
                 HpGainRate = 3.25F;
                 MpGainRate = 0;

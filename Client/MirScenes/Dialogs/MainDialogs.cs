@@ -2947,6 +2947,26 @@ namespace Client.MirScenes.Dialogs
                 case MirClass.Archer:
                     ClassImage.Index = 104;// + offSet * 5;
                     break;
+                case MirClass.HighWarrior://stupple
+                    ClassImage.Index = 100;
+                    
+                    break;
+                case MirClass.HighWizard:
+                    ClassImage.Index = 101;
+                    
+                    break;
+                case MirClass.HighTaoist:
+                    ClassImage.Index = 102;
+                    
+                    break;
+                case MirClass.HighAssassin:
+                    ClassImage.Index = 103;
+                    
+                    break;
+                case MirClass.HighArcher:
+                    ClassImage.Index = 104;
+                    
+                    break;
             }
 
             NameLabel.Text = MapObject.User.Name;
@@ -3685,6 +3705,26 @@ namespace Client.MirScenes.Dialogs
                     break;
                 case MirClass.Archer:
                     ClassImage.Index = 104;// + offSet * 5;
+                    break;
+                case MirClass.HighWarrior://stupple
+                    ClassImage.Index = 100;
+
+                    break;
+                case MirClass.HighWizard:
+                    ClassImage.Index = 101;
+
+                    break;
+                case MirClass.HighTaoist:
+                    ClassImage.Index = 102;
+
+                    break;
+                case MirClass.HighAssassin:
+                    ClassImage.Index = 103;
+
+                    break;
+                case MirClass.HighArcher:
+                    ClassImage.Index = 104;
+
                     break;
             }
 

@@ -101,6 +101,7 @@ namespace Server.MirObjects
         GetRandomText,
         PlaySound,
         SetTimer,
+        Humup,//stupple
         ExpireTimer
     }
 }

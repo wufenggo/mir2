@@ -929,6 +929,7 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.AddMailItem, parts[1], parts[2]));
                     break;
 
+
                 case "SENDMAIL":
                     acts.Add(new NPCActions(ActionType.SendMail));
                     break;
@@ -1052,6 +1053,9 @@ namespace Server.MirObjects
                     if (parts.Length < 4) return;
 
                     acts.Add(new NPCActions(ActionType.SetTimer, parts[1], parts[2], parts[3]));
+                    break;
+                case "HUMUP"://stupple
+                    acts.Add(new NPCActions(ActionType.Humup));
                     break;
                 case "EXPIRETIMER":
                     if (parts.Length < 2) return;
@@ -3664,6 +3668,10 @@ namespace Server.MirObjects
                         break;
                     case ActionType.ExpireTimer:
                         player.ExpireTimer(param[0]);
+                        break;
+                    case ActionType.Humup://stupple
+                        player.Humup();
+
                         break;
                 }
             }

@@ -226,8 +226,9 @@ namespace Server
 
 
         //character settings
-        private static readonly String[] BaseStatClassNames = { "Warrior", "Wizard", "Taoist", "Assassin", "Archer" };
-        public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
+        private static String[] BaseStatClassNames = { "战士", "法师", "道士", "刺客", "弓箭手", "碧血战士", " ", "虹玄法师", "翊仙道士" ,"飞燕刺客", "暗鬼弓手" };
+        public static BaseStats[] ClassBaseStats = new BaseStats[10] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer),
+                                                                       new BaseStats(MirClass.HighWarrior), new BaseStats(MirClass.HighWizard), new BaseStats(MirClass.HighTaoist), new BaseStats(MirClass.HighAssassin), new BaseStats(MirClass.HighArcher) };//stupple
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
         

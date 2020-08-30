@@ -3836,6 +3836,11 @@ namespace Client.MirScenes
                             ob.Effects.Add(new Effect(Libraries.Magic3, 830, 5, 500, ob, CMain.Time + p.DelayTime) { Blend = false });
                         }
                         break;
+                    case SpellEffect.HumUpEffect://stupple
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Effect, 760, 94, 9400, ob));
+                        }
+                        break;
                     case SpellEffect.TurtleKing:
                         {
                             Effect ef = new Effect(Libraries.Monsters[(ushort)Monster.TurtleKing], CMain.Random.Next(2) == 0 ? 922 : 934, 12, 1200, ob);
@@ -5259,7 +5264,11 @@ namespace Client.MirScenes
                     break;
             }
         }
-
+        private void HumUpPlayer(S.HumUpPlayer p)//stupple
+        {
+            PlayerObject player = (PlayerObject)GameScene.Scene.MapControl.FindObject(p.ObjectID, p.Location.X, p.Location.Y);
+            player.Class = p.Class;
+        }
         private void ResizeInventory(S.ResizeInventory p)
         {
             Array.Resize(ref User.Inventory, p.Size);
@@ -9594,7 +9603,7 @@ namespace Client.MirScenes
 
                     GameScene.LogTime = CMain.Time + Globals.LogDelay;
 
-                    if (User.Class == MirClass.Archer && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player / pets)
+                    if ((User.Class == MirClass.Archer || User.Class == MirClass.HighArcher) && User.HasClassWeapon && !User.RidingMount && !User.Fishing)//ArcherTest - non aggressive targets (player
                     {
                         if (Functions.InRange(MapObject.TargetObject.CurrentLocation, User.CurrentLocation, Globals.MaxAttackRange))
                         {
@@ -10570,7 +10579,9 @@ namespace Client.MirScenes
                 case BuffType.MagicShield:
                     text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
                     break;
-
+                case BuffType.HumUp:
+                    text += string.Format("飞升 \n增加多项属性.\n", Values[0]);
+                    break;
                 //special
                 case BuffType.GameMaster:
                     GMOptions options = (GMOptions)Values[0];

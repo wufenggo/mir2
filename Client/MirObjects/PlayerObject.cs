@@ -49,11 +49,11 @@ namespace Client.MirObjects
                 switch (Weapon / 100)
                 {
                     default:
-                        return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist;
+                        return Class == MirClass.Wizard || Class == MirClass.Warrior || Class == MirClass.Taoist || Class == MirClass.HighWizard || Class == MirClass.HighWarrior || Class == MirClass.HighTaoist;
                     case 1:
-                        return Class == MirClass.Assassin;
+                        return Class == MirClass.Assassin || Class == MirClass.HighAssassin;
                     case 2:
-                        return Class == MirClass.Archer;
+                        return Class == MirClass.Archer || Class == MirClass.HighArcher;
                 }
             }
         }
@@ -347,6 +347,7 @@ namespace Client.MirObjects
                 {
                     #region Archer
                     case MirClass.Archer:
+                    case MirClass.HighArcher:
 
                         #region WeaponType
                         if (HasClassWeapon)
@@ -468,7 +469,7 @@ namespace Client.MirObjects
 
                     #region Assassin
                     case MirClass.Assassin:
-
+                    case MirClass.HighAssassin:
                         #region WeaponType
                         if (HasClassWeapon || Weapon < 0)
                         {
@@ -599,6 +600,9 @@ namespace Client.MirObjects
                     case MirClass.Warrior:
                     case MirClass.Taoist:
                     case MirClass.Wizard:
+                    case MirClass.HighWarrior:
+                    case MirClass.HighTaoist:
+                    case MirClass.HighWizard:
 
                         #region Armours
                         BodyLibrary = Armour < Libraries.CArmours.Length ? Libraries.CArmours[Armour] : Libraries.CArmours[0];
@@ -710,26 +714,45 @@ namespace Client.MirObjects
 
 			long delay = 5000;
 
-            if (LevelEffects == LevelEffects.None) return;
 
-            //Effects dependant on flags
-            if (LevelEffects.HasFlag(LevelEffects.BlueDragon))
+            if ((byte)Class > 4)//飞升特效
             {
-                Effects.Add(new SpecialEffect(Libraries.Effect, 1210, 20, 3200, this, true, true, 1) { Repeat = true });
-                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1240, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
-                effect.SetStart(CMain.Time + delay);
-                Effects.Add(effect);
-            }
-            if (LevelEffects.HasFlag(LevelEffects.RedDragon))
-            {
-                Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
-                SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
-                effect.SetStart(CMain.Time + delay);
-                Effects.Add(effect);
-            }
-            if (LevelEffects.HasFlag(LevelEffects.Mist))
-            {
-                Effects.Add(new SpecialEffect(Libraries.Effect, 296, 32, 3600, this, true, false, 1) { Repeat = true });
+                switch ((byte)Class)
+                {
+                    case 5: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect.SetStart(CMain.Time + delay);
+                        Effects.Add(effect);
+                        break;
+                    case 6: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect1 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect1.SetStart(CMain.Time + delay);
+                        Effects.Add(effect1);
+                        break;
+                    case 7: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect2 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect2.SetStart(CMain.Time + delay);
+                        Effects.Add(effect2);
+                        break;
+                    case 8: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect3 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect3.SetStart(CMain.Time + delay);
+                        Effects.Add(effect3);
+                        break;
+                    case 9: //Oma King Robe effect
+                        Effects.Add(new SpecialEffect(Libraries.Effect, 990, 20, 3200, this, true, true, 1) { Repeat = true });
+                        SpecialEffect effect4 = new SpecialEffect(Libraries.Effect, 1020, 32, 4200, this, true, false, 1) { Repeat = true, Delay = delay };
+                        effect4.SetStart(CMain.Time + delay);
+                        Effects.Add(effect4);
+                        break;
+
+
+
+                }
             }
         }
 
@@ -4756,13 +4779,13 @@ namespace Client.MirObjects
                 return;
             }
 
-            if (Weapon >= 0 && Class == MirClass.Assassin)
+            if (Weapon >= 0 && Class == MirClass.Assassin || Class == MirClass.HighAssassin)
             {
                 SoundManager.PlaySound(SoundList.SwingShort);
                 return;
             }
 
-            if (Class == MirClass.Archer && HasClassWeapon)
+            if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
             {
                 return;
             }
@@ -4900,7 +4923,7 @@ namespace Client.MirObjects
                 else
                     DrawWeapon2();
 
-                if (Class == MirClass.Archer && HasClassWeapon)
+                if ((Class == MirClass.Archer || Class == MirClass.HighArcher) && HasClassWeapon)
                     DrawWeapon2();
             }
 

@@ -550,6 +550,9 @@ namespace Client.MirScenes.Dialogs
                     return 199;
 
                 //Special
+
+                case BuffType.HumUp:
+                    return 186;
                 case BuffType.GameMaster:
                     return 173;
                 case BuffType.General:
