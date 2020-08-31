@@ -10580,7 +10580,7 @@ namespace Client.MirScenes
                     text = string.Format("Magic Shield\nReduces damage by {0}%.\n", (Values[0] + 2) * 10);
                     break;
                 case BuffType.HumUp:
-                    text += string.Format("飞升 \n增加多项属性.\n", Values[0]);
+                    text += string.Format("飞升 \n增加多项属性.增加{0}HP\n", Values[0]);
                     break;
                 //special
                 case BuffType.GameMaster:

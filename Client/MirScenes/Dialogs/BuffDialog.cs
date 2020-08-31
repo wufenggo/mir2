@@ -371,6 +371,11 @@ namespace Client.MirScenes.Dialogs
                     case BuffType.Rested:
                         buffExp += buff.Values[0];
                         break;
+                    case BuffType.HumUp:
+                        buffHealth += buff.Values[0];
+                        buffMana += buff.Values[0];
+                        buffBagWeight += buff.Values[0];
+                        break;
 
                     case BuffType.Impact:
                         buffDc += buff.Values[0];

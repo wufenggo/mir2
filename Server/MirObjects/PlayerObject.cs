@@ -862,6 +862,10 @@ namespace Server.MirObjects
             {
                 AddBuff(new Buff { Type = BuffType.Hiding, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
             }
+            if ((byte)Info.Class > 4)
+                {
+                AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
+            }
 
             if (GetMagic(Spell.MentalState) != null && !mentalState)
             {
@@ -872,6 +876,8 @@ namespace Server.MirObjects
             {
                 AddBuff(new Buff { Type = BuffType.GameMaster, Caster = this, ExpireTime = Envir.Time + 100, Values = new int[] { 0 }, Infinite = true, Visible = Settings.GameMasterEffect });
             }
+
+
         }
         private void ProcessRegen()
         {
@@ -14769,7 +14775,7 @@ namespace Server.MirObjects
             Broadcast(new S.HumUpPlayer { ObjectID = ObjectID, Class = Class, Location = CurrentLocation });
             ReceiveChat("Please reconnect to the normal use.", ChatType.System);
 
-            AddBuff(new Buff { Type = BuffType.HumUp, Caster = this, ExpireTime = Envir.Time + 100, Infinite = true });
+            
         }
 
 
