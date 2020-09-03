@@ -2270,7 +2270,7 @@ namespace Server.MirEnvir
             {
                 PlayerObject player = Players[i];
 
-                if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
+                if (Functions.InRange(location, player.CurrentLocation, 1000))
                     player.Enqueue(p);
 
             }
