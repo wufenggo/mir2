@@ -549,7 +549,7 @@ namespace Client.MirScenes
         #endregion
         public sealed class NewCharacterDialog : MirImageControl
         {
-            private static readonly Regex Reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+            //private static readonly Regex Reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
 
             public MirImageControl TitleLabel;
             public MirAnimatedControl CharacterDisplay;
@@ -808,7 +808,7 @@ namespace Client.MirScenes
                     OKButton.Enabled = false;
                     NameTextBox.Border = false;
                 }
-                else if (!Reg.IsMatch(NameTextBox.Text))
+                else if (NameTextBox.Text == null || NameTextBox.Text.Length < Globals.MinCharacterNameLength || NameTextBox.Text.Length > Globals.MaxCharacterNameLength)
                 {
                     OKButton.Enabled = false;
                     NameTextBox.Border = true;
