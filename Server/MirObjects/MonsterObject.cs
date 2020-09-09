@@ -214,7 +214,10 @@ namespace Server.MirObjects
                     return new HellBomb(info);
                 case 100:
                     return new VenomSpider(info);
-
+                case 101:
+                    return new KillerPlant(info);
+                case 250:
+                    return new HumanMonster(info);
                 //unfinished
                 case 253:
                     return new FlamingMutant(info);

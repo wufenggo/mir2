@@ -3369,7 +3369,11 @@ namespace Server.MirEnvir
             }
         }
 
+        public void LoadHumMobs()
 
+        {
+            Settings.LoadHumMobs();
+        }
         public void ReloadNPCs()
         {
             var keys = Scripts.Keys;

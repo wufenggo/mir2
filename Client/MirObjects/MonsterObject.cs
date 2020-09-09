@@ -1668,6 +1668,14 @@ namespace Client.MirObjects
                                             case Monster.FlameQueen:
                                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlameQueen], 729, 10, Frame.Count * Frame.Interval, this));
                                                 break;
+
+                                            case Monster.KillerPlant://黑暗船长，雷电
+                                                ob = MapControl.GetObject(TargetID);
+                                                if (ob != null)
+                                                {
+                                                    ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.KillerPlant], 1200, 12, 2000, ob));
+                                                }
+                                                break;
                                         }
                                         break;
                                     }

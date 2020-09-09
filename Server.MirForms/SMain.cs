@@ -420,12 +420,18 @@ namespace Server
         {
             Envir.ReloadDrops();
         }
-
+        
         private void gameshopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GameShop form = new GameShop();
             form.ShowDialog();
         }
+        private void reloadHumMobsMenuItem_Click(object sender, EventArgs e)
+        {
+            //Settings 
+            Settings.LoadHumMobs();
+        }
+
 
     }
 }

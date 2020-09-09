@@ -3896,12 +3896,142 @@ namespace Client.MirScenes
                         SoundManager.PlaySound(20000 + (ushort)Spell.Healing * 10 + 1);
                         ob.Effects.Add(new Effect(Libraries.Magic3, 650, 10, 800, ob));
                         break;
+                    case SpellEffect.HumanBlizzardCast:
+                        ob.Effects.Add(new Effect(Libraries.Magic2, 1540, 8, 800, ob));
+                        break;
+                    case SpellEffect.HumanCastBlessArm:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 1340, 16, 800, ob));
+                        break;
+                    case SpellEffect.HumanCastPoisonCloud:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 760, 10, 800, ob));
+                        break;
+                    case SpellEffect.HumanCastSoulShield:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 1320, 16, 800, ob));
+                        break;
+                    case SpellEffect.HumanCrossHalfMoon:
+                        ob.Effects.Add(new Effect(Libraries.Magic2, 40 + ((int)p.Direction * 10), 6, 600, ob, CMain.Time + 50));
+                        break;
+                    case SpellEffect.HumanCurseCast:
+                        ob.Effects.Add(new Effect(Libraries.Magic2, 950, 24, 800, ob));
+                        break;
+                    case SpellEffect.HumanFireBall:
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Magic, 0, 10, 800, ob));
+                            MapObject tOID = MapControl.GetObject(p.TargetID);
+                            if (tOID != null)
+                                CreateProjectile(10, Libraries.Magic, true, 6, 30, 4, p.TargetID, ob.CurrentLocation, ob, (int)p.DelayTime, false);
+                        }
+                        break;
+                    case SpellEffect.HumanFireWallCast:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 1620, 10, 800, ob));
+                        break;
+                    case SpellEffect.HumanFlamingSword:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 3480 + ((int)p.Direction * 10), 6, 700, ob, CMain.Time + 50));
+                        break;
+                    case SpellEffect.HumanHalfMoon:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 2560 + ((int)p.Direction * 10), 6, 600, ob));
+                        break;
+                    case SpellEffect.HumanMagicShield:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 1620, 10, 800, ob) { RepeatUntil = CMain.Time + p.Time * 1000 });
+                        break;
+                    case SpellEffect.HumanMeteorCast:
+                        ob.Effects.Add(new Effect(Libraries.Magic2, 1590, 8, 800, ob));
+                        break;
+                    case SpellEffect.HumanPoisoning:
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Magic, 760, 10, 800, ob));
+                            MapObject tOID = MapControl.GetObject(p.TargetID);
+                            if (tOID != null)
+                                tOID.Effects.Add(new Effect(Libraries.Magic, 770, 10, 800, ob, CMain.Time + 800));
+                        }
+                        break;
+                    case SpellEffect.HumanRage:
+                        ob.Effects.Add(new Effect(Libraries.Magic3, 230, 6, 600, ob) { RepeatUntil = CMain.Time + p.Time * 1000 });
+                        break;
+                    case SpellEffect.HumanRepulse:
+                        ob.Effects.Add(new Effect(Libraries.Magic, 900, 6, 800, ob));
+                        break;
+                    case SpellEffect.HumanSoulFireBall:
+                        {
+                            ob.Effects.Add(new Effect(Libraries.Magic, 0, 10, 800, ob));
+                            MapObject tOID = MapControl.GetObject(p.TargetID);
+                            if (tOID != null)
+                            {
+                                Missile missile = CreateProjectile(1160, Libraries.Magic, true, 3, 30, 8, p.TargetID, ob.CurrentLocation, ob, (int)p.DelayTime, false);
+
+                                if (missile.Target != null)
+                                {
+                                    missile.Complete += (o, e) =>
+                                    {
+                                        if (missile.Target.CurrentAction == MirAction.Dead)
+                                            return;
+                                        missile.Target.Effects.Add(new Effect(Libraries.Magic, 1360, 10, 600, missile.Target));
+                                    };
+                                }
+                                break;
+                            }
+                        }
+                        break;
+
+
+
 
                 }
                 return;
             }
 
         }
+
+        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, uint target, Point loc, MapObject owner, int delay, bool direction16 = true)
+        {
+            MapObject ob = MapControl.GetObject(target);
+            Point TargetPoint = new Point();
+            if (ob != null)
+                TargetPoint = ob.CurrentLocation;
+
+            int duration = Functions.MaxDistance(loc, TargetPoint) * 50;
+
+
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, owner, TargetPoint, direction16)
+            {
+                Target = ob,
+                Interval = interval,
+                FrameCount = count,
+                Blend = blend,
+                Skip = skip,
+                Delay = delay
+            };
+
+            owner.Effects.Add(missile);
+
+            return missile;
+        }
+
+        private Missile CreateProjectile(int baseIndex, MLibrary library, bool blend, int count, int interval, int skip, uint target, Point loc, MapObject owner, bool direction16 = true)
+        {
+            MapObject ob = MapControl.GetObject(target);
+            Point TargetPoint = new Point();
+            if (ob != null)
+                TargetPoint = ob.CurrentLocation;
+
+            int duration = Functions.MaxDistance(loc, TargetPoint) * 50;
+
+
+            Missile missile = new Missile(library, baseIndex, duration / interval, duration, owner, TargetPoint, direction16)
+            {
+                Target = ob,
+                Interval = interval,
+                FrameCount = count,
+                Blend = blend,
+                Skip = skip
+            };
+
+            owner.Effects.Add(missile);
+
+            return missile;
+        }
+
+
 
         private void RangeAttack(S.RangeAttack p)
         {

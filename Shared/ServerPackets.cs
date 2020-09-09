@@ -2999,10 +2999,12 @@ namespace ServerPackets
         public override short Index { get { return (short)ServerPacketIds.ObjectEffect; } }
 
         public uint ObjectID;
+        public uint TargetID;
         public SpellEffect Effect;
         public uint EffectType;
         public uint DelayTime = 0;
         public uint Time = 0;
+        public MirDirection Direction;
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -3011,6 +3013,8 @@ namespace ServerPackets
             EffectType = reader.ReadUInt32();
             DelayTime = reader.ReadUInt32();
             Time = reader.ReadUInt32();
+            Direction = (MirDirection)reader.ReadByte();
+            TargetID = reader.ReadUInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
@@ -3019,6 +3023,8 @@ namespace ServerPackets
             writer.Write(EffectType);
             writer.Write(DelayTime);
             writer.Write(Time);
+            writer.Write((byte)Direction);
+            writer.Write(TargetID);
         }
     }
     public sealed class RangeAttack : Packet //ArcherTest

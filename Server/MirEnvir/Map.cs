@@ -29,6 +29,8 @@ namespace Server.MirEnvir
         public Cell[,] Cells;
         public List<Point> WalkableCells;
         public Door[,] DoorIndex;
+        //对应格子的对象，大部分都是空的
+        public List<MapObject>[,] Objects;
         public List<Door> Doors = new List<Door>();
         public MineSpot[,] Mine;
         public long LightningTime, FireTime, InactiveTime;
@@ -567,6 +569,69 @@ namespace Server.MirEnvir
 
 
         }
+
+        public void Add(MapObject mapObject)
+        {
+            Add(mapObject.CurrentLocation.X, mapObject.CurrentLocation.Y, mapObject);
+        }
+        //添加对象进地图
+        public void Add(int x, int y, MapObject mapObject)
+        {
+            if (Objects[x, y] == null)
+            {
+                Objects[x, y] = new List<MapObject>();
+            }
+            Objects[x, y].Add(mapObject);
+        }
+
+
+        public void Remove(MapObject mapObject)
+        {
+            Remove(mapObject.CurrentLocation.X, mapObject.CurrentLocation.Y, mapObject);
+        }
+
+        //移除对象
+        public void Remove(int x, int y, MapObject mapObject)
+        {
+            if (Objects[x, y] == null)
+            {
+                return;
+            }
+            Objects[x, y].Remove(mapObject);
+            if (Objects[x, y].Count == 0)
+            {
+                Objects[x, y] = null;
+            }
+        }
+
+        //获取地图某个区域的对象列表
+        public List<MapObject> getMapObjects(int x, int y, int Range)
+        {
+            List<MapObject> list = new List<MapObject>();
+            for (int x1 = x - Range; x1 <= x + Range; x1++)
+            {
+                if (x1 < 0 || x1 >= Width)
+                {
+                    continue;
+                }
+                for (int y1 = y - Range; y1 <= y + Range; y1++)
+                {
+                    if (y1 < 0 || y1 >= Height || Objects[x1, y1] == null)
+                    {
+                        continue;
+                    }
+                    list.AddRange(Objects[x1, y1]);
+                }
+            }
+            return list;
+        }
+
+
+        public List<MapObject> getMapObjects(int x, int y)
+        {
+            return Objects[x, y];
+        }
+
 
         private void CreateMine()
         {
@@ -2373,5 +2438,6 @@ namespace Server.MirEnvir
                 Route.Add(info);
             }
         }
+
     }
 }

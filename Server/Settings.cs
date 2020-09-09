@@ -30,8 +30,9 @@ namespace Server
             RoutePath = Path.Combine(EnvirPath, "Routes"),
             NameListPath = Path.Combine(EnvirPath, "NameLists"),
             ValuePath = Path.Combine(EnvirPath, "Values"),
+            HumMobsPath = @".\HumanMobs\",
             NoticePath = Path.Combine(EnvirPath, "Notice.txt");
-
+        
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
         public static Notice Notice;
@@ -113,45 +114,45 @@ namespace Server
                           RestedBuffLength = 10,
                           RestedExpBonus = 5,
                           RestedMaxBonus = 24;
+        public static string SkeletonName = "变异骷髅",//召唤骷髅
+                                    ShinsuName = "神兽",//召唤神兽
+                                    BugBatName = "蝙蝠",//角蝇召唤出来的
+                                    Zuma1 = "祖玛雕像",
+                                    Zuma2 = "祖玛卫士",
+                                    Zuma3 = "祖玛弓箭手",
+                                    Zuma4 = "楔蛾",
+                                    Zuma5 = "祖玛弓箭手3",
+                                    Zuma6 = "祖玛雕像3",
+                                    Zuma7 = "祖玛卫士3",
+                                    Turtle1 = "红海龟",//169
+                                    Turtle2 = "绿海龟",//170
+                                    Turtle3 = "蓝海龟",//171
+                                    Turtle4 = "玄武龟",//185
+                                    Turtle5 = "幽冥龟",//186
+                                    BoneMonster1 = "骷髅士兵",
+                                    BoneMonster2 = "骷髅武士",
+                                    BoneMonster3 = "骷髅弓箭手",
+                                    BoneMonster4 = "骷髅武将",
+                                    BehemothMonster1 = "紫电小蜘蛛",//161
+                                    BehemothMonster2 = "剧毒小蜘蛛",//160
+                                    BehemothMonster3 = "爆炸小蜘蛛",//162
+                                    HellKnight1 = "坚冰守护将",//这几个也没有
+                                    HellKnight2 = "魔焰守护将",
+                                    HellKnight3 = "暗魂守护将",
+                                    HellKnight4 = "烈震守护将",
+                                    HellBomb1 = "铁魔夜叉",//这些是地狱中的守护神召唤的帮手
+                                    HellBomb2 = "暴魔夜叉",
+                                    HellBomb3 = "石魔夜叉",
+                                    WhiteSnake = "白灵蛇",
+                                    AngelName = "精灵",//召唤月灵
+                                    BombSpiderName = "爆裂蜘蛛",
+                                    CloneName = "分身",
+                                    AssassinCloneName = "刺客分身",
+                                    VampireName = "召唤蜘蛛",
+                                    ToadName = "召唤蛤蟆",
+                                    SnakeTotemName = "召唤图腾",
+                                    SnakesName = "鬼魅蛇";
 
-        public static string SkeletonName = "BoneFamiliar",
-                             ShinsuName = "Shinsu",
-                             BugBatName = "BugBat",
-                             Zuma1 = "ZumaStatue",
-                             Zuma2 = "ZumaGuardian",
-                             Zuma3 = "ZumaArcher",
-                             Zuma4 = "WedgeMoth",
-                             Zuma5 = "ZumaArcher3",
-                             Zuma6 = "ZumaStatue3",
-                             Zuma7 = "ZumaGuardian3",
-                             Turtle1 = "RedTurtle",
-                             Turtle2 = "GreenTurtle",
-                             Turtle3 = "BlueTurtle",
-                             Turtle4 = "TowerTurtle",
-                             Turtle5 = "FinialTurtle",
-                             BoneMonster1 = "BoneSpearman",
-                             BoneMonster2 = "BoneBlademan",
-                             BoneMonster3 = "BoneArcher",
-                             BoneMonster4 = "BoneCaptain",
-                             BehemothMonster1 = "Hugger",
-                             BehemothMonster2 = "PoisonHugger",
-                             BehemothMonster3 = "MutatedHugger",
-                             HellKnight1 = "HellKnight1",
-                             HellKnight2 = "HellKnight2",
-                             HellKnight3 = "HellKnight3",
-                             HellKnight4 = "HellKnight4",
-                             HellBomb1 = "HellBomb1",
-                             HellBomb2 = "HellBomb2",
-                             HellBomb3 = "HellBomb3",
-                             WhiteSnake = "WhiteSerpent",
-                             AngelName = "HolyDeva",
-                             BombSpiderName = "BombSpider",
-                             CloneName = "Clone",
-                             AssassinCloneName = "AssassinClone",
-                             VampireName = "VampireSpider",
-                             ToadName = "SpittingToad",
-                             SnakeTotemName = "SnakeTotem",
-                             SnakesName = "CharmedSnake";
 
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
@@ -167,8 +168,8 @@ namespace Server
 
 
         //IntelligentCreature
-        public static string[] IntelligentCreatureNameList = { "BabyPig", "Chick", "Kitten", "BabySkeleton", "Baekdon", "Wimaen", "BlackKitten", "BabyDragon", "OlympicFlame", "BabySnowMan", "Frog", "BabyMonkey", "AngryBird", "Foxey", "MedicalRat" };
-        public static string CreatureBlackStoneName = "BlackCreatureStone";
+        public static string[] IntelligentCreatureNameList = { "猪宝宝", "鸡宝宝", "调皮的猫咪", "外星人", "小白猪", "纸人宝宝", "可爱的猫咪", "魔龙宝宝", "圣火宝宝", "雪人宝宝", "青蛙宝宝", "猴宝宝", "(灵物)猴子", "哈士奇" };
+        public static string CreatureBlackStoneName = "黑色石头";
 
         //Fishing Settings
         public static int FishingAttempts = 30;
@@ -176,7 +177,7 @@ namespace Server
         public static int FishingSuccessMultiplier = 10;
         public static long FishingDelay = 0;
         public static int FishingMobSpawnChance = 5;
-        public static string FishingMonster = "GiantKeratoid";
+        public static string FishingMonster = "巨型多角虫";
 
         //Mail Settings
         public static bool MailAutoSendGold = false;
@@ -197,7 +198,7 @@ namespace Server
         public static byte RefineItemStatReduce = 15;
         public static int RefineCost = 125;
 
-        public static string RefineOreName = "BlackIronOre";
+        public static string RefineOreName = "黑铁矿石";
 
         //Marriage Settings
         public static int LoverEXPBonus = 5;
@@ -502,6 +503,7 @@ namespace Server
             LoadGoods();
             LoadGem();
             LoadNotice();
+            LoadHumMobs();
 
             GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
         }
@@ -1409,6 +1411,40 @@ namespace Server
             reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
             reader.Write("Goods", "HideAddedStats", GoodsHideAddedStats);
         }
+        public static List<HumansMonsterSettings> HumMobs = new List<HumansMonsterSettings>();
+        public static void SaveHumMobs()
+        {
+            InIReader reader = new InIReader(HumMobsPath + @".\Humans.ini");
+            reader.Write("Count", "HumanMobCount", 0);
+        }
 
+        public static void LoadHumMobs()
+        {
+            if (!Directory.Exists(HumMobsPath))
+                Directory.CreateDirectory(HumMobsPath);
+            if (!File.Exists(HumMobsPath + @".\Humans.ini"))
+            {
+                SaveHumMobs();
+                return;
+            }
+
+            InIReader reader = new InIReader(HumMobsPath + @".\Humans.ini");
+            int count = reader.ReadInt32("Count", "HumanMobCount", 0);
+            for (int i = 0; i < count; i++)
+            {
+                HumansMonsterSettings hum = new HumansMonsterSettings
+                {
+                    HumansName = reader.ReadString("Human" + i.ToString(), "Name", string.Empty),
+                    Weapon = reader.ReadInt16("Human" + i.ToString(), "Weapon", 0),
+                    Armour = reader.ReadInt16("Human" + i.ToString(), "Armour", 0),
+                    MobsClass = (MirClass)reader.ReadByte("Human" + i.ToString(), "Class", 0),
+                    MobsGender = (MirGender)reader.ReadByte("Human" + i.ToString(), "Gender", 0),
+                    Hair = reader.ReadByte("Human" + i.ToString(), "Hair", 0),
+                    Wing = reader.ReadByte("Human" + i.ToString(), "Wing", 0),
+                    Light = reader.ReadByte("Human" + i.ToString(), "Light", 0)
+                };
+                HumMobs.Add(hum);
+            }
+        }
     }
 }

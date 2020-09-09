@@ -1,4 +1,14 @@
 ﻿using System;
+public class HumansMonsterSettings
+{
+    public string HumansName = string.Empty;
+    public MirClass MobsClass;
+    public MirGender MobsGender;
+    public short Weapon, Armour;
+    public byte Wing, Hair, Light;
+
+    public HumansMonsterSettings() { }
+}
 
 public enum PanelType : byte
 {
@@ -1263,9 +1273,27 @@ public enum SpellEffect : byte
     IcePillar,
     GreenTherapy,
     BlackWave,
-    HumUpEffect//stupple
+    HumUpEffect,//stupple
 
-
+ HumanFireBall,
+    HumanThunderBolt,
+    HumanRepulse,
+    HumanFireWallCast,
+    HumanBlizzardCast,
+    HumanMeteorCast,
+    HumanMagicShield,
+    HumanFlamingSword,
+    HumanTwinDrakeBlade,
+    HumanHalfMoon,
+    HumanCrossHalfMoon,
+    HumanThrusting,
+    HumanRage,
+    HumanSoulFireBall,
+    HumanPoisoning,
+    HumanCurseCast,
+    HumanCastBlessArm,
+    HumanCastSoulShield,
+    HumanCastPoisonCloud
 
 
 
