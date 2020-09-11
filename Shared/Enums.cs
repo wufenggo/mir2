@@ -891,7 +891,8 @@ public enum ItemType : byte
     Awakening = 35,
     Pets = 36,
     Transform = 37,
-    Deco = 38
+    Deco = 38,
+    Socket = 39
 }
 
 public enum MirGridType : byte
@@ -915,7 +916,8 @@ public enum MirGridType : byte
     Refine = 16,
     Renting = 17,
     GuestRenting = 18,
-    Craft = 19
+    Craft = 19,
+    Socket = 20
 }
 
 public enum EquipmentSlot : byte
