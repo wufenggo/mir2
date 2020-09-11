@@ -27,14 +27,15 @@ namespace Client.MirScenes.Dialogs
         private long LastTeleportTime = 0;
         public BigMapDialog()
         {
-            
+            Index = 801;
+            Library = Libraries.Title;
+         
             //NotControl = true;
             Location = new Point(130, 100);
             //Border = true;
             //BorderColour = Color.Lime;
             BeforeDraw += (o, e) => OnBeforeDraw();
             Sort = true;
-
 
             //loadTonw();
             //加入坐标显示
