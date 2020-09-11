@@ -11,342 +11,225 @@ namespace Server.MirObjects.Monsters
         public long MagicShieldTime, MeteorBlizzTime, FireWallTime, RepulseTime, _RageTime, PoisonCloudTime, SoulShieldTime, BlessedArmourTime, CurseTime;
         public long CastTime, SpellCastTime;
         public long NextMagicShieldTime, NextRageTime, NextFlamingSwordTime, NextSoulShieldTime, NextBlessedArmourTime, NextCurseTime;
-        public bool Casting = false;
-        public int OriginalAttackSpeed;
+        public long FearTime, DecreaseMPTime;
+        
+        public byte AttackRange = 6;
+
+        public bool Summoned;
         public MirClass mobsClass;
         public MirGender mobsGender;
         public short weapon, armour;
         public byte wing, hair, light;
-        public bool MagicShieldUp = false;
-        public uint MP = 65535;
-        public bool Summoned;
-      
+        public int AttackDamage = 0;
+
         public int HumanAttackSpeed
         {
             get
             {
-                int tmp = OriginalAttackSpeed;
+                int tmp = AttackRange;
                 if (mobsClass == MirClass.Taoist)
-                    tmp = 1200;
+                    tmp = 6;
                 if (mobsClass == MirClass.Wizard)
-                    tmp = 1400;
+                    tmp = 7;
                 if (mobsClass == MirClass.Warrior)
                 {
-                    if (Envir.Time > _RageTime)
-                        tmp = 1000;
-                    else
-                        tmp = 1000 / 2;
+                  
+                        tmp = 1;
+              
                 }
                 if (mobsClass == MirClass.Assassin)
-                    tmp = 800;
+                    tmp = 1;
                 return tmp;
             }
         }
-
-        public HumanMonster(MonsterInfo info)
+        protected internal HumanMonster(MonsterInfo info)
             : base(info)
         {
-            GetHumanInfo();
             Direction = MirDirection.Down;
             Summoned = true;
-            OriginalAttackSpeed = Info.AttackSpeed;
-            switch (mobsClass)
-            {
-                case MirClass.Warrior:
-                    MP = 1000;
-                    break;
-                case MirClass.Wizard:
-                    MP = 2500;
-                    break;
-                case MirClass.Taoist:
-                    MP = 1750;
-                    break;
-            }
         }
 
-        public int GetHitCount()
+        protected override bool InAttackRange()
         {
-            int count = 0;
-            if (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) <= 2)
-                if (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) == 1)
-                {
-                    Point tmmp = Functions.PointMove(CurrentLocation, Direction, 2);
-                    if (CurrentMap.ValidPoint(tmmp))
-                    {
-                        Cell cell = CurrentMap.GetCell(tmmp);
-                        if (cell.Objects != null)
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                                if ((cell.Objects[i].Race == ObjectType.Player ||
-                                    cell.Objects[i].Race == ObjectType.Monster) &&
-                                    cell.Objects[i].IsAttackTarget(this))
-                                    count = 2;
-                    }
-                }
-                else
-                    count = 1;
-            return count;
+            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, HumanAttackSpeed);
         }
 
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
+        protected override void Attack()
         {
-            if (MagicShieldUp)
-            {
-                int temp = damage * 15 / 100;
-                damage -= temp;
-            }
-            return base.Attacked(attacker, damage, type);
-        }
+            List<MapObject> targets = FindAllTargets(1, CurrentLocation, false);
 
-        public override int Attacked(PlayerObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
-            if (MagicShieldUp)
+            if (!Target.IsAttackTarget(this))
             {
-                int temp = damage * 15 / 100;
-                damage -= temp;
-            }
-            return base.Attacked(attacker, damage, type, damageWeapon);
-        }
-
-        public long MPRegenTime;
-        protected override void ProcessRegen()
-        {
-            if (Envir.Time > MPRegenTime)
-            {
-                int MPRegen = 10;
-                if (MP + MPRegen > uint.MaxValue)
-                    MP = uint.MaxValue;
-                else
-                    MP += (uint)MPRegen;
-                MPRegenTime = Envir.Time + Settings.Second * 3;
-            }
-            base.ProcessRegen();
-        }
-
-        /// <summary>
-        /// Override the ProcessTarget in order to setup the AI.
-        /// </summary>
-        protected override void ProcessTarget()
-        {
-            //  Ensure we're not trying to attack and invalid Target (Dead or non existent)
-            if (Target == null || Target.Dead)
-            {
-                FindTarget();
+                Target = null;
                 return;
             }
 
-            //  Get the Direction to face and use on the ObjectAttack Packet
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            List<MapObject> targets = FindAllTargets(1, CurrentLocation, false);
-            int closeTargets = targets.Count;
-            if (Envir.Time > AttackTime)
+            ShockTime = 0;
+            switch (mobsClass)
             {
-                AttackTime = Envir.Time + HumanAttackSpeed;
-                ActionTime = Envir.Time + 300;
-                switch (mobsClass)
-                {
-                    #region Taoist
-                    case MirClass.Taoist:
-                        {
-                            if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 11))
-                            {
-                                if (Envir.Time > PoisonCloudTime && MP >= 28)
-                                {
-                                    MP -= 28;
-                                    PoisonCloudTime = Envir.Time + Settings.Second * 30;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformPoisonCloud();
-                                }
-                                else if (Envir.Time > CurseTime && MP >= 37)
-                                {
-                                    MP -= 37;
-                                    CurseTime = Envir.Time + Settings.Second * 26;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformCurse();
-                                }
-                                else if (Envir.Time > NextBlessedArmourTime && MP >= 15)
-                                {
-                                    MP -= 15;
-                                    NextBlessedArmourTime = Envir.Time + Settings.Second * 34;
-                                    BlessedArmourTime = Envir.Time + Settings.Second * 15;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformSoulArmour();
-                                }
-                                else if (Envir.Time > NextSoulShieldTime && MP >= 15)
-                                {
-                                    MP -= 15;
-                                    NextSoulShieldTime = Envir.Time + Settings.Second * 34;
-                                    SoulShieldTime = Envir.Time + Settings.Second * 15;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformSoulShield();
-                                }
-                                else if (Envir.Random.Next(5) == 0 && MP >= 6)
-                                {
-                                    MP -= 6;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformPoisoning();
-                                }
-                                else if (MP >= 8)
-                                {
-                                    MP -= 6;
-                                    Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformSoulFireBall();
-                                }
-                            }
-                        }
-                        break;
-                    #endregion
-                    #region Warrior
-                    case MirClass.Warrior:
-                        {
-                            if (Envir.Time > _RageTime)
-                                AttackSpeed = OriginalAttackSpeed;
-                            if (InAttackRange())
-                            {
-                                if (Envir.Time > NextFlamingSwordTime && MP >= 45)
-                                {
-                                    MP -= 45;
-                                    NextFlamingSwordTime = Envir.Time + Settings.Second * Envir.Random.Next(15, 25);
-                                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformFlamingSword();
-                                    return;
-                                }
-                                else if (Envir.Time > NextRageTime && MP >= 18 && Envir.Time > _RageTime)
-                                {
-                                    MP -= 18;
-                                    _RageTime = Envir.Time + Settings.Second * 20;
-                                    NextRageTime = Envir.Time + Settings.Second + Envir.Random.Next(30, 45);
-                                    Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformRage();
-                                    return;
-                                }
-                                else if (MP >= 9 && closeTargets <= 1)
-                                {
-                                    MP -= 9;
-                                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformTwinDrakeBlade();
-                                    return;
-                                }
-                                else if (MP >= 6 && closeTargets >= 2)
-                                {
-                                    if (Envir.Random.Next(0, 10) >= 5
-                                        && MP >= 8)
-                                    {
-                                        MP -= 8;
-                                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                        PerformCrossHalfMoon();
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        MP -= 6;
-                                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                        PerformHalfmoon();
-                                        return;
-                                    }
-                                }
-                                else if (GetHitCount() == 2)
-                                {
-                                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformThrusting();
-                                    return;
-                                }
-                                else if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 1))
-                                {
-                                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    Attack();
-                                    return;
-                                }
-                            }
-                        }
-                        break;
-                    #endregion
-                    #region Wizard
-                    case MirClass.Wizard:
-                        {
-                            if (MagicShieldUp &&
-                                Envir.Time > MagicShieldTime)
-                                MagicShieldUp = false;
-                            if (!Casting)
-                            {
-                                //  Favour MagicShield
-                                if (!MagicShieldUp && Envir.Time > NextMagicShieldTime && MP >= 28)
-                                {
-                                    MP -= 28;
-                                    Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                                    PerformMagicShield();
-                                    //CastTime = Envir.Time + HumanAttackSpeed;
-                                    return;
-                                }
-                                else if (Envir.Time > MeteorBlizzTime && MP >= 89)
-                                {
-                                    MP -= 89;
-                                    Casting = true;
-                                    MeteorBlizzTime = Envir.Time + Settings.Second * 50;
-                                    if (Envir.Random.Next(0, 10) >= 5)
-                                        PerformMeteorStrike();
-                                    else
-                                        PerformBlizzard();
-                                    //CastTime = Envir.Time + HumanAttackSpeed;
-                                    return;
-                                }
-                                else if (Envir.Time > SpellCastTime && MP >= 20)
-                                {
-                                    MP -= 20;
-                                    SpellCastTime = Envir.Time + Settings.Second * 2;
-                                    if (Envir.Random.Next(0, 10) >= 5)
-                                        PerformThunderBolt();
-                                    else
-                                        PerformFireBall();
-                                    //CastTime = Envir.Time + HumanAttackSpeed;
-                                    return;
-                                }
-                                else if (Envir.Time > FireWallTime && MP >= 48)
-                                {
-                                    MP -= 48;
-                                    FireWallTime = Envir.Time + Settings.Second * 32;
-                                    PerformFireWall();
-                                    //CastTime = Envir.Time + HumanAttackSpeed;
-                                    return;
-                                }
-                                else if (Envir.Time > RepulseTime && MP >= 18)
-                                {
-                                    MP -= 18;
-                                    RepulseTime = Envir.Time + Settings.Second * Envir.Random.Next(10, 30);
-                                    PerformRepulse();
-                                    //CastTime = Envir.Time + HumanAttackSpeed;
-                                    return;
-                                }
-                            }
-                            else if (Envir.Time > CastTime)
-                                Casting = false;
-                        }
-                        break;
-                        #endregion
-                }
+                case MirClass.Warrior:
+                    {
+
+                        Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+
+
+                        ActionTime = Envir.Time + 300;
+                        AttackTime = Envir.Time + AttackSpeed;
+
+                        int damage2 = GetAttackPower(MinDC, MaxDC);
+                        AttackDamage += damage2;
+
+                        if (damage2 == 0) return;
+
+                        Target.Attacked(this, damage2);
+                    }
+                    break;
+
+
+                case MirClass.Wizard:
+                    {
+                        Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                        Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.ThunderBolt, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                       
+                    }
+                    ActionTime = Envir.Time + 300;
+                    AttackTime = Envir.Time + AttackSpeed;
+
+                    int damage = GetAttackPower(MinMC, MaxMC);
+                    if (damage == 0) return;
+
+                    DelayedAction action1 = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MAC);
+                    ActionList.Add(action1);
+                    break;
+                case MirClass.Taoist:
+                    {
+                        Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                        Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.SoulFireBall, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                        
+                    }
+                    ActionTime = Envir.Time + 1800;
+                    AttackTime = Envir.Time + AttackSpeed;
+
+                    int damage1 = GetAttackPower(MinSC, MaxSC);
+                    if (damage1 == 0) return;
+
+                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage1, DefenceType.MAC);
+                    ActionList.Add(action);
+                    break;
+
             }
+
+
+
+           
+
+            if (Target.Dead)
+                FindTarget();
+        }
+
+        protected override void ProcessAI()
+        {
+            base.ProcessAI();
+
+            if (Master != null && Master is PlayerObject && Envir.Time > DecreaseMPTime)
+            {
+                DecreaseMPTime = Envir.Time + 1000;
+                if (!Master.Dead) ((PlayerObject)Master).ChangeMP(-10);
+
+                if (((PlayerObject)Master).MP <= 0) Die();
+            }
+        }
+
+        protected override void ProcessTarget()
+        {
+            if (Target == null || !CanAttack) return;
+
+            if (Master != null)
+                MoveTo(Master.CurrentLocation);
+
+            if (InAttackRange())
+            {
+                Attack();
+                return;
+            }
+
+            FearTime = Envir.Time + 5000;
+
             if (Envir.Time < ShockTime)
             {
                 Target = null;
                 return;
             }
 
-            switch (mobsClass)
+
+
+                switch (mobsClass)
             {
+
+                
+
                 case MirClass.Warrior:
                     if (!InAttackRange())
                         MoveTo(Target.CurrentLocation);
                     break;
+                case MirClass.Taoist:
+                    FearTime = Envir.Time + 5000;
+
+                    if (Envir.Time < ShockTime)
+                    {
+                        Target = null;
+                        return;
+                    }
+                    int dist1 = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
+
+                    if (dist1 < AttackRange)
+                    {
+                        MirDirection dir1 = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
+
+                        if (Walk(dir1)) return;
+
+                        switch (Envir.Random.Next(2)) //No favour
+                        {
+                            case 0:
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    dir1 = Functions.NextDir(dir1);
+
+                                    if (Walk(dir1))
+                                        return;
+                                }
+                                break;
+                            default:
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    dir1 = Functions.PreviousDir(dir1);
+
+                                    if (Walk(dir1))
+                                        return;
+                                }
+                                break;
+                        }
+
+                    }
+                    break;
+
                 case MirClass.Wizard:
+                    FearTime = Envir.Time + 5000;
+
+                    if (Envir.Time < ShockTime)
+                    {
+                        Target = null;
+                        return;
+                    }
+
                     int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-                    if (dist >= 11)
-                        MoveTo(Target.CurrentLocation);
-                    else
+                    if (dist < AttackRange)
                     {
                         MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
-                        if (Walk(dir))
-                            return;
+                        if (Walk(dir)) return;
 
                         switch (Envir.Random.Next(2)) //No favour
                         {
@@ -372,55 +255,9 @@ namespace Server.MirObjects.Monsters
 
                     }
                     break;
-                case MirClass.Taoist:
-                    dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
-
-                    if (dist >= 11)
-                        MoveTo(Target.CurrentLocation);
-                    else
-                    {
-                        MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
-
-                        if (Walk(dir))
-                            return;
-
-                        switch (Envir.Random.Next(2)) //No favour
-                        {
-                            case 0:
-                                for (int i = 0; i < 7; i++)
-                                {
-                                    dir = Functions.NextDir(dir);
-
-                                    if (Walk(dir))
-                                        return;
-                                }
-                                break;
-                            default:
-                                for (int i = 0; i < 7; i++)
-                                {
-                                    dir = Functions.PreviousDir(dir);
-
-                                    if (Walk(dir))
-                                        return;
-                                }
-                                break;
-                        }
-                    }
-                    break;
             }
 
 
-            //  If we're not in Range, move to the target
-            if (!InAttackRange())
-                MoveTo(Target.CurrentLocation);
-            //  If the targets invalid or dead, find a new one.
-            if (Target == null || Target.Dead)
-            {
-                FindTarget();
-                return;
-            }
-            //  Move to the Target (it'll check if in range)
-            MoveTo(Target.CurrentLocation);
 
         }
 
@@ -537,13 +374,7 @@ namespace Server.MirObjects.Monsters
             CurrentMap.ActionList.Add(action);
         }
 
-        public void PerformMagicShield()
-        {
-            NextMagicShieldTime = Envir.Time + Settings.Second * 45;
-            MagicShieldTime = Envir.Time + Settings.Second * 20;
-            MagicShieldUp = true;
-            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Direction = Direction, Effect = SpellEffect.HumanMagicShield, Time = 20 });
-        }
+
         #endregion
 
         #region Warrior
@@ -685,16 +516,13 @@ namespace Server.MirObjects.Monsters
             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Direction = Direction, Effect = SpellEffect.HumanThrusting });
         }
 
-        public void PerformRage()
-        {
-            AttackSpeed = AttackSpeed / 2;
-            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Direction = Direction, Effect = SpellEffect.HumanRage, Time = 20 });
-        }
+
         #endregion
 
         #region Taoist
         public void PerformSoulFireBall()
         {
+
             if (!Target.IsAttackTarget(this))
             {
                 Target = null;
@@ -775,6 +603,7 @@ namespace Server.MirObjects.Monsters
             Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Direction = Direction, Effect = SpellEffect.HumanCastBlessArm });
         }
         #endregion
+
 
         public override void Spawned()
         {

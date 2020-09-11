@@ -3926,7 +3926,7 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic, 1620, 10, 800, ob));
                         break;
                     case SpellEffect.HumanFlamingSword:
-                        ob.Effects.Add(new Effect(Libraries.Magic, 3480 + ((int)p.Direction * 10), 6, 700, ob, CMain.Time + 50));
+                        ob.Effects.Add(new Effect(Libraries.Magic, 3480 + ((int)p.Direction * 10), 6, 700, ob));
                         break;
                     case SpellEffect.HumanHalfMoon:
                         ob.Effects.Add(new Effect(Libraries.Magic, 2560 + ((int)p.Direction * 10), 6, 600, ob));

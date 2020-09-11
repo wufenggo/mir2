@@ -2321,7 +2321,7 @@ namespace Server.MirEnvir
             {
                 PlayerObject player = Players[i];
 
-                if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
+                if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange*100))
                     player.Enqueue(p);
                     
             }
@@ -2346,7 +2346,7 @@ namespace Server.MirEnvir
         {
             if (p == null) return;
 
-            if (Functions.InRange(location, Player.CurrentLocation, Globals.DataRange))
+            if (Functions.InRange(location, Player.CurrentLocation, Globals.DataRange*100))
             {
                 Player.Enqueue(p);
             }    

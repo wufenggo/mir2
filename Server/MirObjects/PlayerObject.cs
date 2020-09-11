@@ -1798,7 +1798,7 @@ namespace Server.MirObjects
 
             for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
             {
-                if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
+                if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation,Globals.DataRange))
                     CurrentMap.NPCs[i].CheckVisible(this);
             }
             Report.Levelled(Level);
