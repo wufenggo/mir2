@@ -1301,6 +1301,7 @@ public enum SpellEffect : byte
 
 }
 
+
 public enum BuffType : byte
 {
     None = 0,
