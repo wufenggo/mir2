@@ -14,21 +14,23 @@ using SlimDX.Direct3D9;
 using S = ServerPackets;
 using C = ClientPackets;
 using ServerPackets;
+using Server.MirDatabase;
 
 namespace Client.MirScenes.Dialogs
 {
     public sealed class BigMapDialog : MirImageControl
     {
-        public List<ObjectNPC> NpcList = new List<ObjectNPC>();
+        public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
+        
         public List<MirImageControl> PublicEvents = new List<MirImageControl>();
-        private MirLabel pointlab;
+        private MirLabel pointlab,wordlab;
         //List<MirLabel> ListLabelTown = new List<MirLabel>();
         //List<NameTown> ListTown = new List<NameTown>();
         private long LastTeleportTime = 0;
+        
         public BigMapDialog()
         {
-            Index = 801;
-            Library = Libraries.Title;
+   
          
             //NotControl = true;
             Location = new Point(130, 100);
@@ -39,6 +41,10 @@ namespace Client.MirScenes.Dialogs
 
             //loadTonw();
             //加入坐标显示
+
+
+
+
             pointlab = new MirLabel
             {
                 AutoSize = true,
@@ -130,6 +136,7 @@ namespace Client.MirScenes.Dialogs
                     if (ob is PlayerObject)
                     colour = Color.FromArgb(255, 255, 255);
                 else if (ob is NPCObject || ob.AI == 6)
+                    
                     colour = Color.FromArgb(0, 255, 50);
                 else
                     colour = Color.FromArgb(255, 0, 0);

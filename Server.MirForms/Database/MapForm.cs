@@ -155,7 +155,7 @@ namespace Server.MirForms
                 {
                     try
                     {
-                        if (lines[k].StartsWith(EditEnvir.MapInfoList[j].FileName + " "))
+                        if (lines[k].StartsWith(EditEnvir.MapInfoList[j].Index + " "))
                         {
                             MirDatabase.MovementInfo newMovement = new MirDatabase.MovementInfo();
 
@@ -225,7 +225,7 @@ namespace Server.MirForms
                             string[] e = c[2].Split(',');
 
 
-                            var toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.FileName == c[3]); //check existing maps for the connection info
+                            var toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.Index.ToString() == c[3]); //check existing maps for the connection info
                             var toMap = -1;
 
                             if (toMapIndex >= 0)
@@ -234,7 +234,7 @@ namespace Server.MirForms
                             }
                             if (toMap < 0)
                             {
-                                toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.FileName.ToString() == c[3]);
+                                toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.Index.ToString() == c[3]);
 
                                 if (toMapIndex >= 0)
                                 {

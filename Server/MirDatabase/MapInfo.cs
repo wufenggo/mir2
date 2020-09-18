@@ -19,7 +19,7 @@ namespace Server.MirDatabase
         }
 
         public int Index;
-        public string FileName = string.Empty, Title = string.Empty;
+        public string MapID = string.Empty, FileName = string.Empty, Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
         public LightSetting Light;
         public byte MapDarkLight = 0, MineIndex = 0;
@@ -46,6 +46,7 @@ namespace Server.MirDatabase
         public MapInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
+            MapID = reader.ReadString();
             FileName = reader.ReadString();
             Title = reader.ReadString();
             MiniMap = reader.ReadUInt16();
@@ -102,6 +103,7 @@ namespace Server.MirDatabase
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);
+            writer.Write(MapID);
             writer.Write(FileName);
             writer.Write(Title);
             writer.Write(MiniMap);
