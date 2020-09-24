@@ -107,6 +107,7 @@ namespace Server.MirEnvir
         public List<MagicInfo> MagicInfoList = new List<MagicInfo>();
         public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
         public DragonInfo DragonInfo = new DragonInfo();
+        public MapInfo MapInfo = new MapInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();

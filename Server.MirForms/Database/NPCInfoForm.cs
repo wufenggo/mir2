@@ -278,8 +278,8 @@ namespace Server
             string[] npcs = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
 
 
-            //for (int i = 1; i < npcs.Length; i++)
-            //    NPCInfo.FromText(npcs[i]);
+            for (int i = 1; i < npcs.Length; i++)
+                NPCInfo.FromText(npcs[i]);
 
             UpdateInterface();
         }

@@ -18,8 +18,8 @@ namespace Server.MirDatabase
             get { return Envir.Edit; }
         }
 
-        public int Index;
-        public string MapID = string.Empty, FileName = string.Empty, Title = string.Empty;
+        public int Index,MapID;
+        public string FileName = string.Empty, Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
         public LightSetting Light;
         public byte MapDarkLight = 0, MineIndex = 0;
@@ -46,7 +46,7 @@ namespace Server.MirDatabase
         public MapInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
-            MapID = reader.ReadString();
+            MapID = reader.ReadInt32();
             FileName = reader.ReadString();
             Title = reader.ReadString();
             MiniMap = reader.ReadUInt16();
@@ -189,7 +189,7 @@ namespace Server.MirDatabase
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Index, Title);
+            return string.Format("{0}  :{1} == {2}", Index,MapID, Title);
         }
 
         public void CreateNPCInfo()

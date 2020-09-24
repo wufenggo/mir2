@@ -225,20 +225,20 @@ namespace Server.MirForms
                             string[] e = c[2].Split(',');
 
 
-                            var toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.Index.ToString() == c[3]); //check existing maps for the connection info
+                            var toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.MapID.ToString() == c[3]); //check existing maps for the connection info
                             var toMap = -1;
 
                             if (toMapIndex >= 0)
                             {
-                                toMap = EditEnvir.MapInfoList[toMapIndex].Index; //get real index
+                                toMap = EditEnvir.MapInfoList[toMapIndex].MapID; //get real index
                             }
                             if (toMap < 0)
                             {
-                                toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.Index.ToString() == c[3]);
+                                toMapIndex = EditEnvir.MapInfoList.FindIndex(a => a.MapID.ToString() == c[3]);
 
                                 if (toMapIndex >= 0)
                                 {
-                                    toMap = EditEnvir.MapInfoList[toMapIndex].Index;
+                                    toMap = EditEnvir.MapInfoList[toMapIndex].MapID;
                                 }
                             }
 

@@ -106,6 +106,7 @@ namespace Server
             MapTabs.Enabled = true;
 
             MapIndexTextBox.Text = mi.Index.ToString();
+            MapIDTextBox.Text = mi.MapID.ToString();
             FileNameTextBox.Text = mi.FileName;
             MapNameTextBox.Text = mi.Title;
             MiniMapTextBox.Text = mi.MiniMap.ToString();
@@ -145,6 +146,7 @@ namespace Server
                 mi = _selectedMapInfos[i];
 
                 if (MapIndexTextBox.Text != mi.Index.ToString()) MapIndexTextBox.Text = string.Empty;
+                if (MapIDTextBox.Text != mi.MapID.ToString()) MapIDTextBox.Text = string.Empty;
                 if (FileNameTextBox.Text != mi.FileName) FileNameTextBox.Text = string.Empty;
                 if (MapNameTextBox.Text != mi.Title) MapNameTextBox.Text = string.Empty;
                 if (MiniMapTextBox.Text != mi.MiniMap.ToString()) MiniMapTextBox.Text = string.Empty;
@@ -1361,7 +1363,6 @@ namespace Server
                 _selectedMineZones[i].Size = temp;
             RefreshMineZoneList();
         }
-
         private void ImportMapInfoButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -1377,73 +1378,77 @@ namespace Server
             UpdateInterface();
 
         }
+
+        //private void ImportMapInfoButton_Click(object sender, EventArgs e)
+        //{
+        //    OpenFileDialog ofd = new OpenFileDialog();
+        //    ofd.Filter = "Binary File|*.txt";
+        //    ofd.ShowDialog();
+
+        //    if (ofd.FileName == string.Empty) return;
+
+        //    string Path = ofd.FileName;
+        //    if (!File.Exists(Path))
+        //    {
+        //        MessageBox.Show("File could not be found!");
+        //        return;
+        //    }
+        //    List<MapInfo> list = new List<MapInfo>();
+        //    using (FileStream stream = File.OpenRead(Path))
+        //    {
+        //        using (BinaryReader reader = new BinaryReader(stream))
+        //        {
+        //            int count = reader.ReadInt32();
+        //            for (int i = 0; i < count; i++)
+        //            {
+        //                list.Add(new MapInfo(reader));
+        //            }
+        //        }
+        //    }
+        //    //  No function to update MapInfo due to no unique values will be held by the exports.
+        //    //  Indexes will mis-match and duplicate names will create instances?
+        //    int added = 0;
+        //    if (list != null && list.Count > 0)
+        //    {
+        //        for (int i = 0; i < list.Count; i++)
+        //        {
+        //            list[i].Index = ++Envir.MapIndex;
+        //            Envir.MapInfoList.Add(list[i]);
+        //            added++;
+        //        }
+        //    }
+        //    MessageBox.Show(string.Format("{0} Maps added.", added));
+
+        //    UpdateInterface();
+
+        //    MessageBox.Show(string.Format("{0} Maps imported", added));
+
+        //}
         private void ExportMapInfoButton_Click(object sender, EventArgs e)
         {
-            if (_selectedMapInfos.Count == 0) return;
-
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
-            sfd.FileName = "MapInfoExport";
-            sfd.Filter = "Text File|*.txt";
-            sfd.ShowDialog();
-
-            if (sfd.FileName == string.Empty) return;
-            for (int i = 0; i < _selectedMapInfos.Count; i++)
+            using (FileStream stream = File.Create(Settings.ExportPath + string.Format("MapInfo-{0:dd-MM-yyyy_hh-mm-ss-tt}.txt", DateTime.Now)))
             {
-                using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
+                using (BinaryWriter writer = new BinaryWriter(stream))
                 {
-                    string textOut = string.Empty;
-                    textOut += $"[{_selectedMapInfos[i].FileName} {_selectedMapInfos[i].Title.Replace(' ', '*')}]";
-
-                    textOut += " LIGHT(" + _selectedMapInfos[i].Light + ")";
-                    textOut += " MINIMAP(" + _selectedMapInfos[i].MiniMap + ")";
-                    textOut += " BIGMAP(" + _selectedMapInfos[i].BigMap + ")";
-                    textOut += " MAPLIGHT(" + _selectedMapInfos[i].MapDarkLight + ")";
-                    textOut += " MINE(" + _selectedMapInfos[i].MineIndex + ")";
-                    textOut += " MUSIC(" + _selectedMapInfos[i].Music + ")";
-                    textOut += PrintMapAttributes(_selectedMapInfos[i]);
-                    sw.WriteLine(textOut);
-
-                    //STARTZONE(0,150,150,50) || SAFEZONE(0,150,150,50)
-                    for (int j = 0; j < _selectedMapInfos[i].SafeZones.Count; j++)
+                    //  As there's no export all button we'll make it so when you have nothing selected it'll export all MapInfos.
+                    if (_selectedMapInfos.Count == 0)
                     {
-                        string safeZoneOut = _selectedMapInfos[i].SafeZones[j].StartPoint ? "STARTZONE" : "SAFEZONE";
-                        safeZoneOut += "(" + _selectedMapInfos[i].FileName + "," +
-                            _selectedMapInfos[i].SafeZones[j].Size.ToString() + "," +
-                            _selectedMapInfos[i].SafeZones[j].Location.X.ToString() + "," +
-                            _selectedMapInfos[i].SafeZones[j].Location.Y.ToString() + ")";
-                        sw.WriteLine(safeZoneOut);
+                        writer.Write(Envir.MapInfoList.Count);
+                        for (int i = 0; i < Envir.MapInfoList.Count; i++)
+                            Envir.MapInfoList[i].Save(writer);
                     }
-                    for (int j = 0; j < _selectedMapInfos[i].Movements.Count; j++)
+                    else
                     {
-                        try
-                        {
-                            string movement =
-                                $"{_selectedMapInfos[i].Index} {_selectedMapInfos[i].Movements[j].Source.X + "," + _selectedMapInfos[i].Movements[j].Source.Y} {"->"} {Envir.MapInfoList[_selectedMapInfos[i].Movements[j].MapIndex - 1].Index} {_selectedMapInfos[i].Movements[j].Destination.X + "," + _selectedMapInfos[i].Movements[j].Destination.Y} {(_selectedMapInfos[i].Movements[j].NeedHole ? "NEEDHOLE " : "") + (_selectedMapInfos[i].Movements[j].NeedMove ? "NEEDMOVE " : "") + (_selectedMapInfos[i].Movements[j].ConquestIndex > 0 ? "NEEDCONQUEST(" + _selectedMapInfos[i].Movements[j].ConquestIndex + ")" : "")}";
 
-                            sw.WriteLine(movement);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-                    for (int j = 0; j < _selectedMapInfos[i].MineZones.Count; j++)
-                    {
-                        try
-                        {
-                            string mineZones =
-                                $"MINEZONE {_selectedMapInfos[i].FileName} -> {_selectedMapInfos[i].MineZones[j].Mine.ToString()} {_selectedMapInfos[i].MineZones[j].Location.X.ToString()} {_selectedMapInfos[i].MineZones[j].Location.Y.ToString()} {_selectedMapInfos[i].MineZones[j].Size.ToString()}";
-                            sw.WriteLine(mineZones);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
+                        writer.Write(_selectedMapInfos.Count);
+                        for (int i = 0; i < _selectedMapInfos.Count; i++)
+                            _selectedMapInfos[i].Save(writer);
+
+
                     }
                 }
             }
-            MessageBox.Show("Map Info Export Complete");
+            MessageBox.Show(string.Format("{0} Map Info's exported", _selectedMapInfos.Count == 0 ? Envir.MapInfoList.Count : _selectedMapInfos.Count));
         }
         private String PrintMapAttributes(MapInfo map)
         {
@@ -1724,6 +1729,23 @@ namespace Server
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].Index = temp;
+            RefreshMapList();
+        }
+
+        private void MapIDTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            int temp;
+
+            if (!int.TryParse(ActiveControl.Text, out temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].MapID = temp;
             RefreshMapList();
         }
     }

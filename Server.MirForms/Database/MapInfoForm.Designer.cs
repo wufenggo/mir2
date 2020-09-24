@@ -159,6 +159,8 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.MapIDTextBox = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -199,7 +201,9 @@ namespace Server
             this.tabPage1.Controls.Add(this.BigMapTextBox);
             this.tabPage1.Controls.Add(this.LightsComboBox);
             this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.label26);
             this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.MapIDTextBox);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.MapIndexTextBox);
             this.tabPage1.Controls.Add(this.MiniMapTextBox);
@@ -1504,6 +1508,24 @@ namespace Server
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
             // 
+            // MapIDTextBox
+            // 
+            this.MapIDTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MapIDTextBox.Location = new System.Drawing.Point(222, 14);
+            this.MapIDTextBox.Name = "MapIDTextBox";
+            this.MapIDTextBox.Size = new System.Drawing.Size(47, 21);
+            this.MapIDTextBox.TabIndex = 1;
+            this.MapIDTextBox.TextChanged += new System.EventHandler(this.MapIDTextBox_TextChanged);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(156, 17);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 4;
+            this.label26.Text = "MapID:";
+            // 
             // MapInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1671,5 +1693,7 @@ namespace Server
         private Label label25;
         private CheckBox NoTownTeleportCheckbox;
         private CheckBox NoReincarnation;
+        private Label label26;
+        private TextBox MapIDTextBox;
     }
 }
