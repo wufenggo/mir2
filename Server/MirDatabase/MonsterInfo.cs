@@ -201,14 +201,20 @@ namespace Server.MirDatabase
             }
 
             Drops.Sort((drop1, drop2) =>
+            {
+                if (drop1.Gold > 0 && drop2.Gold == 0)
+                    return -1;
+                if (drop1.Gold == 0 && drop2.Gold > 0)
+                    return 1;
+                if (drop1.Chance > drop2.Chance)
                 {
-                    if (drop1.Gold > 0 && drop2.Gold == 0)
-                        return 1;
-                    if (drop1.Gold == 0 && drop2.Gold > 0)
-                        return -1;
-
-                    return drop1.Item.Type.CompareTo(drop2.Item.Type);
-                });
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
         }
 
         public static void FromText(string text)

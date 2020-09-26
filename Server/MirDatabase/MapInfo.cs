@@ -18,7 +18,8 @@ namespace Server.MirDatabase
             get { return Envir.Edit; }
         }
 
-        public int Index,MapID;
+        public int Index;
+        public int MapID;
         public string FileName = string.Empty, Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
         public LightSetting Light;
@@ -210,7 +211,7 @@ namespace Server.MirDatabase
 
             MapInfo info = new MapInfo {FileName = data[0], Title = data[1]};
 
-
+            
             if (!ushort.TryParse(data[2], out info.MiniMap)) return;
 
             if (!Enum.TryParse(data[3], out info.Light)) return;
@@ -220,7 +221,7 @@ namespace Server.MirDatabase
             if (!int.TryParse(data[5], out miCount)) return;
             if (!int.TryParse(data[6], out riCount)) return;
             if (!int.TryParse(data[7], out npcCount)) return;
-
+           
 
             int start = 8;
 

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+
+
 public class HumansMonsterSettings
 {
     public string HumansName = string.Empty;
@@ -1805,4 +1808,27 @@ public enum IntelligentCreaturePickupMode : byte
 {
     Automatic = 0,
     SemiAutomatic = 1,
+}
+
+
+public class RandomUtils
+{
+    private static int seed = Environment.TickCount;
+    private static ThreadLocal<Random> RandomWrapper = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
+    public static int Next()
+    {
+        return RandomWrapper.Value.Next();
+    }
+    public static int Next(int maxValue)
+    {
+        return RandomWrapper.Value.Next(maxValue);
+    }
+    public static int Next(int minValue, int maxValue)
+    {
+        return RandomWrapper.Value.Next(minValue, maxValue);
+    }
+    public static double NextDouble()
+    {
+        return RandomWrapper.Value.NextDouble();
+    }
 }

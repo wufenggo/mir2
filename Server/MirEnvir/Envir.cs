@@ -2849,7 +2849,7 @@ namespace Server.MirEnvir
 
         public Map GetMap(int index)
         {
-            return MapList.FirstOrDefault(t => t.Info.Index == index);
+            return MapList.FirstOrDefault(t => t.Info.MapID == index);
         }
 
         public Map GetMapByNameAndInstance(string name, int instanceValue = 0)

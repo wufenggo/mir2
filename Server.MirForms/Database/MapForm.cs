@@ -49,7 +49,7 @@ namespace Server.MirForms
 
                     List<string> mapAttributes = new List<string>(); // Group of all attributes associated with that map
                     mapAttributes.AddRange(a[1].Split(' '));
-
+                    
                     newMapInfo.NoTeleport = mapAttributes.Any(s => s.Contains("NOTELEPORT".ToUpper()));
                     newMapInfo.NoRandom = mapAttributes.Any(s => s.Contains("NORANDOMMOVE".ToUpper()));
                     newMapInfo.NoEscape = mapAttributes.Any(s => s.Contains("NOESCAPE".ToUpper()));
@@ -83,6 +83,12 @@ namespace Server.MirForms
                     {
                         int index = mapAttributes.FindIndex(x => x.StartsWith("NORECONNECT(".ToUpper()));
                         newMapInfo.NoReconnectMap = newMapInfo.NoReconnectMap == string.Empty ? "0" : mapAttributes[index].TrimStart("NORECONNECT(".ToCharArray()).TrimEnd(')');
+                    }
+
+                    if (mapAttributes.Any(x => x.StartsWith("MAPID(".ToUpper())))
+                    {
+                        int index = mapAttributes.FindIndex(x => x.StartsWith("MAPID(".ToUpper()));
+                        newMapInfo.MapID = Convert.ToUInt16(mapAttributes[index].TrimStart("MAPID(".ToCharArray()).TrimEnd(')'));
                     }
 
                     if (mapAttributes.Any(x => x.StartsWith("MINIMAP(".ToUpper())))
@@ -155,7 +161,7 @@ namespace Server.MirForms
                 {
                     try
                     {
-                        if (lines[k].StartsWith(EditEnvir.MapInfoList[j].Index + " "))
+                        if (lines[k].StartsWith(EditEnvir.MapInfoList[j].MapID + " "))
                         {
                             MirDatabase.MovementInfo newMovement = new MirDatabase.MovementInfo();
 

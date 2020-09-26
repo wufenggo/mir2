@@ -56,7 +56,7 @@ public class GameLanguage
                          PatchErr = "Could not get Patch Information",
                          LastOnline = "Last Online",
 
-                         Gold = "Gold",
+                         Gold = "金币",
                          Credit = "Credit",
 
                          YouGained = "You gained {0}.",

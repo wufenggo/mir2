@@ -44,7 +44,9 @@ namespace Server
             this.BigMapTextBox = new System.Windows.Forms.TextBox();
             this.LightsComboBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.MapIDTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.MapIndexTextBox = new System.Windows.Forms.TextBox();
             this.MiniMapTextBox = new System.Windows.Forms.TextBox();
@@ -159,8 +161,6 @@ namespace Server
             this.ExportMongenButton = new System.Windows.Forms.Button();
             this.VisualizerButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.MapIDTextBox = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
             this.MapTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -292,6 +292,15 @@ namespace Server
             this.label5.TabIndex = 12;
             this.label5.Text = "Lights:";
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(156, 17);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 4;
+            this.label26.Text = "MapID:";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -300,6 +309,15 @@ namespace Server
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 4;
             this.label1.Text = "Map Index:";
+            // 
+            // MapIDTextBox
+            // 
+            this.MapIDTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MapIDTextBox.Location = new System.Drawing.Point(222, 14);
+            this.MapIDTextBox.Name = "MapIDTextBox";
+            this.MapIDTextBox.Size = new System.Drawing.Size(47, 21);
+            this.MapIDTextBox.TabIndex = 1;
+            this.MapIDTextBox.TextChanged += new System.EventHandler(this.MapIDTextBox_TextChanged);
             // 
             // label4
             // 
@@ -1457,6 +1475,7 @@ namespace Server
             this.CopyMapButton.TabIndex = 23;
             this.CopyMapButton.Text = "Copy";
             this.CopyMapButton.UseVisualStyleBackColor = true;
+            this.CopyMapButton.Click += new System.EventHandler(this.CopyMapButton_Click);
             // 
             // ImportMapInfoButton
             // 
@@ -1507,24 +1526,6 @@ namespace Server
             this.VisualizerButton.Text = "Visualizer";
             this.VisualizerButton.UseVisualStyleBackColor = true;
             this.VisualizerButton.Click += new System.EventHandler(this.VisualizerButton_Click);
-            // 
-            // MapIDTextBox
-            // 
-            this.MapIDTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.MapIDTextBox.Location = new System.Drawing.Point(222, 14);
-            this.MapIDTextBox.Name = "MapIDTextBox";
-            this.MapIDTextBox.Size = new System.Drawing.Size(47, 21);
-            this.MapIDTextBox.TabIndex = 1;
-            this.MapIDTextBox.TextChanged += new System.EventHandler(this.MapIDTextBox_TextChanged);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(156, 17);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(41, 12);
-            this.label26.TabIndex = 4;
-            this.label26.Text = "MapID:";
             // 
             // MapInfoForm
             // 

@@ -9463,7 +9463,7 @@ namespace Client.MirScenes
             switch (MapDarkLight)
             {
                 case 1:
-                    Darkness = Color.FromArgb(255, 20, 20, 20);
+                    Darkness = Color.FromArgb(40, 40, 40);
                     break;
                 case 2:
                     Darkness = Color.LightSlateGray;
@@ -9596,7 +9596,7 @@ namespace Client.MirScenes
 
                     Color lightIntensity;
 
-                    light = (M2CellInfo[x, y].Light % 10) * 3;
+                    light = (M2CellInfo[x, y].Light % 10) * 10;
 
                     switch (M2CellInfo[x, y].Light / 10)
                     {

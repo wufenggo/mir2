@@ -418,7 +418,7 @@ namespace Server
             SourceYTextBox.Text = info.Source.Y.ToString();
             NeedHoleMCheckBox.Checked = info.NeedHole;
             NeedMoveMCheckBox.Checked = info.NeedMove;
-            DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
+            DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.MapID == info.MapIndex);
             DestXTextBox.Text = info.Destination.X.ToString();
             DestYTextBox.Text = info.Destination.Y.ToString();
 
@@ -431,7 +431,7 @@ namespace Server
 
                 SourceXTextBox.Text = info.Source.X.ToString();
                 SourceYTextBox.Text = info.Source.Y.ToString();
-                DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex);
+                DestMapComboBox.SelectedItem = Envir.MapInfoList.FirstOrDefault(x => x.MapID == info.MapIndex);
                 DestXTextBox.Text = info.Destination.X.ToString();
                 DestYTextBox.Text = info.Destination.Y.ToString();
                 ConquestComboBox.SelectedItem = Envir.ConquestInfos.FirstOrDefault(x => x.Index == info.ConquestIndex);
@@ -439,7 +439,7 @@ namespace Server
                 if (SourceXTextBox.Text != info.Source.X.ToString()) SourceXTextBox.Text = string.Empty;
                 if (SourceYTextBox.Text != info.Source.Y.ToString()) SourceYTextBox.Text = string.Empty;
 
-                if (DestMapComboBox.SelectedItem != Envir.MapInfoList.FirstOrDefault(x => x.Index == info.MapIndex)) DestMapComboBox.SelectedItem = null;
+                if (DestMapComboBox.SelectedItem != Envir.MapInfoList.FirstOrDefault(x => x.MapID == info.MapIndex)) DestMapComboBox.SelectedItem = null;
 
                 if (DestXTextBox.Text != info.Destination.X.ToString()) DestXTextBox.Text = string.Empty;
                 if (DestYTextBox.Text != info.Destination.Y.ToString()) DestYTextBox.Text = string.Empty;
@@ -1036,7 +1036,7 @@ namespace Server
             if (info == null) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++)
-                _selectedMovementInfos[i].MapIndex = info.Index;
+                _selectedMovementInfos[i].MapIndex = info.MapID;
 
             RefreshMovementList();
 
@@ -1064,20 +1064,22 @@ namespace Server
 
         private void PasteMapButton_Click(object sender, EventArgs e)
         {
-            string data = Clipboard.GetText();
+            //string data = Clipboard.GetText();
 
-            if (!data.StartsWith("Map", StringComparison.OrdinalIgnoreCase))
-            {
-                MessageBox.Show("Cannot Paste, Copied data is not Map Information.");
-                return;
-            }
-
-
-            string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            //if (data.StartsWith("Map", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    MessageBox.Show("Cannot Paste, Copied data is not Map Information.");
+            //    return;
+            //}
 
 
-            for (int i = 1; i < monsters.Length; i++)
-                MapInfo.FromText(monsters[i]);
+            //string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+            //for (int i = 1; i < monsters.Length; i++)
+            //    MapInfo.FromText(monsters[i]);
+
+            MapIDTextBox.Text = (String)Clipboard.GetDataObject().GetData(DataFormats.Text);
 
             UpdateInterface();
         }
@@ -1747,6 +1749,17 @@ namespace Server
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].MapID = temp;
             RefreshMapList();
+        }
+
+        private void CopyMapButton_Click(object sender, EventArgs e)
+        {
+            IDataObject iData = Clipboard.GetDataObject();
+            //检测文本
+            if (iData.GetDataPresent(DataFormats.Text) | iData.GetDataPresent(DataFormats.OemText))
+            {
+                this.MapIndexTextBox.Text = (String)iData.GetData(DataFormats.Text);
+            }
+
         }
     }
 }

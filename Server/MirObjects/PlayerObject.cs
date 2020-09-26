@@ -10238,7 +10238,7 @@ namespace Server.MirObjects
 
                 if (activeCoord != location) continue;
 
-                CallDefaultNPC(DefaultNPCType.MapCoord, CurrentMap.Info.FileName, activeCoord.X, activeCoord.Y);
+                CallDefaultNPC(DefaultNPCType.MapCoord, CurrentMap.Info.MapID, activeCoord.X, activeCoord.Y);
             }
 
             //Map movements
@@ -10332,7 +10332,7 @@ namespace Server.MirObjects
 
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.MapID);
             }
 
             if (Info.Married != 0)
