@@ -118,6 +118,14 @@ namespace Client.MirScenes
 
         public TimerDialog TimerControl;
 
+        public NewHeroDialog NewHeroDialog;
+        public ChangeHeroDialog ChangeHeroDialog;//改变英雄对话框
+        public HeroInfoDialog HeroInfoDialog;//英雄信息对话框
+        public HeroInventoryDialog HeroInventoryDialog;//英雄背包对话框
+
+        public HeroSkillBarDialog HeroSkillBarDialog;
+        public List<Buff> HeroBuffs = new List<Buff>();//英雄增益
+
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
         public static List<UserItem> ChatItemList = new List<UserItem>();
@@ -126,7 +134,7 @@ namespace Client.MirScenes
         public static List<ClientRecipeInfo> RecipeInfoList = new List<ClientRecipeInfo>();
 
         public List<Buff> Buffs = new List<Buff>();
-
+        
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
         public static UserItem[] Refine = new UserItem[16];
@@ -161,6 +169,10 @@ namespace Client.MirScenes
 
         public MirLabel[] OutputLines = new MirLabel[10];
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
+
+        public int CurrentHeroIndex = 0;
+        public bool HeroSummoned = false;
+
 
         public long OutputDelay;
 
@@ -264,6 +276,10 @@ namespace Client.MirScenes
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
 
             TimerControl = new TimerDialog { Parent = this, Visible = false };
+            //英雄
+            HeroInventoryDialog = new HeroInventoryDialog() { Parent = this, Visible = false };
+            ChangeHeroDialog = new ChangeHeroDialog() { Parent = this, Visible = false };
+            HeroInfoDialog = new HeroInfoDialog() { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -1719,12 +1735,45 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.UpdateNotice:
                     ShowNotice((S.UpdateNotice)p);
                     break;
+                case (short)ServerPacketIds.NewHeroRequest:
+                    NewHero();
+                    break;
+                case (short)ServerPacketIds.CurrentHeroIndexChange:
+                    CurrentHeroIndexChange((S.CurrentHeroIndexChange)p);
+                    break;
+                case (short)ServerPacketIds.HeroInformation:
+                    var info = (S.HeroInformation)p;
+                    if (User.Hero == null)
+                    {
+                        HeroSummoned = true;
+                        User.Hero = new HeroObject(info.ObjectID);
+                        MainDialog.HeroAvatar.Show();
+                        MainDialog.HeroCommandBar.Show();
+                        HeroInventoryDialog.BeltBar.Show();
+                        User.Hero.Load(info);
+                        MainDialog.HeroCommandBar.ActiveAI((byte)User.Hero.Mode);
+                    }
+                    else
+                    {
+                        User.Hero.Refresh(info);
+                    }
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
             }
         }
+        public void NewHero()
+        {
+            NewHeroDialog = new NewHeroDialog() { Parent = this, Visible = true };
+        }
 
+        public void CurrentHeroIndexChange(S.CurrentHeroIndexChange packet)
+        {
+            CurrentHeroIndex = packet.HeroIndex;
+            MainDialog.HeroOpControl.Visible = packet.Index > 0;
+            MainDialog.HeroOpControl.BringToFront();
+        }
         private void KeepAlive(S.KeepAlive p)
         {
             if (p.Time == 0) return;

@@ -5821,4 +5821,248 @@ namespace ServerPackets
             Notice.Save(writer);
         }
     }
+
+    public sealed class NewHeroRequest : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.NewHeroRequest; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+
+        }
+    }
+
+    public sealed class CurrentHeroIndexChange : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.CurrentHeroIndexChange; } }
+
+        public int HeroIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            HeroIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(HeroIndex);
+        }
+    }
+
+    public sealed class HeroInformation : Packet//英雄信息 以下的数据包是服务端发送Enqueue（new 请求 然后客户端再打开的
+    {
+        public string Name = string.Empty;
+        public List<ClientMagic> Magics = new List<ClientMagic>();
+        public uint ObjectID;
+        public long RealId;
+        public Color NameColour;
+        public MirClass Class;
+        public MirGender Gender;
+        public ushort Level;
+        public Point Location;
+        public MirDirection Direction;
+        public byte Hair;
+        public LevelEffects LevelEffects;
+        public uint MaxHP;
+        public uint MP;
+        public uint MaxMP;
+        public uint HP;
+        public ushort MinAC;
+        public ushort MaxAC;
+        public ushort MinMAC;
+        public ushort MaxMAC;
+        public ushort MinDC;
+        public ushort MaxDC;
+        public ushort MinMC;
+        public ushort MaxMC;
+        public ushort MinSC;
+        public ushort MaxSC;
+        public byte Accuracy;
+        public byte Agility;
+        public sbyte ASpeed;
+        public sbyte Luck;
+        public int AttackSpeed;
+        public ushort CurrentHandWeight;
+        public ushort MaxHandWeight;
+        public ushort CurrentWearWeight;
+        public ushort MaxWearWeight;
+        public ushort CurrentBagWeight;
+        public ushort MaxBagWeight;
+        public long Experience;
+        public long MaxExperience;
+        public byte LifeOnHit;
+        public byte MagicResist;
+        public byte PoisonResist;
+        public byte HealthRecovery;
+        public byte SpellRecovery;
+        public byte PoisonRecovery;
+        public byte CriticalRate;
+        public byte CriticalDamage;
+        public byte Holy;
+        public byte Freezing;
+        public byte PoisonAttack;
+        public byte HpDrainRate;
+        public BaseStats CoreStats;
+        public HeroMode Mode;
+        public UserItem[] Inventory;
+        public UserItem[] Equipment;
+
+        public override short Index { get { return (short)ServerPacketIds.HeroInformation; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            RealId = reader.ReadInt64();
+            Name = reader.ReadString();
+            NameColour = Color.FromArgb(reader.ReadInt32());
+            Class = (MirClass)reader.ReadByte();
+            Gender = (MirGender)reader.ReadByte();
+            Level = reader.ReadUInt16();
+            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+            Direction = (MirDirection)reader.ReadByte();
+            Hair = reader.ReadByte();
+            HP = reader.ReadUInt32();
+            MP = reader.ReadUInt32();
+            Experience = reader.ReadInt64();
+            MaxExperience = reader.ReadInt64();
+            LevelEffects = (LevelEffects)reader.ReadUInt16();
+            int num = reader.ReadInt32();
+            for (int i = 0; i < num; i++)
+                Magics.Add(new ClientMagic(reader));
+            MaxHP = reader.ReadUInt32();
+            MaxMP = reader.ReadUInt32();
+            MinAC = reader.ReadUInt16();
+            MaxAC = reader.ReadUInt16();
+            MinMAC = reader.ReadUInt16();
+            MaxMAC = reader.ReadUInt16();
+            MinDC = reader.ReadUInt16();
+            MaxDC = reader.ReadUInt16();
+            MinMC = reader.ReadUInt16();
+            MaxMC = reader.ReadUInt16();
+            MinSC = reader.ReadUInt16();
+            MaxSC = reader.ReadUInt16();
+            Accuracy = reader.ReadByte();
+            Agility = reader.ReadByte();
+            ASpeed = reader.ReadSByte();
+            Luck = reader.ReadSByte();
+            AttackSpeed = reader.ReadInt32();
+            CurrentHandWeight = reader.ReadUInt16();
+            MaxHandWeight = reader.ReadUInt16();
+            CurrentWearWeight = reader.ReadUInt16();
+            MaxWearWeight = reader.ReadUInt16();
+            CurrentBagWeight = reader.ReadUInt16();
+            MaxBagWeight = reader.ReadUInt16();
+            LifeOnHit = reader.ReadByte();
+            MagicResist = reader.ReadByte();
+            PoisonResist = reader.ReadByte();
+            HealthRecovery = reader.ReadByte();
+            SpellRecovery = reader.ReadByte();
+            PoisonRecovery = reader.ReadByte();
+            CriticalRate = reader.ReadByte();
+            CriticalDamage = reader.ReadByte();
+            Holy = reader.ReadByte();
+            Freezing = reader.ReadByte();
+            PoisonAttack = reader.ReadByte();
+            HpDrainRate = reader.ReadByte();
+            Mode = (HeroMode)reader.ReadByte();
+            var inventorySize = reader.ReadInt32();
+            if (inventorySize > 0)
+            {
+                Inventory = new UserItem[inventorySize];
+                for (int i = 0; i < Inventory.Length; i++)
+                {
+                    if (!reader.ReadBoolean())
+                        Inventory[i] = new UserItem(reader);
+                }
+            }
+
+            var equipmentSize = reader.ReadInt32();
+            if (equipmentSize > 0)
+            {
+                Equipment = new UserItem[equipmentSize];
+                for (int i = 0; i < Equipment.Length; i++)
+                {
+                    if (!reader.ReadBoolean())
+                        Equipment[i] = new UserItem(reader);
+                }
+            }
+
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(RealId);
+            writer.Write(Name);
+            writer.Write(NameColour.ToArgb());
+            writer.Write((byte)Class);
+            writer.Write((byte)Gender);
+            writer.Write(Level);
+            writer.Write(Location.X);
+            writer.Write(Location.Y);
+            writer.Write((byte)Direction);
+            writer.Write(Hair);
+            writer.Write(HP);
+            writer.Write(MP);
+            writer.Write(Experience);
+            writer.Write(MaxExperience);
+            writer.Write((ushort)LevelEffects);
+            writer.Write(Magics.Count);
+            foreach (var magic in Magics)
+                magic.Save(writer);
+            writer.Write(MaxHP);
+            writer.Write(MaxMP);
+            writer.Write(MinAC);
+            writer.Write(MaxAC);
+            writer.Write(MinMAC);
+            writer.Write(MaxMAC);
+            writer.Write(MinDC);
+            writer.Write(MaxDC);
+            writer.Write(MinMC);
+            writer.Write(MaxMC);
+            writer.Write(MinSC);
+            writer.Write(MaxSC);
+            writer.Write(Accuracy);
+            writer.Write(Agility);
+            writer.Write(ASpeed);
+            writer.Write(Luck);
+            writer.Write(AttackSpeed);
+            writer.Write(CurrentHandWeight);
+            writer.Write(MaxHandWeight);
+            writer.Write(CurrentWearWeight);
+            writer.Write(MaxWearWeight);
+            writer.Write(CurrentBagWeight);
+            writer.Write(MaxBagWeight);
+            writer.Write(LifeOnHit);
+            writer.Write(MagicResist);
+            writer.Write(PoisonResist);
+            writer.Write(HealthRecovery);
+            writer.Write(SpellRecovery);
+            writer.Write(PoisonRecovery);
+            writer.Write(CriticalRate);
+            writer.Write(CriticalDamage);
+            writer.Write(Holy);
+            writer.Write(Freezing);
+            writer.Write(PoisonAttack);
+            writer.Write(HpDrainRate);
+            writer.Write((byte)Mode);
+            writer.Write(Inventory?.Length ?? 0);
+            if (Inventory != null)
+                foreach (var item in Inventory)
+                {
+                    writer.Write(item == null);
+                    item?.Save(writer);
+                }
+            writer.Write(Equipment?.Length ?? 0);
+            if (Equipment != null)
+                foreach (var item in Equipment)
+                {
+                    writer.Write(item == null);
+                    item?.Save(writer);
+                }
+        }
+    }
 }

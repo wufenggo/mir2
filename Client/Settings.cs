@@ -114,6 +114,8 @@ namespace Client
                     SoundManager.MusicVol = (int)(-3000 + (3000 * (_musicVolume / 100M)));
             }
         }
+        public static int HeroHpRate { get; set; }
+        public static int HeroMpRate { get; set; }
 
         //Game
         public static string AccountID = "",

@@ -151,6 +151,7 @@
     <Compile Include="MirControls\MirTextBox.cs" />
     <Compile Include="MirGraphics\DXManager.cs" />
     <Compile Include="MirGraphics\MLibrary.cs" />
+    <Compile Include="MirObjects\HeroObject.cs" />
     <Compile Include="MirObjects\PathFinder.cs" />
     <Compile Include="MirObjects\Damage.cs" />
     <Compile Include="MirObjects\DecoObject.cs" />
@@ -174,7 +175,7 @@
     <Compile Include="MirScenes\Dialogs\GroupDialog.cs" />
     <Compile Include="MirScenes\Dialogs\GuildDialog.cs" />
     <Compile Include="MirScenes\Dialogs\HelpDialog.cs" />
-    <Compile Include="MirScenes\Dialogs\HeroObject.cs" />
+    <Compile Include="MirScenes\Dialogs\HeroDialog.cs" />
     <Compile Include="MirScenes\Dialogs\IntelligentCreatureDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\KeyboardLayoutDialog.cs" />
     <Compile Include="MirScenes\Dialogs\ItemRentingDialog.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="MirScenes\Dialogs\MainDialogs.cs" />
     <Compile Include="MirScenes\Dialogs\MentorDialog.cs" />
     <Compile Include="MirScenes\Dialogs\MountDialog.cs" />
+    <Compile Include="MirScenes\Dialogs\NewHeroDialog.cs" />
     <Compile Include="MirScenes\Dialogs\NoticeDialog.cs" />
     <Compile Include="MirScenes\Dialogs\SocketDialog.cs" />
     <Compile Include="MirScenes\Dialogs\TimerDialog.cs" />

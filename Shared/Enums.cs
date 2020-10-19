@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 
 
@@ -853,6 +854,7 @@ public enum ChatType : byte
     Shout2 = 14,
     Shout3 = 15,
     LineMessage = 16,
+    System4 = 17
 }
 
 public enum ItemType : byte
@@ -920,7 +922,10 @@ public enum MirGridType : byte
     Renting = 17,
     GuestRenting = 18,
     Craft = 19,
-    Socket = 20
+    Socket = 20,
+
+   HeroInventory,
+    HeroEquipment
 }
 
 public enum EquipmentSlot : byte
@@ -975,6 +980,13 @@ public enum PetMode : byte
     MoveOnly = 1,
     AttackOnly = 2,
     None = 3,
+}
+public enum HeroMode : byte
+{
+    Attack = 0,
+    Defend = 1,
+    Follow = 2,
+    Custom = 3,
 }
 
 [Flags]
@@ -1362,6 +1374,11 @@ public enum BuffType : byte
     WonderDrug,
     Knapsack,
     HumUp,
+    HeroWarrior,
+    HeroWizard,
+    HeroTaoist,
+    HeroAssassin,
+    HeroArcher,
     Group
 }
 
@@ -1621,7 +1638,11 @@ public enum ServerPacketIds : short
     SetTimer,
     ExpireTimer,
     UpdateNotice,
-    HumUpPlayer
+    HumUpPlayer,
+
+            NewHeroRequest,
+    CurrentHeroIndexChange,
+    HeroInformation
 }
 
 public enum ClientPacketIds : short
@@ -1764,7 +1785,17 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+
+        NewHero,
+    DeleteHero,
+    SelectHero,
+    ReviveHero,
+    SummonHero,
+    DismissHero,
+
+    ChangeHero,
+    ChangeHeroAttackMode
 }
 
 public enum ConquestType : byte
@@ -1830,5 +1861,58 @@ public class RandomUtils
     public static double NextDouble()
     {
         return RandomWrapper.Value.NextDouble();
+    }
+
+
+
+    
+}
+
+public class ClientHeroInfo
+{
+    public long UniqueID;
+    public string Name;
+    public ushort Level;
+    public MirClass Class;
+    public MirGender Gender;
+    public bool Summoned;
+    public bool Sealed;
+    public bool Dead;
+    public bool Active;
+    public uint ObjectID;
+    public ushort InventoryLevel;
+
+    public ClientHeroInfo()
+    {
+    }
+
+    public ClientHeroInfo(BinaryReader reader)
+    {
+        UniqueID = reader.ReadInt64();
+        Name = reader.ReadString();
+        Level = reader.ReadUInt16();
+        Class = (MirClass)reader.ReadByte();
+        Gender = (MirGender)reader.ReadByte();
+        Summoned = reader.ReadBoolean();
+        Sealed = reader.ReadBoolean();
+        Dead = reader.ReadBoolean();
+        Active = reader.ReadBoolean();
+        ObjectID = reader.ReadUInt32();
+        InventoryLevel = reader.ReadUInt16();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(UniqueID);
+        writer.Write(Name);
+        writer.Write(Level);
+        writer.Write((byte)Class);
+        writer.Write((byte)Gender);
+        writer.Write(Summoned);
+        writer.Write(Sealed);
+        writer.Write(Dead);
+        writer.Write(Active);
+        writer.Write(ObjectID);
+        writer.Write(InventoryLevel);
     }
 }

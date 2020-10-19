@@ -329,7 +329,7 @@ namespace Client.MirControls
             GameScene.Scene.SocketDialog.Show(GridType, Item);
         }
 
-        public void UseItem()
+        public void UseItem(bool isHero = false)
         {
             if (Locked || GridType == MirGridType.Inspect || GridType == MirGridType.TrustMerchant || GridType == MirGridType.GuildStorage || GridType == MirGridType.Craft) return;
 

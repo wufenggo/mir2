@@ -2308,4 +2308,142 @@ public sealed class AwakeningNeedMaterials : Packet
         protected override void WritePacket(BinaryWriter writer)
         { }
     }
+
+    public sealed class NewHero : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.NewHero; } }
+
+        public string Name = string.Empty;
+        public MirGender Gender;
+        public MirClass Class;
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Name = reader.ReadString();
+            Gender = (MirGender)reader.ReadByte();
+            Class = (MirClass)reader.ReadByte();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Name);
+            writer.Write((byte)Gender);
+            writer.Write((byte)Class);
+        }
+    }
+    public sealed class DeleteHero : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.DeleteHero; } }
+
+        public int HeroIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            HeroIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(HeroIndex);
+        }
+    }
+
+    public sealed class SelectHero : Packet
+    {
+        public override short Index => (short)ClientPacketIds.SelectHero;
+
+        public int HeroIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            HeroIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(HeroIndex);
+        }
+    }
+
+    public sealed class ReviveHero : Packet
+    {
+        public override short Index => (short)ClientPacketIds.ReviveHero;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+
+        }
+    }
+
+    public sealed class SummonHero : Packet
+    {
+        public override short Index => (short)ClientPacketIds.SummonHero;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+
+        }
+    }
+
+    public sealed class DismissHero : Packet
+    {
+        public override short Index => (short)ClientPacketIds.DismissHero;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// 改变英雄
+    /// </summary>
+    public sealed class ChangeHero : Packet
+    {
+        public long UniqueID;//被我改成了ulong
+
+        public override short Index { get { return (short)ClientPacketIds.ChangeHero; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            UniqueID = reader.ReadInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(UniqueID);
+        }
+    }
+
+    /// <summary>
+    /// 改变英雄攻击模式
+    /// </summary>
+    public sealed class ChangeHeroAttackMode : Packet
+    {
+        public HeroMode AttackMode;
+
+        public override short Index { get { return (short)ClientPacketIds.ChangeHeroAttackMode; } }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            AttackMode = (HeroMode)reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write((byte)AttackMode);
+        }
+    }
+
 }

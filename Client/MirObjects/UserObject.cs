@@ -11,7 +11,7 @@ namespace Client.MirObjects
     public class UserObject : PlayerObject
     {
         public uint Id;
-
+        public List<ClientHeroInfo> Heros = new List<ClientHeroInfo>();
         public ushort HP, MaxHP, MP, MaxMP;
 
         public ushort MinAC, MaxAC,
@@ -69,7 +69,10 @@ namespace Client.MirObjects
         public MapObject NextMagicObject;
         public MirDirection NextMagicDirection;
         public QueuedAction QueuedAction;
-
+        
+        public UserItem[] HeroInventory = new UserItem[10];
+        public UserItem[] HeroEquipment = new UserItem[14];
+        public HeroObject Hero;
         public UserObject(uint objectID) : base(objectID)
         {
         }

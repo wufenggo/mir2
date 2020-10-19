@@ -38,6 +38,9 @@ namespace Client.MirScenes.Dialogs
 
         public MirButton CustomButton1, CustomButton2;
 
+        public HeroOPControl HeroOpControl;
+        public HeroAvatarControl HeroAvatar;
+        public HeroCommandBar HeroCommandBar;
         public bool HPOnly
         {
             get { return User != null && User.Class == MirClass.Warrior && User.Level < 26; }
@@ -395,6 +398,10 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Settings.Resolution != 800 ? 899 : 675, Settings.Resolution != 800 ? -463 : -295),
                 Visible = Settings.ModeView
             };
+
+            HeroOpControl = new HeroOPControl(this) { Visible = false };
+            HeroAvatar = new HeroAvatarControl(this) { Visible = false };
+            HeroCommandBar = new HeroCommandBar(this) { Visible = false };
         }
 
         public void Process()
@@ -849,6 +856,10 @@ namespace Client.MirScenes.Dialogs
                     foreColour = Color.HotPink;
                     break;
                 case ChatType.Mentor:
+                    backColour = Color.White;
+                    foreColour = Color.Purple;
+                    break;
+                case ChatType.System4:
                     backColour = Color.White;
                     foreColour = Color.Purple;
                     break;
